@@ -14,8 +14,8 @@
   
     <classes>
       <class name="com.salesforce.automation.test.LeadPageTest"/>
-      <class name= "com.salesforce.automation.test.CasePageT"/>
-      <class name= "com.salesforce.automation.test.OptimusCasePageTest"/>
+      <!--<class name= "com.salesforce.automation.test.CasePageT"/>
+      <class name= "com.salesforce.automation.test.OptimusCasePageTest"/>-->
       
     </classes>
   </test> <!-- Test -->
