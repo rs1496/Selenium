@@ -11,7 +11,7 @@
   <url>http://maven.apache.org</url>
   
 
- <properties>
+ <!--<properties>
     <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>	
   <profiles>
   <profile>
@@ -34,7 +34,7 @@
   </build>
   </profile>
   </profiles>
- </properties>
+ </properties>-->
   
     <!-- https://mvnrepository.com/artifact/commons-codec/commons-codec -->   
     <!-- https://mvnrepository.com/artifact/org.seleniumhq.selenium/selenium-java -->
