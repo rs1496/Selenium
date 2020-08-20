@@ -1,0 +1,13 @@
+<!DOCTYPE suite SYSTEM "http://testng.org/testng-1.0.dtd" >
+<suite thread-count="1" verbose="1" name="Suite" annotations="JDK">
+
+	<listeners>
+		<listener class-name="com.salesforce.automation.config.ExtentReportListener"></listener>
+	</listeners>
+	<test name="SalesForce">
+		<classes>
+			<!-- <class name="com.salesforce.automation.test.AccountContractPageTest" /> -->
+			<class name="com.salesforce.automation.test.RPAErrorPageTest" />
+		</classes>
+	</test>
+</suite>

@@ -1,0 +1,150 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<testng-results skipped="0" failed="0" ignored="0" total="3" passed="3">
+  <reporter-output>
+  </reporter-output>
+  <suite name="Default suite" duration-ms="287940" started-at="2020-08-19T05:53:09Z" finished-at="2020-08-19T05:57:57Z">
+    <groups>
+    </groups>
+    <test name="Default test" duration-ms="287940" started-at="2020-08-19T05:53:09Z" finished-at="2020-08-19T05:57:57Z">
+      <class name="com.salesforce.automation.test.LeadPageTest">
+        <test-method status="PASS" signature="before()[pri:0, instance:com.salesforce.automation.test.LeadPageTest@5700d6b1]" test-instance-name="Create NTB Lead - Asset1" name="before" is-config="true" duration-ms="45182" started-at="2020-08-19T11:23:09Z" finished-at="2020-08-19T11:23:54Z">
+          <reporter-output>
+          </reporter-output>
+        </test-method> <!-- before -->
+        <test-method status="PASS" signature="BeforeMethod(java.lang.reflect.Method, [Ljava.lang.Object;, org.testng.ITestContext)[pri:0, instance:com.salesforce.automation.test.LeadPageTest@5700d6b1]" test-instance-name="Create NTB Lead - Asset1" name="BeforeMethod" is-config="true" duration-ms="2" started-at="2020-08-19T11:23:56Z" finished-at="2020-08-19T11:23:56Z">
+          <params>
+            <param index="0">
+              <value>
+                <![CDATA[public void com.salesforce.automation.test.LeadPageTest.test_LeadPage(com.salesforce.automation.datamodel.LeadDataModel) throws java.lang.Exception]]>
+              </value>
+            </param>
+            <param index="1">
+              <value>
+                <![CDATA[[Ljava.lang.Object;@66ad7bf0]]>
+              </value>
+            </param>
+            <param index="2">
+              <value>
+                <![CDATA[org.testng.TestRunner@167279d1]]>
+              </value>
+            </param>
+          </params>
+          <reporter-output>
+          </reporter-output>
+        </test-method> <!-- BeforeMethod -->
+        <test-method status="PASS" signature="test_LeadPage(com.salesforce.automation.datamodel.LeadDataModel)[pri:0, instance:com.salesforce.automation.test.LeadPageTest@5700d6b1]" test-instance-name="Create NTB Lead - Asset1" name="test_LeadPage" duration-ms="158915" started-at="2020-08-19T11:23:56Z" data-provider="LeadPage" finished-at="2020-08-19T11:26:35Z">
+          <params>
+            <param index="0">
+              <value>
+                <![CDATA[com.salesforce.automation.datamodel.LeadDataModel@773cbf4f]]>
+              </value>
+            </param>
+          </params>
+          <reporter-output>
+          </reporter-output>
+        </test-method> <!-- test_LeadPage -->
+        <test-method status="PASS" signature="BeforeMethod(java.lang.reflect.Method, [Ljava.lang.Object;, org.testng.ITestContext)[pri:0, instance:com.salesforce.automation.test.LeadPageTest@5700d6b1]" test-instance-name="Create NTB Lead - Asset1" name="BeforeMethod" is-config="true" duration-ms="0" started-at="2020-08-19T11:26:35Z" finished-at="2020-08-19T11:26:35Z">
+          <params>
+            <param index="0">
+              <value>
+                <![CDATA[public void com.salesforce.automation.test.LeadPageTest.test_LeadPage(com.salesforce.automation.datamodel.LeadDataModel) throws java.lang.Exception]]>
+              </value>
+            </param>
+            <param index="1">
+              <value>
+                <![CDATA[[Ljava.lang.Object;@138caeca]]>
+              </value>
+            </param>
+            <param index="2">
+              <value>
+                <![CDATA[org.testng.TestRunner@167279d1]]>
+              </value>
+            </param>
+          </params>
+          <reporter-output>
+          </reporter-output>
+        </test-method> <!-- BeforeMethod -->
+        <test-method status="PASS" signature="tearDown(org.testng.ITestResult)[pri:0, instance:com.salesforce.automation.test.LeadPageTest@5700d6b1]" test-instance-name="Create NTB Lead - Asset1" name="tearDown" is-config="true" duration-ms="0" started-at="2020-08-19T11:26:35Z" finished-at="2020-08-19T11:26:35Z">
+          <params>
+            <param index="0">
+              <value>
+                <![CDATA[[TestResult name=Create NTB Lead status=SUCCESS method=LeadPageTest.test_LeadPage(com.salesforce.automation.datamodel.LeadDataModel)[pri:0, instance:com.salesforce.automation.test.LeadPageTest@5700d6b1] output={null}]]]>
+              </value>
+            </param>
+          </params>
+          <reporter-output>
+          </reporter-output>
+        </test-method> <!-- tearDown -->
+        <test-method status="PASS" signature="test_LeadPage(com.salesforce.automation.datamodel.LeadDataModel)[pri:0, instance:com.salesforce.automation.test.LeadPageTest@5700d6b1]" test-instance-name="Create NTB Lead - Asset1" name="test_LeadPage" duration-ms="41757" started-at="2020-08-19T11:26:35Z" data-provider="LeadPage" finished-at="2020-08-19T11:27:17Z">
+          <params>
+            <param index="0">
+              <value>
+                <![CDATA[com.salesforce.automation.datamodel.LeadDataModel@7726e185]]>
+              </value>
+            </param>
+          </params>
+          <reporter-output>
+          </reporter-output>
+        </test-method> <!-- test_LeadPage -->
+        <test-method status="PASS" signature="BeforeMethod(java.lang.reflect.Method, [Ljava.lang.Object;, org.testng.ITestContext)[pri:0, instance:com.salesforce.automation.test.LeadPageTest@5700d6b1]" test-instance-name="Create NTB Lead - Asset1" name="BeforeMethod" is-config="true" duration-ms="1" started-at="2020-08-19T11:27:17Z" finished-at="2020-08-19T11:27:17Z">
+          <params>
+            <param index="0">
+              <value>
+                <![CDATA[public void com.salesforce.automation.test.LeadPageTest.test_LeadPage(com.salesforce.automation.datamodel.LeadDataModel) throws java.lang.Exception]]>
+              </value>
+            </param>
+            <param index="1">
+              <value>
+                <![CDATA[[Ljava.lang.Object;@4d96250]]>
+              </value>
+            </param>
+            <param index="2">
+              <value>
+                <![CDATA[org.testng.TestRunner@167279d1]]>
+              </value>
+            </param>
+          </params>
+          <reporter-output>
+          </reporter-output>
+        </test-method> <!-- BeforeMethod -->
+        <test-method status="PASS" signature="tearDown(org.testng.ITestResult)[pri:0, instance:com.salesforce.automation.test.LeadPageTest@5700d6b1]" test-instance-name="Create NTB Lead - Asset1" name="tearDown" is-config="true" duration-ms="0" started-at="2020-08-19T11:27:17Z" finished-at="2020-08-19T11:27:17Z">
+          <params>
+            <param index="0">
+              <value>
+                <![CDATA[[TestResult name=Create NTB Lead - Asset status=SUCCESS method=LeadPageTest.test_LeadPage(com.salesforce.automation.datamodel.LeadDataModel)[pri:0, instance:com.salesforce.automation.test.LeadPageTest@5700d6b1] output={null}]]]>
+              </value>
+            </param>
+          </params>
+          <reporter-output>
+          </reporter-output>
+        </test-method> <!-- tearDown -->
+        <test-method status="PASS" signature="test_LeadPage(com.salesforce.automation.datamodel.LeadDataModel)[pri:0, instance:com.salesforce.automation.test.LeadPageTest@5700d6b1]" test-instance-name="Create NTB Lead - Asset1" name="test_LeadPage" duration-ms="36160" started-at="2020-08-19T11:27:17Z" data-provider="LeadPage" finished-at="2020-08-19T11:27:53Z">
+          <params>
+            <param index="0">
+              <value>
+                <![CDATA[com.salesforce.automation.datamodel.LeadDataModel@6ecd665]]>
+              </value>
+            </param>
+          </params>
+          <reporter-output>
+          </reporter-output>
+        </test-method> <!-- test_LeadPage -->
+        <test-method status="PASS" signature="tearDown(org.testng.ITestResult)[pri:0, instance:com.salesforce.automation.test.LeadPageTest@5700d6b1]" test-instance-name="Create NTB Lead - Asset1" name="tearDown" is-config="true" duration-ms="0" started-at="2020-08-19T11:27:53Z" finished-at="2020-08-19T11:27:53Z">
+          <params>
+            <param index="0">
+              <value>
+                <![CDATA[[TestResult name=Create NTB Lead - Asset1 status=SUCCESS method=LeadPageTest.test_LeadPage(com.salesforce.automation.datamodel.LeadDataModel)[pri:0, instance:com.salesforce.automation.test.LeadPageTest@5700d6b1] output={null}]]]>
+              </value>
+            </param>
+          </params>
+          <reporter-output>
+          </reporter-output>
+        </test-method> <!-- tearDown -->
+        <test-method status="PASS" signature="afterAll()[pri:0, instance:com.salesforce.automation.test.LeadPageTest@5700d6b1]" test-instance-name="Create NTB Lead - Asset1" name="afterAll" is-config="true" duration-ms="4113" started-at="2020-08-19T11:27:53Z" finished-at="2020-08-19T11:27:57Z">
+          <reporter-output>
+          </reporter-output>
+        </test-method> <!-- afterAll -->
+      </class> <!-- com.salesforce.automation.test.LeadPageTest -->
+    </test> <!-- Default test -->
+  </suite> <!-- Default suite -->
+</testng-results>
