@@ -1,0 +1,64 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<testng-results skipped="0" failed="0" ignored="0" total="1" passed="1">
+  <reporter-output>
+  </reporter-output>
+  <suite name="Suite" duration-ms="59183" started-at="2020-11-19T06:15:47Z" finished-at="2020-11-19T06:16:46Z">
+    <groups>
+    </groups>
+    <test name="Test" duration-ms="59183" started-at="2020-11-19T06:15:47Z" finished-at="2020-11-19T06:16:46Z">
+      <class name="com.salesforce.automation.test.LeadPageTest">
+        <test-method status="PASS" signature="before()[pri:0, instance:com.salesforce.automation.test.LeadPageTest@6108b2d7]" test-instance-name="Sample Login" name="before" is-config="true" duration-ms="26301" started-at="2020-11-19T11:45:47Z" finished-at="2020-11-19T11:46:13Z">
+          <reporter-output>
+          </reporter-output>
+        </test-method> <!-- before -->
+        <test-method status="PASS" signature="BeforeMethod(java.lang.reflect.Method, [Ljava.lang.Object;, org.testng.ITestContext)[pri:0, instance:com.salesforce.automation.test.LeadPageTest@6108b2d7]" test-instance-name="Sample Login" name="BeforeMethod" is-config="true" duration-ms="1" started-at="2020-11-19T11:46:15Z" finished-at="2020-11-19T11:46:15Z">
+          <params>
+            <param index="0">
+              <value>
+                <![CDATA[public void com.salesforce.automation.test.LeadPageTest.test_LeadPage(com.salesforce.automation.datamodel.LeadDataModel) throws java.lang.Exception]]>
+              </value>
+            </param>
+            <param index="1">
+              <value>
+                <![CDATA[[Ljava.lang.Object;@3b366632]]>
+              </value>
+            </param>
+            <param index="2">
+              <value>
+                <![CDATA[org.testng.TestRunner@51f49060]]>
+              </value>
+            </param>
+          </params>
+          <reporter-output>
+          </reporter-output>
+        </test-method> <!-- BeforeMethod -->
+        <test-method status="PASS" signature="test_LeadPage(com.salesforce.automation.datamodel.LeadDataModel)[pri:0, instance:com.salesforce.automation.test.LeadPageTest@6108b2d7]" test-instance-name="Sample Login" name="test_LeadPage" duration-ms="31165" started-at="2020-11-19T11:46:15Z" data-provider="LeadPage" finished-at="2020-11-19T11:46:46Z">
+          <params>
+            <param index="0">
+              <value>
+                <![CDATA[com.salesforce.automation.datamodel.LeadDataModel@16fb356]]>
+              </value>
+            </param>
+          </params>
+          <reporter-output>
+          </reporter-output>
+        </test-method> <!-- test_LeadPage -->
+        <test-method status="PASS" signature="tearDown(org.testng.ITestResult)[pri:0, instance:com.salesforce.automation.test.LeadPageTest@6108b2d7]" test-instance-name="Sample Login" name="tearDown" is-config="true" duration-ms="1" started-at="2020-11-19T11:46:46Z" finished-at="2020-11-19T11:46:46Z">
+          <params>
+            <param index="0">
+              <value>
+                <![CDATA[[TestResult name=Sample Login status=SUCCESS method=LeadPageTest.test_LeadPage(com.salesforce.automation.datamodel.LeadDataModel)[pri:0, instance:com.salesforce.automation.test.LeadPageTest@6108b2d7] output={null}]]]>
+              </value>
+            </param>
+          </params>
+          <reporter-output>
+          </reporter-output>
+        </test-method> <!-- tearDown -->
+        <test-method status="PASS" signature="afterAll()[pri:0, instance:com.salesforce.automation.test.LeadPageTest@6108b2d7]" test-instance-name="Sample Login" name="afterAll" is-config="true" duration-ms="196" started-at="2020-11-19T11:46:46Z" finished-at="2020-11-19T11:46:46Z">
+          <reporter-output>
+          </reporter-output>
+        </test-method> <!-- afterAll -->
+      </class> <!-- com.salesforce.automation.test.LeadPageTest -->
+    </test> <!-- Test -->
+  </suite> <!-- Suite -->
+</testng-results>
