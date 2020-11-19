@@ -1,0 +1,5 @@
+[77804:18936:0702/153353.545:WARNING:leveldb_database.cc(106)] Unable to open C:\SalesForceAutomationTest\cookies\Default\shared_proto_db: Invalid argument: C:\SalesForceAutomationTest\cookies\Default\shared_proto_db: does not exist (create_if_missing is false)
+[77804:15380:0702/153354.097:WARNING:discovery_network_list_win.cc(196)] Failed to open Wlan client handle: 1062
+[77804:42576:0702/153448.273:ERROR:browser_process_sub_thread.cc(221)] Waited 206 ms for network service
+[77804:79604:0702/153448.273:WARNING:pref_notifier_impl.cc(36)] Pref observer for browser.relaunch_notification_period found at shutdown.
+[77804:79604:0702/153448.273:WARNING:pref_notifier_impl.cc(36)] Pref observer for media_router.cast_allow_all_ips found at shutdown.
