@@ -48,14 +48,14 @@
 			<version>1.2</version>
 	</dependency>
 	
-	<dependency>
+	<!--<dependency>
 			<groupId>SampleConfig</groupId>
 			<artifactId>SampleConfig</artifactId>
 			<scope>system</scope>
 			<version>1.0</version>
 			<systemPath>${project.basedir}\Config.jar</systemPath>
-	<!--</dependency>
-	           <dependency>				
+	</dependency>-->
+	         <!--  <dependency>				
              <groupId>junit</groupId>								
              <artifactId>junit</artifactId>								
              <version>3.8.1</version>								
