@@ -4,6 +4,7 @@ import static com.salesforce.automation.constants.SalesForceConstants.PASSWORD;
 import static com.salesforce.automation.constants.SalesForceConstants.LEAD_PAGE;
 import static com.salesforce.automation.constants.SalesForceConstants.USERNAME;
 import java.lang.reflect.Method;
+import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collection;
@@ -125,6 +126,7 @@ public class LeadPageTest extends ExtentReportListener implements ITest
 	{
 		if(ITestResult.FAILURE == result.getStatus())
 		{
+			//XlsOperationsUtility.captureScreenshot(driver, result.getName()+LocalDateTime.now());
 			XlsOperationsUtility.captureScreenshot(driver, result.getName());
 		}
 	}

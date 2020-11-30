@@ -7,7 +7,6 @@ import org.apache.poi.ss.usermodel.Row;
 import org.apache.poi.xssf.usermodel.XSSFSheet;
 
 import com.salesforce.automation.constants.SalesForceConstants;
-import com.salesforce.automation.datamodel.AccountContractDataModel;
 import com.salesforce.automation.datamodel.CaseDataModel;
 import com.salesforce.automation.utility.XlsOperationsUtility;
 
@@ -114,6 +113,9 @@ public class CaseDataHelper
 			handlerObj.setReconOpsStatusCode1(row1.getCell(87).toString());		
 			handlerObj.setTransactionDisputeStatus(row1.getCell(88).toString());
 			handlerObj.setWcOpsStatusCode1(row1.getCell(89).toString());
+			handlerObj.setCibilQueueUser(row1.getCell(90).toString());
+			handlerObj.setCibilQueueStatusCode(row1.getCell(91).toString());
+			
 			
 			
 			

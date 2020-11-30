@@ -3,15 +3,15 @@
 <suite guice-stage="DEVELOPMENT" name="Failed suite [Default suite]">
   <test name="Default test(failed)">
     <classes>
-      <class name="com.salesforce.automation.test.LeadPageTest">
+      <class name="com.salesforce.automation.test.MvpPageTest">
         <methods>
-          <include name="test_LeadPage" invocation-numbers="1"/>
-          <include name="before"/>
           <include name="afterAll"/>
+          <include name="before"/>
           <include name="BeforeMethod"/>
+          <include name="test_MvpPage" invocation-numbers="0"/>
           <include name="tearDown"/>
         </methods>
-      </class> <!-- com.salesforce.automation.test.LeadPageTest -->
+      </class> <!-- com.salesforce.automation.test.MvpPageTest -->
     </classes>
   </test> <!-- Default test(failed) -->
 </suite> <!-- Failed suite [Default suite] -->

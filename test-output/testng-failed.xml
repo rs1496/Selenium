@@ -1,20 +1,17 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE suite SYSTEM "http://testng.org/testng-1.0.dtd">
-<suite guice-stage="DEVELOPMENT" name="Failed suite [Suite]">
-  <test name="Test(failed)">
-    <parameter name="environment" value="uat"/>
-    <parameter name="password" value="Cyber$400"/>
-    <parameter name="username" value="vishakha.thakre_acc@idfcbank.com.crmuat"/>
+<suite guice-stage="DEVELOPMENT" name="Failed suite [Default suite]">
+  <test name="Default test(failed)">
     <classes>
-      <class name="com.salesforce.automation.test.LeadPageTest">
+      <class name="com.salesforce.automation.test.MvpPageTest">
         <methods>
-          <include name="test_LeadPage"/>
-          <include name="before"/>
           <include name="afterAll"/>
+          <include name="before"/>
           <include name="BeforeMethod"/>
+          <include name="test_MvpPage" invocation-numbers="0"/>
           <include name="tearDown"/>
         </methods>
-      </class> <!-- com.salesforce.automation.test.LeadPageTest -->
+      </class> <!-- com.salesforce.automation.test.MvpPageTest -->
     </classes>
-  </test> <!-- Test(failed) -->
-</suite> <!-- Failed suite [Suite] -->
+  </test> <!-- Default test(failed) -->
+</suite> <!-- Failed suite [Default suite] -->

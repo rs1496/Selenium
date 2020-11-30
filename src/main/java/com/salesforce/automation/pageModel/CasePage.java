@@ -48,8 +48,13 @@ public class CasePage {
 	Actions builder;
 	
 	
-	@FindBy(xpath = "//div[text()='New']")
+	//@FindBy(xpath = "//div[text()='New']")
+	//@FindBy(xpath = "//h1[text()='Cases']/following::a[@title='New'][@class='forceActionLink']")
+	@FindBy(xpath = "//a[@id='customTab3__item'][text()='New']")
 	private WebElement newButton;
+	
+	@FindBy(xpath = "//button[text()='New Case']")
+	private WebElement newCaseButton;
 	
 	@FindBy(xpath = "//select[@name='CaseType']")
 	private WebElement caseTypeDropdown;
@@ -60,6 +65,12 @@ public class CasePage {
 	
 	@FindBy(xpath = "//span[text()='Sub Category']/following::select[1]")
 	private WebElement subCategoryDropdown;
+	
+	@FindBy(xpath = "//label[text()='Account Number']/following::textarea[1]")
+	private WebElement accountNumberField;
+		
+	@FindBy(xpath = "//h2[contains(text(),'Account Details')]/following::button[text()='Select'][1]")
+	private WebElement selectButtonOfAccountDetails;
 	
 	@FindBy(xpath = "//label[text()='Authentication Mode']/following::input[1]")
 	private WebElement AuthenticationModeDropdown;
@@ -171,7 +182,9 @@ public class CasePage {
 	private WebElement retailBankingConsoleOption;
 	
 	//@FindBy(xpath = "//input[@placeholder='Search Salesforce']")
-	@FindBy(xpath = "//input[@placeholder='Search...']")
+	//@FindBy(xpath = "//input[@placeholder='Search...']")
+	
+	@FindBy(xpath = "//input[starts-with(@placeholder,'Search')]/ancestor::div[1][@class='uiInput uiAutocomplete uiInput--default']/input")
 	private WebElement globalSearchField;
 	
 /*	@FindBy(xpath = "//ul[@class='slds-global-actions']/li[8]/span/button/div/span/div/span/img[@class='icon noicon'][@title='User']")
@@ -249,7 +262,10 @@ public class CasePage {
 	@FindBy(xpath = "//span[@title='Case Number']/following::a[@data-refid='recordId'][1]")
 	private WebElement topCaseNumberLink;
 	
-	@FindBy(xpath = "//div[text()='Change User Role']/following::a[@title='Edit'][1]")
+	//uat edit button
+	//@FindBy(xpath = "//div[text()='Change User Role']/following::a[@title='Edit'][1]")
+	
+	@FindBy(xpath = "//button[text()='Change User Role']/following::button[1][text()='Edit']")
 	private WebElement editButton;
 		
 	@FindBy(xpath = "//span[text()='Select item 1']/ancestor::label[1]/span[1]")
@@ -288,7 +304,8 @@ public class CasePage {
 	@FindBy(xpath = "//label[text()='New Email ID*']/following::input[1]")
 	private WebElement newEmailIdField;
 	
-	@FindBy(xpath = "//span[contains(text(),'Validate Mother')]/following::input[1]")
+	//@FindBy(xpath = "//span[contains(text(),'Validate Mother')]/following::input[1]")
+	@FindBy(xpath = "//input[@name='IFB_Validate_Mother_s_Maiden_Name__c']")
 	private WebElement mothersMaidenNameCheckbox;
 	
 	@FindBy(xpath = "//span[contains(text(),'Verify Transaction')]/following::input[1]")
@@ -552,6 +569,15 @@ public class CasePage {
 	@FindBy(xpath = "//label[text()='Transaction Dispute Status']/following::input[1]")
 	private WebElement transactionDisputeStatusDropdown;
 	
+	@FindBy(xpath = "//span[contains(text(),'Show All Results for')]")
+	private WebElement showAllResultsForOption;
+	
+	@FindBy(xpath = "//a[text()='Branch Name']/following::tbody[1]/tr/td[1]/a[1]")
+	private WebElement selectBranchName1stOption;
+	
+	@FindBy(xpath = "//a[@data-label='Cases']")
+	private WebElement casesTab;
+	
 	
 
 	public void clearTab() {
@@ -571,6 +597,25 @@ public class CasePage {
 
 		} catch (Exception e) {
 			// do nothing
+		}
+	}
+	
+	
+	public void continueExecution()
+	{
+		try
+		{
+						
+			if(logOutLink.isDisplayed())
+			{
+				logOutLink.click();
+				System.out.println("Logged out NOW");
+				Thread.sleep(2000);
+			}
+		}
+		catch(Exception e)
+		{
+			
 		}
 	}
 	
@@ -677,6 +722,9 @@ public class CasePage {
 			homeDropdown.click();
 			Thread.sleep(3000);
 			
+			Thread.sleep(5000);
+			this.continueExecution();
+			
 			
 			Actions action = new Actions(driver);
 			action.doubleClick(globalSearchField).perform();
@@ -696,9 +744,60 @@ public class CasePage {
 			Thread.sleep(15000);
 			driver.switchTo().frame(0);
 			Thread.sleep(10000);
+			wait.until(ExpectedConditions.visibilityOf(loginButton));
 			this.performClickWithAction(loginButton);
 			
 			System.out.println("Logged in Successfully");
+			Thread.sleep(10000);
+		}
+		catch(Exception e)
+		{
+			ExtentConfigurer.getTest().log(Status.ERROR, "Selenium Error Occurred : " + e.getMessage());
+			Assert.fail();
+		}
+	}
+	
+	public void searchUserLoginOnSetUpPage(CaseDataModel handler)
+	{
+		try
+		{
+			Thread.sleep(3000);
+			this.clearTab();
+			System.out.println("Closing All Tabs");
+			Thread.sleep(2000);
+			this.clearTab();
+			System.out.println("Closing All Tabs");
+			Thread.sleep(2000);
+			this.clearTab();
+			System.out.println("Closing All Tabs");
+			Thread.sleep(2000);
+			this.clearTab();
+			System.out.println("Closing All Tabs");
+			Thread.sleep(3000);
+			/*navigationMenuDropdown.click();
+			Thread.sleep(3000);
+			homeDropdown.click();
+			Thread.sleep(8000);*/
+			
+			this.continueExecution();		
+			
+			Thread.sleep(5000);
+			Actions action = new Actions(driver);
+			action.doubleClick(globalSearchField).perform();
+			
+			
+			globalSearchField.sendKeys(this.trimQuote(handler.getGlobalSearch()));
+			
+			Thread.sleep(3000);
+			globalSearchValueSelection.click();
+			Thread.sleep(5000);			
+						
+			Thread.sleep(15000);
+			driver.switchTo().frame(0);
+			Thread.sleep(10000);
+			this.performClickWithAction(loginButton);
+			
+			System.out.println("Logged in Successfully through setup page");
 			Thread.sleep(10000);
 		}
 		catch(Exception e)
@@ -738,13 +837,9 @@ public class CasePage {
 			
 			Thread.sleep(3000);
 			//casesWithIcon.click();
-			this.performClickWithAction(casesWithIcon);
-			Thread.sleep(3000);
-			
-			
-			
 			
 			newButton.click();
+			newCaseButton.click();
 			Thread.sleep(5000);
 			
 			this.performClickWithAction(caseTypeDropdown);
@@ -773,11 +868,16 @@ public class CasePage {
 			statusCodeDropdown.click();
 			this.selectElement(statusCodeDropdown, handler.getStatusCode());
 			System.out.println("Status Code Sent To Ops");
-			saveButton.click();
+			((JavascriptExecutor) driver).executeScript("window.scrollTo(document.body.scrollHeight, 0)");
+			
 			Thread.sleep(2000);
+
+			this.performClickWithAction(topSaveButton);
+			Thread.sleep(10000);
 			
 			//this.storingCaseNumber();
 			
+			wait.until(ExpectedConditions.visibilityOf(caseNumber));
 			String caseno = caseNumber.getText();					
 			System.out.println("caseno" +" "+ caseno);
 			
@@ -934,29 +1034,25 @@ public class CasePage {
 			
 			System.out.println("Clickd on Case number");
 			Thread.sleep(5000);
+			wait.until(ExpectedConditions.visibilityOf(editButton));
 			editButton.click();
 			Thread.sleep(10000);
+			wait.until(ExpectedConditions.visibilityOf(statusCodeDropdown));
 			
 			statusCodeDropdown.click();			
 			this.selectElement(statusCodeDropdown, handler.getDvuCheckerStatusCode());
 			System.out.println("Status code is changed");
-			Thread.sleep(6000);
 			
-			driver.navigate().refresh();
-			Thread.sleep(6000);
+			Thread.sleep(4000);
+			((JavascriptExecutor) driver).executeScript("window.scrollTo(document.body.scrollHeight, 0)");
 			
-			statusCodeDropdown.click();	
-			this.selectElement(statusCodeDropdown, handler.getDvuCheckerStatusCode());
-			System.out.println("Status code is changed");
-			Thread.sleep(5000);
-			
-			driver.findElement(By.xpath("//button[@title='OK']")).click();
-			
-			Thread.sleep(6000);
-			this.performClickWithAction(saveButton);
+			Thread.sleep(4000);
+
+			this.performClickWithAction(topSaveButton);
+			System.out.println("Clicked on save button");
 			
 			Thread.sleep(10000);
-			
+			wait.until(ExpectedConditions.visibilityOf(caseOwnerValue));
 			String caseownername = caseOwnerValue.getText();
 			System.out.println("Case owner name is " + caseownername);
 			
@@ -1058,9 +1154,10 @@ public class CasePage {
 			
 			System.out.println("Clickd on Case number");
 			Thread.sleep(5000);
+			wait.until(ExpectedConditions.visibilityOf(editButton));
 			editButton.click();
 			Thread.sleep(10000);
-			
+			wait.until(ExpectedConditions.visibilityOf(statusCodeDropdown));
 			statusCodeDropdown.click();	
 			this.selectElement(statusCodeDropdown, handler.getDvuCheckerStatusCode());
 			System.out.println("Status code is changed");
@@ -1074,10 +1171,14 @@ public class CasePage {
 			this.selectElement(statusCodeDropdown, handler.getDvuCheckerStatusCode());
 			System.out.println("Status code is changed");
 			Thread.sleep(5000);
-			this.performClickWithAction(saveButton);
+			((JavascriptExecutor) driver).executeScript("window.scrollTo(document.body.scrollHeight, 0)");
 			
-			Thread.sleep(8000);
+			Thread.sleep(2000);
+
+			this.performClickWithAction(topSaveButton);
 			
+			Thread.sleep(10000);
+			wait.until(ExpectedConditions.visibilityOf(caseNumber));
 			System.out.println("Completed RL Ops DVU Checker non individual process");
 			
 			
@@ -1138,15 +1239,20 @@ public class CasePage {
 			topCaseNumberLink.click();
 			System.out.println("Clickd on Case number");
 			Thread.sleep(3000);
+			wait.until(ExpectedConditions.visibilityOf(editButton));
 			editButton.click();
 			Thread.sleep(2000);
 			this.selectElement(statusCodeDropdown, handler.getDvuMakerStatusCode());
 			System.out.println("Status code is changed");
 			Thread.sleep(2000);
-			this.performClickWithAction(saveButton);
-			//saveButton.click();
-			Thread.sleep(2000);
+			((JavascriptExecutor) driver).executeScript("window.scrollTo(document.body.scrollHeight, 0)");
 			
+			Thread.sleep(2000);
+
+			this.performClickWithAction(topSaveButton);
+		
+			Thread.sleep(10000);
+			wait.until(ExpectedConditions.visibilityOf(caseNumber));
 			System.out.println("Completed RL Ops DVU Maker process");
 			
 			
@@ -1166,6 +1272,7 @@ public class CasePage {
 		{
 			
 			Thread.sleep(10000);
+			wait.until(ExpectedConditions.visibilityOf(searchGlodalFieldOfUserPage));
 			
 			searchGlodalFieldOfUserPage.click();			
 			searchGlodalFieldOfUserPage.sendKeys(this.trimQuote(handler.getDeMakerUser()));
@@ -1188,7 +1295,10 @@ public class CasePage {
 			// After login 
 			
 			Thread.sleep(10000);
-			this.clearTab();			
+			this.clearTab();	
+			this.clearTab();
+			Thread.sleep(3000);	
+			this.clearTab();
 			Thread.sleep(5000);	
 			navigationMenuDropdown.click();
 			Thread.sleep(3000);
@@ -1203,7 +1313,8 @@ public class CasePage {
 			System.out.println("RL Ops DE Maker – Individual Request is selected");
 			
 			
-			Thread.sleep(6000);				
+			Thread.sleep(6000);	
+			wait.until(ExpectedConditions.visibilityOf(caseSearchField));
 			caseSearchField.sendKeys(this.caseCount);
 			caseSearchField.sendKeys(Keys.ENTER);
 			Thread.sleep(5000);
@@ -1226,24 +1337,28 @@ public class CasePage {
 			Thread.sleep(6000);
 			
 			driver.findElement(By.xpath("//table[@data-aura-class='uiVirtualDataTable']/tbody/tr/td[1]/span")).click();
-			Thread.sleep(2000);
-			this.performClickWithAction(topCaseNumberLink);
-			/*
-			Actions actions = new Actions(driver);
-			actions.doubleClick(topCaseNumberLink).perform();*/
-			
-			//topCaseNumberLink.click();
-			System.out.println("Clickd on Case number");
-			Thread.sleep(6000);
-			editButton.click();
-			Thread.sleep(6000);
+			Thread.sleep(4000);
+			this.performClickWithAction(topCaseNumberLink);			
+			System.out.println("Clicked on Case number");
+			Thread.sleep(10000);
+			wait.until(ExpectedConditions.visibilityOf(editButton));
+			this.performClickWithAction(editButton);
+			System.out.println("Clicked on Edit button");
+			Thread.sleep(15000);
+			wait.until(ExpectedConditions.visibilityOf(statusCodeDropdown));
+			statusCodeDropdown.click();
 			this.selectElement(statusCodeDropdown, handler.getDeMakerStatusCode());
 			System.out.println("Status code is changed");
-			Thread.sleep(2000);
-			this.performClickWithAction(saveButton);
-			//saveButton.click();
-			Thread.sleep(2000);
+			Thread.sleep(4000);
+			((JavascriptExecutor) driver).executeScript("window.scrollTo(document.body.scrollHeight, 0)");
 			
+			Thread.sleep(4000);
+			
+			this.performClickWithAction(topSaveButton);
+			System.out.println("Clicked on save button");
+			
+			Thread.sleep(10000);
+			wait.until(ExpectedConditions.visibilityOf(caseNumber));
 			System.out.println("Completed RL Ops DE Maker process");
 			
 			
@@ -1278,10 +1393,8 @@ public class CasePage {
 			existingTopCustomerName.click();			
 			Thread.sleep(3000);
 			
-			this.performClickWithAction(casesWithIcon);
-			Thread.sleep(3000);
-			
 			newButton.click();
+			newCaseButton.click();
 			Thread.sleep(5000);
 			this.performClickWithAction(caseTypeDropdown);
 			this.selectElement(caseTypeDropdown, handler.getCaseType());
@@ -1295,29 +1408,9 @@ public class CasePage {
 			this.selectElement(subCategoryDropdown, handler.getSubCategory());
 						
 			System.out.println("Sub category selected");
-			Thread.sleep(2000);
-			/*String authenticationModevalue = handler.getAuthenticationMode();
-			wait.until(ExpectedConditions.presenceOfElementLocated(By.xpath("//span[text()='"+authenticationModevalue+"']"))).click();
-			*/
+			Thread.sleep(2000);		
 			
-			/*dispatchDestinationDropdown.click();
-			String dispatchDestinationValue = handler.getDispatchDestination();
-			wait.until(ExpectedConditions.presenceOfElementLocated(By.xpath("//label[text()='Dispatch Destination']/..//div[@role='listbox']/lightning-base-combobox-item//span[@class='slds-truncate'][@title='"+dispatchDestinationValue+"']")));
-			System.out.println("Dispatch destination is selected");
-			
-			landmarkField.sendKeys(handler.getLandmark());
-			
-			dispatchModeDropdown.click();
-			String dispatchModeValue = handler.getDispatchMode();
-			wait.until(ExpectedConditions.presenceOfElementLocated(By.xpath("//span[text()='"+dispatchModeValue+"']")));
-			
-			*/
-			
-			Thread.sleep(20000);
-
-			/*validatePANCheckbox.click();
-			System.out.println("Succesfully clicked on Validate PAN Checkbox");*/
-			
+			Thread.sleep(20000);					
 			
 			mothersMaidenNameCheckbox.click();
 			verifyTransactionCheckbox.click();
@@ -1327,8 +1420,14 @@ public class CasePage {
 			statusCodeDropdown.click();
 			this.selectElement(statusCodeDropdown, handler.getStatusCode());
 			System.out.println("Status Code Sent To Ops");
-			saveButton.click();
-			Thread.sleep(5000);
+			Thread.sleep(2000);
+			((JavascriptExecutor) driver).executeScript("window.scrollTo(document.body.scrollHeight, 0)");
+			
+			Thread.sleep(2000);
+
+			this.performClickWithAction(topSaveButton);
+			Thread.sleep(10000);
+			wait.until(ExpectedConditions.visibilityOf(caseNumber));
 			
 			String caseno = caseNumber.getText();
 			System.out.println("caseno" +" "+ caseno);	
@@ -1353,31 +1452,17 @@ public class CasePage {
 			Thread.sleep(1000);
 			logOutLink.click();
 			System.out.println("Successfuly logged out");
+			Thread.sleep(10000);
+			wait.until(ExpectedConditions.visibilityOf(searchGlodalFieldOfUserPage));
 			
 			//click on Search Setuup input fiel(Global Search)
 			
-			searchGlodalFieldOfUserPage.click();
-			//login RL OPS user
-			/*Thread.sleep(5000);
-			this.clearTab();
-			Thread.sleep(3000);
-			navigationMenuDropdown.click();
-			Thread.sleep(3000);
-			homeDropdown.click();
-			Thread.sleep(3000);*/
-			
-			
-			/*Actions action = new Actions(driver);
-			action.doubleClick(globalSearchField).perform();*/
+			searchGlodalFieldOfUserPage.click();			
 			
 			searchGlodalFieldOfUserPage.sendKeys(this.trimQuote(handler.getRlOpsUser()));
 			
 			Thread.sleep(3000);
-			globalSearchValueSelection.click();
-			Thread.sleep(5000);
-			
-			
-			//this.performClickWithAction(userDetailButton);
+			globalSearchValueSelection.click();		
 			
 			Thread.sleep(9000);
 			
@@ -1404,7 +1489,7 @@ public class CasePage {
 			Thread.sleep(5000);
 			listViewSearchField.sendKeys("RL Ops Request");
 			Thread.sleep(3000);
-			//listViewFirstOption.click();
+			
 			//Selecting 2nd option of RL Ops Request
 			Thread.sleep(2000);
 			driver.findElement(By.xpath("//a[@title='Select List View']/following::input[@role='combobox']/following::ul[1]/li[2]")).click();
@@ -1417,7 +1502,7 @@ public class CasePage {
 			caseSearchField.sendKeys(Keys.ENTER);
 			Thread.sleep(5000);
 			this.performClickWithAction(caseNumberCheckbox);
-		//	caseNumberCheckbox.click();
+		
 			acceptButton.click();
 			Thread.sleep(10000);
 			System.out.println("Successfully clicked on Accept Button");
@@ -1436,20 +1521,25 @@ public class CasePage {
 			driver.findElement(By.xpath("//table[@data-aura-class='uiVirtualDataTable']/tbody/tr/td[1]/span")).click();
 			Thread.sleep(2000);
 			this.performClickWithAction(topCaseNumberLink);
-			/*Actions actions = new Actions(driver);
-			actions.doubleClick(topCaseNumberLink).perform();
-			*/
-			//topCaseNumberLink.click();
-			System.out.println("Clickd on Case number");
+			
+			System.out.println("Clicked on Case number");
 			Thread.sleep(6000);
+			wait.until(ExpectedConditions.visibilityOf(editButton));
 			editButton.click();
-			Thread.sleep(2000);
+			Thread.sleep(10000);
+			wait.until(ExpectedConditions.visibilityOf(statusCodeDropdown));
+			statusCodeDropdown.click();
 			this.selectElement(statusCodeDropdown, handler.getRlOpsStatusCode());
 			System.out.println("Status code is changed");
 			Thread.sleep(2000);
-			this.performClickWithAction(saveButton);
-			//saveButton.click();
+			((JavascriptExecutor) driver).executeScript("window.scrollTo(document.body.scrollHeight, 0)");
+			
 			Thread.sleep(2000);
+
+			this.performClickWithAction(topSaveButton);
+			
+			Thread.sleep(10000);
+			wait.until(ExpectedConditions.visibilityOf(caseNumber));
 			
 			//String caseownername = caseOwnerValue.getText();
 			System.out.println("Case owner name is " + caseownername);
@@ -1470,13 +1560,6 @@ public class CasePage {
 			System.out.println("Completed RL Ops DE Maker process");
 			
 			Thread.sleep(3000);
-			
-			//logout process
-			
-			Thread.sleep(1000);
-			logOutLink.click();
-			System.out.println("Successfuly logged out");
-		
 			
 			
 
@@ -1516,6 +1599,8 @@ public class CasePage {
 			//driver.navigate().refresh();
 			Thread.sleep(5000);
 			driver.navigate().refresh();
+			Thread.sleep(5000);
+			this.clearTab();
 			this.clearTab();
 			Thread.sleep(8000);
 			wait.until(ExpectedConditions.visibilityOf(searchThisListField));
@@ -1548,10 +1633,8 @@ public class CasePage {
 			
 			Thread.sleep(10000);
 			
-			this.performClickWithAction(casesWithIcon);
-			Thread.sleep(3000);
-			
 			newButton.click();
+			newCaseButton.click();
 			Thread.sleep(5000);
 			this.performClickWithAction(caseTypeDropdown);
 			this.selectElement(caseTypeDropdown, handler.getCaseType());
@@ -1582,9 +1665,14 @@ public class CasePage {
 			statusCodeDropdown.click();
 			this.selectElement(statusCodeDropdown, handler.getStatusCode());
 			System.out.println("Status Code as Draft");
-			saveButton.click();
-			Thread.sleep(5000);
+			((JavascriptExecutor) driver).executeScript("window.scrollTo(document.body.scrollHeight, 0)");
 			
+			Thread.sleep(2000);
+
+			this.performClickWithAction(topSaveButton);
+			Thread.sleep(10000);
+			
+			wait.until(ExpectedConditions.visibilityOf(caseNumber));
 			String caseno = caseNumber.getText();
 			System.out.println("caseno" +" "+ caseno);	
 						
@@ -1603,7 +1691,7 @@ public class CasePage {
 			
 			//refresh the page
 			
-			Thread.sleep(5000);
+			Thread.sleep(10000);
 			
 			driver.navigate().refresh();
 		
@@ -1642,11 +1730,8 @@ public class CasePage {
 		try
 		{
 			
-			
-			this.performClickWithAction(casesWithIcon);
-			Thread.sleep(3000);
-			
 			newButton.click();
+			newCaseButton.click();
 			Thread.sleep(5000);
 			this.performClickWithAction(caseTypeDropdown);
 			this.selectElement(caseTypeDropdown, handler.getCaseType());
@@ -1665,9 +1750,15 @@ public class CasePage {
 			statusCodeDropdown.click();
 			this.selectElement(statusCodeDropdown, handler.getStatusCode());
 			System.out.println("Status Code Sent To Ops");
-			saveButton.click();
-			Thread.sleep(5000);
+			((JavascriptExecutor) driver).executeScript("window.scrollTo(document.body.scrollHeight, 0)");
 			
+			Thread.sleep(2000);
+
+			this.performClickWithAction(topSaveButton);
+
+			Thread.sleep(10000);
+			
+			wait.until(ExpectedConditions.visibilityOf(errorMessages));
 			String errormsg = errorMessages.getText();
 			System.out.println("Error is " + errormsg);
 			
@@ -1688,11 +1779,20 @@ public class CasePage {
 	{
 		try
 		{
-			this.performClickWithAction(casesWithIcon);
-			Thread.sleep(3000);
 			
-			newButton.click();
-			Thread.sleep(5000);
+			Thread.sleep(10000);
+			JavascriptExecutor js = (JavascriptExecutor) driver; 
+			js.executeScript("arguments[0].scrollIntoView();",casesTab);
+			casesTab.click();
+			Thread.sleep(2000);
+			wait.until(ExpectedConditions.visibilityOf(newButton));
+			this.performClickWithAction(newButton);
+			System.out.println("Clicked on new button");
+			Thread.sleep(2000);			
+			wait.until(ExpectedConditions.visibilityOf(newCaseButton));
+			this.performClickWithAction(newCaseButton);
+			System.out.println("Clicked on new case button");			
+			Thread.sleep(9000);	
 			this.performClickWithAction(caseTypeDropdown);
 			this.selectElement(caseTypeDropdown, handler.getCaseType());
 			System.out.println("Case type selected");
@@ -1705,14 +1805,19 @@ public class CasePage {
 			this.selectElement(subCategoryDropdown, handler.getSubCategory());
 						
 			System.out.println("Sub category selected");
-			Thread.sleep(2000);	
+			Thread.sleep(3000);	
 			
-			mothersMaidenNameCheckbox.click();
-			verifyTransactionCheckbox.click();			
+			this.performClickWithAction(mothersMaidenNameCheckbox);
+			
+			//mothersMaidenNameCheckbox.click();
+			this.performClickWithAction(verifyTransactionCheckbox);
+			
+			//verifyTransactionCheckbox.click();			
 			
 			Thread.sleep(2000);
 								
-			statusCodeDropdown.click();
+			//statusCodeDropdown.click();
+			this.performClickWithAction(statusCodeDropdown);
 			this.selectElement(statusCodeDropdown, handler.getStatusCode());
 			System.out.println("Status Code Sent To Ops");
 			
@@ -1724,15 +1829,20 @@ public class CasePage {
 			
 			//select date & Time
 			dateField.sendKeys(handler.getCallBackDate());
+			System.out.println("Selected call back date time");
 			Thread.sleep(1000);
 			/*timeField.clear();
 			timeField.sendKeys(handler.getCallBackTime());*/
 			Thread.sleep(2000);
 			
-			saveButton.click();
-			Thread.sleep(6000);
+			((JavascriptExecutor) driver).executeScript("window.scrollTo(document.body.scrollHeight, 0)");
 			
+			Thread.sleep(2000);
+
+			this.performClickWithAction(topSaveButton);
+			Thread.sleep(10000);
 			
+			wait.until(ExpectedConditions.visibilityOf(caseNumber));
 			String caseno = caseNumber.getText();
 			System.out.println("caseno" +" "+ caseno);	
 						
@@ -1820,21 +1930,27 @@ public class CasePage {
 			driver.findElement(By.xpath("//table[@data-aura-class='uiVirtualDataTable']/tbody/tr/td[1]/span")).click();
 			Thread.sleep(2000);
 			this.performClickWithAction(topCaseNumberLink);
-			Actions actions = new Actions(driver);
-			//actions.doubleClick(topCaseNumberLink).perform();
 			
-			//topCaseNumberLink.click();
-			System.out.println("Clickd on Case number");
-			Thread.sleep(6000);
+			System.out.println("Clicked on Case number");
+			Thread.sleep(10000);
+			wait.until(ExpectedConditions.visibilityOf(editButton));
 			editButton.click();
-			Thread.sleep(2000);
+			Thread.sleep(10000);
+			wait.until(ExpectedConditions.visibilityOf(statusCodeDropdown));
+			statusCodeDropdown.click();
 			this.selectElement(statusCodeDropdown, handler.getRlOpsStatusCode());
 			System.out.println("Status code is changed");
 			Thread.sleep(2000);
-			this.performClickWithAction(saveButton);
-			//saveButton.click();
-			Thread.sleep(2000);
 			
+			((JavascriptExecutor) driver).executeScript("window.scrollTo(document.body.scrollHeight, 0)");
+			
+			Thread.sleep(2000);
+
+			this.performClickWithAction(topSaveButton);
+
+			//saveButton.click();
+			Thread.sleep(10000);
+			wait.until(ExpectedConditions.visibilityOf(caseNumber));
 			System.out.println("Case owner name is " + caseownername);	
 			System.out.println("Customer name is " + customername);
 			System.out.println("Status code is " + statuscode);
@@ -1852,6 +1968,8 @@ public class CasePage {
 			
 			//BOC user login
 			
+			Thread.sleep(10000);
+			wait.until(ExpectedConditions.visibilityOf(searchGlodalFieldOfUserPage));
 			searchGlodalFieldOfUserPage.click();
 			
 			searchGlodalFieldOfUserPage.sendKeys(this.trimQuote(handler.getBocUser()));
@@ -1861,19 +1979,26 @@ public class CasePage {
 			Thread.sleep(5000);
 			Thread.sleep(9000);
 			
+			//driver.switchTo().frame(0);
+			/*wait.until(ExpectedConditions.visibilityOf(userDetailButton));
+						
+			this.performClickWithAction(userDetailButton);*/
+			Thread.sleep(8000);
 			driver.switchTo().frame(0);
-			Thread.sleep(3000);
-			driver.findElement(By.xpath("//h2[text()='User Detail']")).click();
-			Thread.sleep(2000);
+			Thread.sleep(8000);
 			this.performClickWithAction(loginButton);
-			//loginButton.click();
+			
 			System.out.println("BOC user logged in Successfully");
 			Thread.sleep(5000);
 			
 			//BOC user logged in & accept case
 			
 			this.clearTab();			
-			Thread.sleep(10000);	
+			Thread.sleep(5000);
+			driver.navigate().refresh();
+			Thread.sleep(5000);
+			this.clearTab();
+			Thread.sleep(10000);
 			navigationMenuDropdown.click();
 			Thread.sleep(3000);
 			caseDropdown.click();
@@ -1907,22 +2032,27 @@ public class CasePage {
 			driver.findElement(By.xpath("//table[@data-aura-class='uiVirtualDataTable']/tbody/tr/td[1]/span")).click();
 			Thread.sleep(2000);
 			this.performClickWithAction(topCaseNumberLink);
-			
-			//actions.doubleClick(topCaseNumberLink).perform();
-			
+						
 			System.out.println("Clickd on Case number");
-			Thread.sleep(6000);
+			Thread.sleep(8000);
+			wait.until(ExpectedConditions.visibilityOf(editButton));
 			editButton.click();
-			Thread.sleep(3000);
+			Thread.sleep(9000);
+			wait.until(ExpectedConditions.visibilityOf(statusCodeDropdown));
+			statusCodeDropdown.click();
 			this.selectElement(statusCodeDropdown, handler.getBocStatusCode());
 			System.out.println("Status code is changed to Communicated & Closed.");
 			Thread.sleep(2000);
-			this.performClickWithAction(saveButton);
-			//saveButton.click();
+			resolutionCommentField.sendKeys(handler.getResolutionComment());
 			Thread.sleep(2000);
+			((JavascriptExecutor) driver).executeScript("window.scrollTo(document.body.scrollHeight, 0)");
 			
+			Thread.sleep(2000);
+
+			this.performClickWithAction(topSaveButton);
 			
-			Thread.sleep(5000);
+			Thread.sleep(10000);
+			wait.until(ExpectedConditions.visibilityOf(statusCodeValue));
 			String statuscode1 = statusCodeValue.getText();
 			
 			System.out.println("Status code is " + statuscode1);
@@ -1958,10 +2088,8 @@ public class CasePage {
 	{
 		try
 		{
-			this.performClickWithAction(casesWithIcon);
-			Thread.sleep(3000);
-			
 			newButton.click();
+			newCaseButton.click();
 			Thread.sleep(5000);
 			this.performClickWithAction(caseTypeDropdown);
 			this.selectElement(caseTypeDropdown, handler.getCaseType());
@@ -1994,14 +2122,19 @@ public class CasePage {
 			
 			//select date & Time
 			dateField.sendKeys(handler.getCallBackDate());
+			System.out.println("Selected call back date and time");
 			Thread.sleep(1000);
 			/*timeField.clear();
 			timeField.sendKeys(handler.getCallBackTime());*/
 			Thread.sleep(2000);
 			
-			saveButton.click();
-			Thread.sleep(6000);
+			((JavascriptExecutor) driver).executeScript("window.scrollTo(document.body.scrollHeight, 0)");
 			
+			Thread.sleep(2000);
+
+			this.performClickWithAction(topSaveButton);
+			Thread.sleep(10000);
+			wait.until(ExpectedConditions.visibilityOf(caseNumber));
 			
 			String caseno = caseNumber.getText();
 			System.out.println("caseno" +" "+ caseno);	
@@ -2090,21 +2223,28 @@ public class CasePage {
 			driver.findElement(By.xpath("//table[@data-aura-class='uiVirtualDataTable']/tbody/tr/td[1]/span")).click();
 			Thread.sleep(2000);
 			this.performClickWithAction(topCaseNumberLink);
-			/*Actions actions = new Actions(driver);
-			actions.doubleClick(topCaseNumberLink).perform();*/
+			//Actions actions = new Actions(driver);
+			//actions.doubleClick(topCaseNumberLink).perform();
 			
 			//topCaseNumberLink.click();
-			System.out.println("Clickd on Case number");
+			System.out.println("Clicked on Case number");
 			Thread.sleep(6000);
+			wait.until(ExpectedConditions.visibilityOf(editButton));
 			editButton.click();
-			Thread.sleep(2000);
+			Thread.sleep(8000);
+			wait.until(ExpectedConditions.visibilityOf(statusCodeDropdown));
+			statusCodeDropdown.click();
 			this.selectElement(statusCodeDropdown, handler.getRlOpsStatusCode());
 			System.out.println("Status code is changed");
 			Thread.sleep(2000);
-			this.performClickWithAction(saveButton);
-			//saveButton.click();
-			Thread.sleep(2000);
+			((JavascriptExecutor) driver).executeScript("window.scrollTo(document.body.scrollHeight, 0)");
 			
+			Thread.sleep(2000);
+
+			this.performClickWithAction(topSaveButton);
+			//saveButton.click();
+			Thread.sleep(10000);
+			wait.until(ExpectedConditions.visibilityOf(caseNumber));
 			System.out.println("Case owner name is " + caseownername);	
 			System.out.println("Customer name is " + customername);
 			System.out.println("Status code is " + statuscode);
@@ -2122,6 +2262,7 @@ public class CasePage {
 			
 			//BOC user login
 			
+			Thread.sleep(10000);
 			searchGlodalFieldOfUserPage.click();
 			
 			searchGlodalFieldOfUserPage.sendKeys(this.trimQuote(handler.getBocUser()));
@@ -2131,19 +2272,26 @@ public class CasePage {
 			Thread.sleep(5000);
 			Thread.sleep(9000);
 			
+			//driver.switchTo().frame(0);
+			/*wait.until(ExpectedConditions.visibilityOf(userDetailButton));
+						
+			this.performClickWithAction(userDetailButton);*/
+			Thread.sleep(8000);
 			driver.switchTo().frame(0);
-			Thread.sleep(3000);
-			driver.findElement(By.xpath("//h2[text()='User Detail']")).click();
-			Thread.sleep(2000);
+			Thread.sleep(8000);
 			this.performClickWithAction(loginButton);
-			//loginButton.click();
+			
 			System.out.println("BOC user logged in Successfully");
 			Thread.sleep(5000);
 			
 			//BOC user logged in & accept case
 			
 			this.clearTab();			
-			Thread.sleep(10000);	
+			Thread.sleep(5000);
+			driver.navigate().refresh();
+			Thread.sleep(5000);
+			this.clearTab();
+			Thread.sleep(10000);
 			navigationMenuDropdown.click();
 			Thread.sleep(3000);
 			caseDropdown.click();
@@ -2177,29 +2325,33 @@ public class CasePage {
 			driver.findElement(By.xpath("//table[@data-aura-class='uiVirtualDataTable']/tbody/tr/td[1]/span")).click();
 			Thread.sleep(2000);
 			this.performClickWithAction(topCaseNumberLink);
-			
-			//actions.doubleClick(topCaseNumberLink).perform();
-			
+						
 			System.out.println("Clickd on Case number");
-			Thread.sleep(6000);
+			Thread.sleep(8000);
+			wait.until(ExpectedConditions.visibilityOf(editButton));
 			editButton.click();
-			Thread.sleep(3000);
+			Thread.sleep(9000);
+			wait.until(ExpectedConditions.visibilityOf(statusCodeDropdown));
+			statusCodeDropdown.click();
 			this.selectElement(statusCodeDropdown, handler.getBocStatusCode());
-			System.out.println("Status code is changed to Communicated & Closed.");
-			Thread.sleep(2000);
-			this.performClickWithAction(saveButton);
-			//saveButton.click();
+			System.out.println("Status code is changed to Not Contactable & Closed");
 			Thread.sleep(2000);
 			
+			((JavascriptExecutor) driver).executeScript("window.scrollTo(document.body.scrollHeight, 0)");
 			
-			Thread.sleep(5000);
+			Thread.sleep(2000);
+
+			this.performClickWithAction(topSaveButton);
+			
+			Thread.sleep(10000);
+			wait.until(ExpectedConditions.visibilityOf(statusCodeValue));
 			String statuscode1 = statusCodeValue.getText();
 			
 			System.out.println("Status code is " + statuscode1);
 			
-			if(statuscode1.equals("Communicated & Closed"))
+			if(statuscode1.equals("Not Contactable & Closed"))
 			{
-				System.out.println("Status code is Comunicated & Closed");
+				System.out.println("Status code is Not Contactable & Closed");
 			}
 			else
 			{
@@ -2209,7 +2361,9 @@ public class CasePage {
 			
 			
 				
-			System.out.println("Completed Call back scenarios with Communicated & Closed status");
+			System.out.println("Completed Call back scenarios with Not Contactable & Closed status");
+			
+		
 			
 		
 			
@@ -2448,10 +2602,9 @@ public class CasePage {
 		try 
 		{
 			Thread.sleep(10000);
-			this.performClickWithAction(casesWithIcon);
-			Thread.sleep(5000);
 			
 			newButton.click();
+			newCaseButton.click();
 			Thread.sleep(5000);
 			
 			wait.until(ExpectedConditions.visibilityOf(caseTypeDropdown));
@@ -2475,9 +2628,14 @@ public class CasePage {
 			this.selectElement(statusCodeDropdown, handler.getStatusCode());
 			System.out.println("Status Code Sent To Ops");
 			Thread.sleep(5000);
-			this.performClickWithAction(saveButton);
-			//saveButton.click();
+			
+			((JavascriptExecutor) driver).executeScript("window.scrollTo(document.body.scrollHeight, 0)");
 			Thread.sleep(5000);
+			
+			this.performClickWithAction(topSaveButton);
+			//saveButton.click();
+			Thread.sleep(10000);
+			wait.until(ExpectedConditions.visibilityOf(caseNumber));
 						
 			
 			String caseno = caseNumber.getText();					
@@ -2503,15 +2661,17 @@ public class CasePage {
 			Thread.sleep(1000);
 			logOutLink.click();
 			System.out.println("Successfuly logged out");
+			Thread.sleep(10000);
 			
 			//click on Search Setup input field(Global Search) of User Page
-			Thread.sleep(10000);
+			wait.until(ExpectedConditions.visibilityOf(searchGlodalFieldOfUserPage));
 			searchGlodalFieldOfUserPage.click();
 			
 			searchGlodalFieldOfUserPage.sendKeys(this.trimQuote(handler.getDvuMakerUser()));
 			
 			Thread.sleep(5000);
 			globalSearchValueSelection.click();
+			
 			Thread.sleep(5000);
 			Thread.sleep(9000);
 			
@@ -2523,7 +2683,6 @@ public class CasePage {
 			
 			System.out.println("RL Ops DVU Maker user logged in Successfully");
 			Thread.sleep(5000);
-			driver.navigate().refresh();
 			//RL OPS DVU Maker accept Invite & Edit
 			Thread.sleep(10000);
 			this.clearTab();			
@@ -2551,10 +2710,10 @@ public class CasePage {
 			this.performClickWithAction(caseNumberCheckbox);
 		
 			acceptButton.click();
-			Thread.sleep(10000);
 			System.out.println("Successfully clicked on Accept Button");
+			Thread.sleep(10000);
 			
-			
+			wait.until(ExpectedConditions.visibilityOf(listViewDropdown));
 			//CHange status code process
 			listViewDropdown.click();
 			Thread.sleep(3000);
@@ -2570,15 +2729,16 @@ public class CasePage {
 			this.performClickWithAction(topCaseNumberLink);
 
 			
-			System.out.println("Clickd on Case number");
-			Thread.sleep(5000);
+			System.out.println("Clicked on Case number");
+			Thread.sleep(10000);
+			wait.until(ExpectedConditions.visibilityOf(editButton));	
 			editButton.click();
-			Thread.sleep(5000);			 
-			
+			Thread.sleep(10000);
+			wait.until(ExpectedConditions.visibilityOf(statusCodeDropdown));			
 			statusCodeDropdown.click();
 			this.selectElement(statusCodeDropdown, handler.getDvuMakerStatusCode());
 			System.out.println("Status code is changed to Sent to DVU Checker - Rejected");
-			Thread.sleep(3000);
+			Thread.sleep(5000);
 			reasonForRejectionTopVallue.click();
 			Thread.sleep(3000);
 			moveSelectionToChosenArrowButton.click();
@@ -2602,7 +2762,7 @@ public class CasePage {
 		Thread.sleep(1000);
 		logOutLink.click();
 		System.out.println("Successfuly logged out");
-		Thread.sleep(5000);
+		Thread.sleep(10000);
 		
 		//click on Search Setup input field(Global Search)
 		
@@ -2629,6 +2789,8 @@ public class CasePage {
 		Thread.sleep(10000);
 		this.clearTab();			
 		Thread.sleep(5000);	
+		this.clearTab();			
+		Thread.sleep(5000);	
 		navigationMenuDropdown.click();
 		Thread.sleep(3000);
 		caseDropdown.click();
@@ -2645,7 +2807,7 @@ public class CasePage {
 		Thread.sleep(6000);				
 		caseSearchField.sendKeys(caseno);
 		caseSearchField.sendKeys(Keys.ENTER);
-		Thread.sleep(5000);
+		Thread.sleep(9000);
 		this.performClickWithAction(caseNumberCheckbox);
 	
 		acceptButton.click();
@@ -2660,7 +2822,7 @@ public class CasePage {
 		Thread.sleep(3000);
 		listViewFirstOption.click();
 		System.out.println("My open cases is selected");
-		Thread.sleep(3000);			
+		Thread.sleep(6000);			
 		caseSearchField.sendKeys(caseno);
 		Thread.sleep(6000);
 		driver.findElement(By.xpath("//table[@data-aura-class='uiVirtualDataTable']/tbody/tr/td[1]/span")).click();
@@ -2668,11 +2830,12 @@ public class CasePage {
 		this.performClickWithAction(topCaseNumberLink);
 
 		
-		System.out.println("Clickd on Case number");
-		Thread.sleep(5000);
+		System.out.println("Clicked on Case number");
+		Thread.sleep(10000);
+		wait.until(ExpectedConditions.visibilityOf(editButton));
 		editButton.click();
-		Thread.sleep(5000);
-		//wait.until(ExpectedConditions.visibilityOf(statusCodeDropdown));
+		Thread.sleep(10000);
+		wait.until(ExpectedConditions.visibilityOf(statusCodeDropdown));
 		statusCodeDropdown.click();
 		this.selectElement(statusCodeDropdown, handler.getDvuCheckerStatusCode());
 		System.out.println("Status code is changed to Clarification Required");
@@ -2685,7 +2848,8 @@ public class CasePage {
 		
 		this.performClickWithAction(topSaveButton);
 		
-		Thread.sleep(5000);
+		Thread.sleep(10000);
+		wait.until(ExpectedConditions.visibilityOf(caseNumber));
 		
 		System.out.println("Completed RL Ops DVU Checker process");
 	
@@ -2695,6 +2859,8 @@ public class CasePage {
 			Thread.sleep(1000);
 			logOutLink.click();
 			System.out.println("Successfuly logged out");
+			Thread.sleep(10000);
+			wait.until(ExpectedConditions.visibilityOf(searchGlodalFieldOfUserPage));
 			
 			//click on Search Setup input field(Global Search)
 			
@@ -2761,35 +2927,42 @@ public class CasePage {
 			caseSearchField.sendKeys(caseno);
 			Thread.sleep(5000);
 			driver.findElement(By.xpath("//table[@data-aura-class='uiVirtualDataTable']/tbody/tr/td[1]/span")).click();
-			Thread.sleep(2000);
+			Thread.sleep(4000);
 			this.performClickWithAction(topCaseNumberLink);
 
 			
 			System.out.println("Clickd on Case number");
-			Thread.sleep(5000);
-			editButton.click();
-			Thread.sleep(2000);
+			Thread.sleep(10000);
+			wait.until(ExpectedConditions.visibilityOf(editButton));
+			//editButton.click();
+			this.performClickWithAction(editButton);
+			Thread.sleep(10000);
+			wait.until(ExpectedConditions.visibilityOf(statusCodeDropdown));
+			statusCodeDropdown.click();
 			this.selectElement(statusCodeDropdown, handler.getBocStatusCode());
 			System.out.println("Status code is changed to Clarification Provided");
-			Thread.sleep(2000);
+			Thread.sleep(5000);
 			
 			((JavascriptExecutor) driver).executeScript("window.scrollTo(document.body.scrollHeight, 0)");
 			
 			this.performClickWithAction(topSaveButton);
 			
-			Thread.sleep(5000);
+			Thread.sleep(10000);
+			wait.until(ExpectedConditions.visibilityOf(caseNumber));
 			
 			System.out.println("Completed BOC user process");
 		
 			
 					//logout process
 					
-					Thread.sleep(1000);
+					Thread.sleep(5000);
 					logOutLink.click();
 					System.out.println("Successfuly logged out");
 					
 					//click on Search Setup input field(Global Search)
 					
+					Thread.sleep(10000);
+					wait.until(ExpectedConditions.visibilityOf(searchGlodalFieldOfUserPage));
 					searchGlodalFieldOfUserPage.click();
 					
 					searchGlodalFieldOfUserPage.sendKeys(this.trimQuote(handler.getDvuCheckerUser()));
@@ -2800,9 +2973,8 @@ public class CasePage {
 					Thread.sleep(9000);
 					
 					driver.switchTo().frame(0);
-					Thread.sleep(3000);
-					driver.findElement(By.xpath("//h2[text()='User Detail']")).click();
-					Thread.sleep(2000);
+					Thread.sleep(5000);
+										
 					this.performClickWithAction(loginButton);
 					
 					System.out.println("DVU checker user logged in Successfully");
@@ -2853,19 +3025,21 @@ public class CasePage {
 
 					
 					System.out.println("Clickd on Case number");
-					Thread.sleep(5000);
+					Thread.sleep(10000);
+					wait.until(ExpectedConditions.visibilityOf(editButton));
 					editButton.click();
-					Thread.sleep(2000);
+					Thread.sleep(10000);
+					wait.until(ExpectedConditions.visibilityOf(statusCodeDropdown));
 					statusCodeDropdown.click();
 					this.selectElement(statusCodeDropdown, handler.getDvuCheckerStatus1());
 					System.out.println("Status code is changed as Sent to DE Maker");
-					Thread.sleep(2000);
+					Thread.sleep(5000);
 					((JavascriptExecutor) driver).executeScript("window.scrollTo(document.body.scrollHeight, 0)");
 					this.performClickWithAction(topSaveButton);
-					
-					Thread.sleep(2000);
-					
 					System.out.println("Completed DVU Checker user process");
+					
+					Thread.sleep(10000);
+					wait.until(ExpectedConditions.visibilityOf(caseNumber));
 				
 				
 				//logout process
@@ -2873,7 +3047,8 @@ public class CasePage {
 				Thread.sleep(1000);
 				logOutLink.click();
 				System.out.println("Successfuly logged out");
-				
+				Thread.sleep(10000);
+				wait.until(ExpectedConditions.visibilityOf(searchGlodalFieldOfUserPage));
 				//click on Search Setup input field(Global Search)
 				
 				searchGlodalFieldOfUserPage.click();
@@ -2887,7 +3062,7 @@ public class CasePage {
 				
 				driver.switchTo().frame(0);
 				Thread.sleep(3000);
-				driver.findElement(By.xpath("//h2[text()='User Detail']")).click();
+				
 				Thread.sleep(2000);
 				this.performClickWithAction(loginButton);
 				
@@ -2912,12 +3087,12 @@ public class CasePage {
 				System.out.println("RL Ops DE Maker – Individual Request is selected");
 				
 				
-				Thread.sleep(6000);				
+				Thread.sleep(10000);				
 				caseSearchField.sendKeys(caseno);
 				caseSearchField.sendKeys(Keys.ENTER);
 				Thread.sleep(5000);
 				this.performClickWithAction(caseNumberCheckbox);
-			
+				Thread.sleep(3000);
 				acceptButton.click();
 				Thread.sleep(10000);
 				System.out.println("Successfully clicked on Accept Button");
@@ -2931,7 +3106,7 @@ public class CasePage {
 				listViewFirstOption.click();
 				System.out.println("My open cases is selected");
 				Thread.sleep(3000);			
-				caseSearchField.sendKeys("");
+				caseSearchField.sendKeys(caseno);
 				Thread.sleep(5000);
 				driver.findElement(By.xpath("//table[@data-aura-class='uiVirtualDataTable']/tbody/tr/td[1]/span")).click();
 				Thread.sleep(2000);
@@ -2939,22 +3114,24 @@ public class CasePage {
 
 				
 				System.out.println("Clickd on Case number");
-				Thread.sleep(5000);
+				Thread.sleep(10000);
+				wait.until(ExpectedConditions.visibilityOf(editButton));
 				editButton.click();
-				Thread.sleep(2000);
+				Thread.sleep(10000);
+				wait.until(ExpectedConditions.visibilityOf(statusCodeDropdown));
 				statusCodeDropdown.click();
 				this.selectElement(statusCodeDropdown, handler.getDeMakerStatusCode());
 				System.out.println("Status code is changed as Sent to DE Checker");
-				Thread.sleep(2000);
+				Thread.sleep(5000);
 				
 				journalNumber.sendKeys(handler.getJournalNumber());
 				((JavascriptExecutor) driver).executeScript("window.scrollTo(document.body.scrollHeight, 0)");
 				
 				this.performClickWithAction(topSaveButton);
-				
-				Thread.sleep(2000);
-				
 				System.out.println("Completed DE Maker user process");
+				Thread.sleep(10000);
+				wait.until(ExpectedConditions.visibilityOf(caseNumber));
+				
 		
 		//logout process
 		
@@ -2962,7 +3139,9 @@ public class CasePage {
 		logOutLink.click();
 		System.out.println("Successfuly logged out");
 		
+		Thread.sleep(10000);
 		//click on Search Setup input field(Global Search)
+		wait.until(ExpectedConditions.visibilityOf(searchGlodalFieldOfUserPage));
 		
 		searchGlodalFieldOfUserPage.click();
 		
@@ -2975,7 +3154,7 @@ public class CasePage {
 		
 		driver.switchTo().frame(0);
 		Thread.sleep(3000);
-		driver.findElement(By.xpath("//h2[text()='User Detail']")).click();
+		
 		Thread.sleep(2000);
 		this.performClickWithAction(loginButton);
 		
@@ -3028,8 +3207,10 @@ public class CasePage {
 		
 		System.out.println("Clickd on Case number");
 		Thread.sleep(5000);
+		wait.until(ExpectedConditions.visibilityOf(editButton));
 		editButton.click();
-		Thread.sleep(2000);
+		Thread.sleep(9000);
+		wait.until(ExpectedConditions.visibilityOf(statusCodeDropdown));
 		statusCodeDropdown.click();
 		this.selectElement(statusCodeDropdown, handler.getDeCheckerStatus());
 		System.out.println("Status code is Resolved");
@@ -3037,12 +3218,13 @@ public class CasePage {
 		((JavascriptExecutor) driver).executeScript("window.scrollTo(document.body.scrollHeight, 0)");
 		this.performClickWithAction(topSaveButton);
 		
-		Thread.sleep(5000);
+		Thread.sleep(10000);
+		wait.until(ExpectedConditions.visibilityOf(statusCodeValue));
 		String statuscode1 = statusCodeValue.getText();
 		
 		System.out.println("Status code is " + statuscode1);
 		
-		if(statuscode1.equals("RESOLVED AND CLOSED"))
+		if(statuscode1.equals("Resolved And Closed"))
 		{
 			System.out.println("Status code is Resolved & Closed");
 		}
@@ -3068,15 +3250,650 @@ public class CasePage {
 	}
 	
 	
+	
+	public void createCaseStep4ClarificationRequiredByBranch(CaseDataModel handler)
+	{
+		try 
+		{
+			Thread.sleep(10000);
+			
+			newButton.click();
+			newCaseButton.click();
+			Thread.sleep(5000);
+			
+			wait.until(ExpectedConditions.visibilityOf(caseTypeDropdown));
+			this.performClickWithAction(caseTypeDropdown);
+	
+			this.selectElement(caseTypeDropdown, handler.getCaseType());
+			System.out.println("Case type selected");
+			Thread.sleep(2000);
+			categoryDropdown.click();
+			this.selectElement(categoryDropdown, handler.getCategory());
+			System.out.println("Category selected");
+			Thread.sleep(2000);
+			subCategoryDropdown.click();
+			this.selectElement(subCategoryDropdown, handler.getSubCategory());
+			
+			System.out.println("Sub category selected");
+			Thread.sleep(2000);
+			
+			barCodeField.sendKeys(handler.getBarcode());
+			
+			Thread.sleep(2000);
+			statusCodeDropdown.click();
+			this.selectElement(statusCodeDropdown, handler.getStatusCode());
+			System.out.println("Status Code Sent To Ops");
+			Thread.sleep(5000);
+			
+			((JavascriptExecutor) driver).executeScript("window.scrollTo(document.body.scrollHeight, 0)");
+			Thread.sleep(5000);
+			
+			this.performClickWithAction(topSaveButton);
+			//saveButton.click();
+			Thread.sleep(10000);
+			wait.until(ExpectedConditions.visibilityOf(caseNumber));
+						
+			
+			String caseno = caseNumber.getText();					
+			System.out.println("caseno" +" "+ caseno);
+			
+			String caseownername = caseOwnerValue.getText();
+			System.out.println("Case owner name is " + caseownername);
+			
+			String customername = customerNameValue.getText();
+			System.out.println("Customer name is " + customername);
+			
+			String statuscode = statusCodeValue.getText();
+			System.out.println("Status code is " + statuscode);
+			
+			String createdBydate = createdByDateValue.getText();
+			System.out.println("Created By date " + createdBydate);
+			
+			String createdByName = createdByNameValue.getText();
+			System.out.println("Created by name " + createdByName);
+			
+			//logout process
+			
+			Thread.sleep(1000);
+			logOutLink.click();
+			System.out.println("Successfuly logged out");
+			Thread.sleep(10000);
+			
+			//click on Search Setup input field(Global Search) of User Page
+			wait.until(ExpectedConditions.visibilityOf(searchGlodalFieldOfUserPage));
+			searchGlodalFieldOfUserPage.click();
+			
+			searchGlodalFieldOfUserPage.sendKeys(this.trimQuote(handler.getDvuMakerUser()));
+			
+			Thread.sleep(5000);
+			globalSearchValueSelection.click();
+			Thread.sleep(5000);
+			Thread.sleep(9000);
+			
+			driver.switchTo().frame(0);
+			Thread.sleep(5000);
+			driver.findElement(By.xpath("//h2[text()='User Detail']")).click();
+			Thread.sleep(5000);
+			this.performClickWithAction(loginButton);
+			
+			System.out.println("RL Ops DVU Maker user logged in Successfully");
+			Thread.sleep(5000);
+			//RL OPS DVU Maker accept Invite & Edit
+			Thread.sleep(10000);
+			this.clearTab();			
+			Thread.sleep(5000);	
+			navigationMenuDropdown.click();
+			Thread.sleep(3000);
+			caseDropdown.click();
+			Thread.sleep(5000);			
+			//Accept case process
+			listViewDropdown.click();
+			Thread.sleep(5000);
+			listViewSearchField.sendKeys("RL Ops DVU Maker – Individual Request");					
+			
+			//RL OPS DVU Maker accept Invite & Edit
+						
+			Thread.sleep(3000);
+			listViewFirstOption.click();
+			System.out.println("RL Ops DVU Maker – Individual Request is selected");
+			
+			
+			Thread.sleep(6000);				
+			caseSearchField.sendKeys(caseno);
+			caseSearchField.sendKeys(Keys.ENTER);
+			Thread.sleep(5000);
+			this.performClickWithAction(caseNumberCheckbox);
+		
+			acceptButton.click();
+			System.out.println("Successfully clicked on Accept Button");
+			Thread.sleep(10000);
+			
+			wait.until(ExpectedConditions.visibilityOf(listViewDropdown));
+			//CHange status code process
+			listViewDropdown.click();
+			Thread.sleep(3000);
+			listViewSearchField.sendKeys("My Open Cases");
+			Thread.sleep(3000);
+			listViewFirstOption.click();
+			System.out.println("My open cases is selected");
+			Thread.sleep(3000);			
+			caseSearchField.sendKeys(caseno);
+			Thread.sleep(6000);
+			driver.findElement(By.xpath("//table[@data-aura-class='uiVirtualDataTable']/tbody/tr/td[1]/span")).click();
+			Thread.sleep(2000);
+			this.performClickWithAction(topCaseNumberLink);
+
+			
+			System.out.println("Clicked on Case number");
+			Thread.sleep(10000);
+			wait.until(ExpectedConditions.visibilityOf(editButton));	
+			editButton.click();
+			Thread.sleep(10000);
+			wait.until(ExpectedConditions.visibilityOf(statusCodeDropdown));			
+			statusCodeDropdown.click();
+			this.selectElement(statusCodeDropdown, handler.getDvuMakerStatusCode());
+			System.out.println("Status code is changed to Sent to DVU Checker - Rejected");
+			Thread.sleep(5000);
+			reasonForRejectionTopVallue.click();
+			Thread.sleep(3000);
+			moveSelectionToChosenArrowButton.click();
+			Thread.sleep(3000);
+					
+			//scrolling page on top
+			((JavascriptExecutor) driver).executeScript("window.scrollTo(document.body.scrollHeight, 0)");
+			Thread.sleep(5000);
+					
+			
+			this.performClickWithAction(topSaveButton);
+			System.out.println("Clicked on save button");
+			
+			Thread.sleep(10000);
+			
+			System.out.println("Completed RL Ops DVU Maker process");
+			
+		
+		//logout process
+		
+		Thread.sleep(1000);
+		logOutLink.click();
+		System.out.println("Successfuly logged out");
+		Thread.sleep(10000);
+		
+		//click on Search Setup input field(Global Search)
+		
+		searchGlodalFieldOfUserPage.click();
+		
+		searchGlodalFieldOfUserPage.sendKeys(this.trimQuote(handler.getDvuCheckerUser()));
+		
+		Thread.sleep(3000);
+		globalSearchValueSelection.click();
+		Thread.sleep(5000);
+		Thread.sleep(9000);
+		
+		driver.switchTo().frame(0);
+		Thread.sleep(3000);
+		driver.findElement(By.xpath("//h2[text()='User Detail']")).click();
+		Thread.sleep(2000);
+		this.performClickWithAction(loginButton);
+		
+		System.out.println("RL Ops DVU Checker user logged in Successfully");
+		Thread.sleep(3000);
+		
+		//RL OPS DVU Maker accept Invite & Edit
+		
+		Thread.sleep(10000);
+		this.clearTab();			
+		Thread.sleep(5000);	
+		this.clearTab();			
+		Thread.sleep(5000);	
+		navigationMenuDropdown.click();
+		Thread.sleep(3000);
+		caseDropdown.click();
+		Thread.sleep(3000);			
+		//Accept case process
+		listViewDropdown.click();
+		Thread.sleep(5000);
+		listViewSearchField.sendKeys("RL Ops DVU Checker – Individual Request");
+		Thread.sleep(3000);
+		listViewFirstOption.click();
+		System.out.println("RL Ops DVU Checker – Individual Request is selected");
+		
+		
+		Thread.sleep(6000);				
+		caseSearchField.sendKeys(caseno);
+		caseSearchField.sendKeys(Keys.ENTER);
+		Thread.sleep(9000);
+		this.performClickWithAction(caseNumberCheckbox);
+	
+		acceptButton.click();
+		Thread.sleep(10000);
+		System.out.println("Successfully clicked on Accept Button");
+		
+		
+		//CHange status code process
+		listViewDropdown.click();
+		Thread.sleep(3000);
+		listViewSearchField.sendKeys("My Open Cases");
+		Thread.sleep(3000);
+		listViewFirstOption.click();
+		System.out.println("My open cases is selected");
+		Thread.sleep(6000);			
+		caseSearchField.sendKeys(caseno);
+		Thread.sleep(6000);
+		driver.findElement(By.xpath("//table[@data-aura-class='uiVirtualDataTable']/tbody/tr/td[1]/span")).click();
+		Thread.sleep(2000);
+		this.performClickWithAction(topCaseNumberLink);
+
+		
+		System.out.println("Clicked on Case number");
+		Thread.sleep(10000);
+		wait.until(ExpectedConditions.visibilityOf(editButton));
+		editButton.click();
+		Thread.sleep(10000);
+		wait.until(ExpectedConditions.visibilityOf(statusCodeDropdown));
+		statusCodeDropdown.click();
+		this.selectElement(statusCodeDropdown, handler.getDvuCheckerStatusCode());
+		System.out.println("Status code is changed to Clarification Required");
+		Thread.sleep(2000);
+		
+		//scrolling page on top
+		((JavascriptExecutor) driver).executeScript("window.scrollTo(document.body.scrollHeight, 0)");
+		Thread.sleep(5000);
+				
+		
+		this.performClickWithAction(topSaveButton);
+		
+		Thread.sleep(10000);
+		wait.until(ExpectedConditions.visibilityOf(caseNumber));
+		
+		System.out.println("Completed RL Ops DVU Checker process");
+	
+			
+			//logout process
+			
+			Thread.sleep(1000);
+			logOutLink.click();
+			System.out.println("Successfuly logged out");
+			Thread.sleep(10000);
+			wait.until(ExpectedConditions.visibilityOf(searchGlodalFieldOfUserPage));
+			
+			//click on Search Setup input field(Global Search)
+			
+			searchGlodalFieldOfUserPage.click();
+			
+			searchGlodalFieldOfUserPage.sendKeys(this.trimQuote(handler.getBranchUser()));
+			
+			Thread.sleep(3000);
+			globalSearchValueSelection.click();
+			Thread.sleep(5000);
+			Thread.sleep(9000);
+			
+			driver.switchTo().frame(0);
+			Thread.sleep(3000);
+			driver.findElement(By.xpath("//h2[text()='User Detail']")).click();
+			Thread.sleep(2000);
+			this.performClickWithAction(loginButton);
+			
+			System.out.println("Branch user logged in Successfully");
+			Thread.sleep(3000);
+			
+			//BOC user accept Invite & Edit
+			
+			Thread.sleep(10000);
+			this.clearTab();			
+			Thread.sleep(5000);	
+			navigationMenuDropdown.click();
+			Thread.sleep(3000);
+			caseDropdown.click();
+			Thread.sleep(3000);			
+			//Accept case process
+			listViewDropdown.click();
+			Thread.sleep(3000);
+			
+			listViewSearchField.sendKeys("Clarification Required - Branch");
+			
+			Thread.sleep(3000);
+			listViewFirstOption.click();
+			Thread.sleep(3000);
+			
+			System.out.println("Clarification Required - Branch is selected");			
+			
+			Thread.sleep(6000);				
+			caseSearchField.sendKeys(caseno);
+			caseSearchField.sendKeys(Keys.ENTER);
+			Thread.sleep(5000);		
+			
+			driver.findElement(By.xpath("//table[@data-aura-class='uiVirtualDataTable']/tbody/tr/td[1]/span")).click();
+			Thread.sleep(4000);
+			this.performClickWithAction(topCaseNumberLink);
+
+			
+			System.out.println("Clickd on Case number");
+			Thread.sleep(10000);
+			wait.until(ExpectedConditions.visibilityOf(editButton));
+			//editButton.click();
+			this.performClickWithAction(editButton);
+			Thread.sleep(10000);
+			wait.until(ExpectedConditions.visibilityOf(statusCodeDropdown));
+			statusCodeDropdown.click();
+			this.selectElement(statusCodeDropdown, handler.getBranchStatusCode());
+			System.out.println("Status code is changed to Clarification Provided");
+			Thread.sleep(5000);
+			
+			((JavascriptExecutor) driver).executeScript("window.scrollTo(document.body.scrollHeight, 0)");
+			
+			this.performClickWithAction(topSaveButton);
+			
+			Thread.sleep(10000);
+			wait.until(ExpectedConditions.visibilityOf(caseNumber));
+			
+			System.out.println("Completed BOC user process");
+		
+			
+					//logout process
+					
+					Thread.sleep(5000);
+					logOutLink.click();
+					System.out.println("Successfuly logged out");
+					
+					//click on Search Setup input field(Global Search)
+					
+					Thread.sleep(10000);
+					wait.until(ExpectedConditions.visibilityOf(searchGlodalFieldOfUserPage));
+					searchGlodalFieldOfUserPage.click();
+					
+					searchGlodalFieldOfUserPage.sendKeys(this.trimQuote(handler.getDvuCheckerUser()));
+					
+					Thread.sleep(3000);
+					globalSearchValueSelection.click();
+					Thread.sleep(5000);
+					Thread.sleep(9000);
+					
+					driver.switchTo().frame(0);
+					Thread.sleep(5000);
+										
+					this.performClickWithAction(loginButton);
+					
+					System.out.println("DVU checker user logged in Successfully");
+					Thread.sleep(3000);
+					
+					//RL Ops Dvu Checker accept Invite & Edit
+					
+					Thread.sleep(10000);
+					this.clearTab();			
+					Thread.sleep(5000);	
+					navigationMenuDropdown.click();
+					Thread.sleep(3000);
+					caseDropdown.click();
+					Thread.sleep(3000);			
+					//Accept case process
+					listViewDropdown.click();
+					Thread.sleep(5000);
+					listViewSearchField.sendKeys("Clarification Provided-RLOpsDVUChecker-I");
+					Thread.sleep(3000);
+					listViewFirstOption.click();
+					System.out.println("Clarification Provided-RLOpsDVUChecker-I is selected");
+					
+					
+					Thread.sleep(6000);				
+					caseSearchField.sendKeys(caseno);
+					caseSearchField.sendKeys(Keys.ENTER);
+					Thread.sleep(5000);
+					this.performClickWithAction(caseNumberCheckbox);
+				
+					acceptButton.click();
+					Thread.sleep(10000);
+					System.out.println("Successfully clicked on Accept Button");
+					
+					
+					//CHange status code process
+					listViewDropdown.click();
+					Thread.sleep(3000);
+					listViewSearchField.sendKeys("My Open Cases");
+					Thread.sleep(3000);
+					listViewFirstOption.click();
+					System.out.println("My open cases is selected");
+					Thread.sleep(3000);			
+					caseSearchField.sendKeys(caseno);
+					Thread.sleep(6000);
+					driver.findElement(By.xpath("//table[@data-aura-class='uiVirtualDataTable']/tbody/tr/td[1]/span")).click();
+					Thread.sleep(2000);
+					this.performClickWithAction(topCaseNumberLink);
+
+					
+					System.out.println("Clickd on Case number");
+					Thread.sleep(10000);
+					wait.until(ExpectedConditions.visibilityOf(editButton));
+					editButton.click();
+					Thread.sleep(10000);
+					wait.until(ExpectedConditions.visibilityOf(statusCodeDropdown));
+					statusCodeDropdown.click();
+					this.selectElement(statusCodeDropdown, handler.getDvuCheckerStatus1());
+					System.out.println("Status code is changed as Sent to DE Maker");
+					Thread.sleep(5000);
+					((JavascriptExecutor) driver).executeScript("window.scrollTo(document.body.scrollHeight, 0)");
+					this.performClickWithAction(topSaveButton);
+					System.out.println("Completed DVU Checker user process");
+					
+					Thread.sleep(10000);
+					wait.until(ExpectedConditions.visibilityOf(caseNumber));
+				
+				
+				//logout process
+				
+				Thread.sleep(1000);
+				logOutLink.click();
+				System.out.println("Successfuly logged out");
+				Thread.sleep(10000);
+				wait.until(ExpectedConditions.visibilityOf(searchGlodalFieldOfUserPage));
+				//click on Search Setup input field(Global Search)
+				
+				searchGlodalFieldOfUserPage.click();
+				
+				searchGlodalFieldOfUserPage.sendKeys(this.trimQuote(handler.getDeMakerUser()));
+				
+				Thread.sleep(3000);
+				globalSearchValueSelection.click();
+				Thread.sleep(5000);
+				Thread.sleep(9000);
+				
+				driver.switchTo().frame(0);
+				Thread.sleep(3000);
+				
+				Thread.sleep(2000);
+				this.performClickWithAction(loginButton);
+				
+				System.out.println("DE maker user logged in Successfully");
+				Thread.sleep(3000);
+				
+				//DE Maker accept Invite & Edit
+				
+				Thread.sleep(10000);
+				this.clearTab();			
+				Thread.sleep(5000);	
+				navigationMenuDropdown.click();
+				Thread.sleep(3000);
+				caseDropdown.click();
+				Thread.sleep(3000);			
+				//Accept case process
+				listViewDropdown.click();
+				Thread.sleep(5000);
+				listViewSearchField.sendKeys("RL Ops DE Maker – Individual Request");
+				Thread.sleep(3000);
+				listViewFirstOption.click();
+				System.out.println("RL Ops DE Maker – Individual Request is selected");
+				
+				
+				Thread.sleep(10000);				
+				caseSearchField.sendKeys(caseno);
+				caseSearchField.sendKeys(Keys.ENTER);
+				Thread.sleep(5000);
+				this.performClickWithAction(caseNumberCheckbox);
+				Thread.sleep(3000);
+				acceptButton.click();
+				Thread.sleep(10000);
+				System.out.println("Successfully clicked on Accept Button");
+				
+				
+				//CHange status code process
+				listViewDropdown.click();
+				Thread.sleep(3000);
+				listViewSearchField.sendKeys("My Open Cases");
+				Thread.sleep(3000);
+				listViewFirstOption.click();
+				System.out.println("My open cases is selected");
+				Thread.sleep(3000);			
+				caseSearchField.sendKeys(caseno);
+				Thread.sleep(5000);
+				driver.findElement(By.xpath("//table[@data-aura-class='uiVirtualDataTable']/tbody/tr/td[1]/span")).click();
+				Thread.sleep(2000);
+				this.performClickWithAction(topCaseNumberLink);
+
+				
+				System.out.println("Clickd on Case number");
+				Thread.sleep(10000);
+				wait.until(ExpectedConditions.visibilityOf(editButton));
+				editButton.click();
+				Thread.sleep(10000);
+				wait.until(ExpectedConditions.visibilityOf(statusCodeDropdown));
+				statusCodeDropdown.click();
+				this.selectElement(statusCodeDropdown, handler.getDeMakerStatusCode());
+				System.out.println("Status code is changed as Sent to DE Checker");
+				Thread.sleep(5000);
+				
+				journalNumber.sendKeys(handler.getJournalNumber());
+				((JavascriptExecutor) driver).executeScript("window.scrollTo(document.body.scrollHeight, 0)");
+				
+				this.performClickWithAction(topSaveButton);
+				System.out.println("Completed DE Maker user process");
+				Thread.sleep(10000);
+				wait.until(ExpectedConditions.visibilityOf(caseNumber));
+				
+		
+		//logout process
+		
+		Thread.sleep(1000);
+		logOutLink.click();
+		System.out.println("Successfuly logged out");
+		
+		Thread.sleep(10000);
+		//click on Search Setup input field(Global Search)
+		wait.until(ExpectedConditions.visibilityOf(searchGlodalFieldOfUserPage));
+		
+		searchGlodalFieldOfUserPage.click();
+		
+		searchGlodalFieldOfUserPage.sendKeys(this.trimQuote(handler.getDeCheckerUser()));
+		
+		Thread.sleep(3000);
+		globalSearchValueSelection.click();
+		Thread.sleep(5000);
+		Thread.sleep(9000);
+		
+		driver.switchTo().frame(0);
+		Thread.sleep(3000);
+		
+		Thread.sleep(2000);
+		this.performClickWithAction(loginButton);
+		
+		System.out.println("DE checker user logged in Successfully");
+		Thread.sleep(3000);
+		
+		//DE checker accept Invite & Edit
+		
+		Thread.sleep(10000);
+		this.clearTab();			
+		Thread.sleep(5000);	
+		navigationMenuDropdown.click();
+		Thread.sleep(3000);
+		caseDropdown.click();
+		Thread.sleep(3000);			
+		//Accept case process
+		listViewDropdown.click();
+		Thread.sleep(5000);
+		listViewSearchField.sendKeys("RL Ops DE Checker – Individual Request");
+		Thread.sleep(3000);
+		listViewFirstOption.click();
+		System.out.println("RL Ops DE Checker – Individual Request is selected");
+		
+		
+		Thread.sleep(6000);				
+		caseSearchField.sendKeys(caseno);
+		caseSearchField.sendKeys(Keys.ENTER);
+		Thread.sleep(5000);
+		this.performClickWithAction(caseNumberCheckbox);
+	
+		acceptButton.click();
+		Thread.sleep(10000);
+		System.out.println("Successfully clicked on Accept Button");
+		
+		
+		//CHange status code process
+		listViewDropdown.click();
+		Thread.sleep(3000);
+		listViewSearchField.sendKeys("My Open Cases");
+		Thread.sleep(3000);
+		listViewFirstOption.click();
+		System.out.println("My open cases is selected");
+		Thread.sleep(3000);			
+		caseSearchField.sendKeys(caseno);
+		Thread.sleep(5000);
+		driver.findElement(By.xpath("//table[@data-aura-class='uiVirtualDataTable']/tbody/tr/td[1]/span")).click();
+		Thread.sleep(2000);
+		this.performClickWithAction(topCaseNumberLink);
+
+		
+		System.out.println("Clickd on Case number");
+		Thread.sleep(5000);
+		wait.until(ExpectedConditions.visibilityOf(editButton));
+		editButton.click();
+		Thread.sleep(9000);
+		wait.until(ExpectedConditions.visibilityOf(statusCodeDropdown));
+		statusCodeDropdown.click();
+		this.selectElement(statusCodeDropdown, handler.getDeCheckerStatus());
+		System.out.println("Status code is Resolved");
+		Thread.sleep(2000);
+		((JavascriptExecutor) driver).executeScript("window.scrollTo(document.body.scrollHeight, 0)");
+		this.performClickWithAction(topSaveButton);
+		
+		Thread.sleep(10000);
+		wait.until(ExpectedConditions.visibilityOf(statusCodeValue));
+		String statuscode1 = statusCodeValue.getText();
+		
+		System.out.println("Status code is " + statuscode1);
+		
+		if(statuscode1.equals("Resolved And Closed"))
+		{
+			System.out.println("Status code is Resolved & Closed");
+		}
+		else
+		{
+			System.out.println("Status code is not matched");
+			Assert.fail();
+		}
+		
+		
+			
+		System.out.println("Completed RL OPS 4 step");
+	
+		
+			
+		}
+		catch(Exception e)
+		{
+			ExtentConfigurer.getTest().log(Status.ERROR, "Selenium Error Occurred : " + e.getMessage());
+			Assert.fail();
+			
+		}
+	}
+	
 	public void createCaseWith3Step(CaseDataModel handler)
 	{
 		try
 		{
 			Thread.sleep(3000);
-			this.performClickWithAction(casesWithIcon);
-			Thread.sleep(3000);
 			
 			newButton.click();
+			newCaseButton.click();
 			Thread.sleep(5000);
 			this.performClickWithAction(caseTypeDropdown);
 			this.selectElement(caseTypeDropdown, handler.getCaseType());
@@ -3093,13 +3910,17 @@ public class CasePage {
 			Thread.sleep(2000);
 			
 			
-			
-			
 			statusCodeDropdown.click();
 			this.selectElement(statusCodeDropdown, handler.getStatusCode());
 			System.out.println("Status Code Sent To Ops");
-			saveButton.click();
-			Thread.sleep(2000);
+			
+			((JavascriptExecutor) driver).executeScript("window.scrollTo(document.body.scrollHeight, 0)");
+			Thread.sleep(5000);
+			this.performClickWithAction(topSaveButton);
+			
+			Thread.sleep(10000);
+			
+			wait.until(ExpectedConditions.visibilityOf(caseNumber));
 						
 			
 			String caseno =  caseNumber.getText();	
@@ -3128,6 +3949,7 @@ public class CasePage {
 			System.out.println("Successfuly logged out");
 			
 			Thread.sleep(15000);
+			wait.until(ExpectedConditions.visibilityOf(searchGlodalFieldOfUserPage));
 			
 			//click on Search Setup input field(Global Search) of User Page
 			
@@ -3192,21 +4014,25 @@ public class CasePage {
 			
 			
 			driver.findElement(By.xpath("//table[@data-aura-class='uiVirtualDataTable']/tbody/tr/td[1]/span")).click();
-			Thread.sleep(2000);
+			Thread.sleep(4000);
 			this.performClickWithAction(topCaseNumberLink);
-			System.out.println("Clickd on Case number");
-			Thread.sleep(6000);
+			System.out.println("Clicked on Case number");
+			Thread.sleep(10000);
+			
+			wait.until(ExpectedConditions.visibilityOf(editButton));
 			editButton.click();
-			Thread.sleep(2000);
+			System.out.println("Clicked on edit button");
+			Thread.sleep(10000);
+			wait.until(ExpectedConditions.visibilityOf(statusCodeDropdown));
 			this.selectElement(statusCodeDropdown, handler.getDvuMakerStatusCode());
 			System.out.println("Status code is changed to Sent to DE maker");
 			Thread.sleep(2000);
+			((JavascriptExecutor) driver).executeScript("window.scrollTo(document.body.scrollHeight, 0)");
+			Thread.sleep(5000);
+			this.performClickWithAction(topSaveButton);
 			
-			
-			this.performClickWithAction(saveButton);
-			
-			Thread.sleep(2000);
-			
+			Thread.sleep(10000);
+			wait.until(ExpectedConditions.visibilityOf(caseNumber));
 			System.out.println("Completed RL Ops DVU Maker process");
 			
 				
@@ -3217,7 +4043,8 @@ public class CasePage {
 					System.out.println("Successfuly logged out");
 					
 					//click on Search Setup input field(Global Search) of User Page
-					
+					Thread.sleep(10000);
+					wait.until(ExpectedConditions.visibilityOf(searchGlodalFieldOfUserPage));
 					searchGlodalFieldOfUserPage.click();
 					
 					searchGlodalFieldOfUserPage.sendKeys(this.trimQuote(handler.getDeMakerUser()));
@@ -3276,20 +4103,28 @@ public class CasePage {
 					caseSearchField.sendKeys(caseno);
 					Thread.sleep(6000);
 					driver.findElement(By.xpath("//table[@data-aura-class='uiVirtualDataTable']/tbody/tr/td[1]/span")).click();
-					Thread.sleep(2000);
+					Thread.sleep(4000);
 					this.performClickWithAction(topCaseNumberLink);
 					System.out.println("Clickd on Case number");
 					Thread.sleep(5000);
+					wait.until(ExpectedConditions.visibilityOf(editButton));
 					editButton.click();
-					Thread.sleep(2000);
+					Thread.sleep(10000);
+					wait.until(ExpectedConditions.visibilityOf(journalNumber));
 					journalNumber.sendKeys(handler.getJournalNumber());
+					statusCodeDropdown.click();
 					this.selectElement(statusCodeDropdown, handler.getDeMakerStatusCode());
 					System.out.println("Status code is changed as Sent to DE Checker");
 					Thread.sleep(2000);
 					
-					this.performClickWithAction(saveButton);
 					
-					Thread.sleep(2000);
+					((JavascriptExecutor) driver).executeScript("window.scrollTo(document.body.scrollHeight, 0)");
+					Thread.sleep(5000);
+					
+					this.performClickWithAction(topSaveButton);
+					
+					Thread.sleep(10000);
+					wait.until(ExpectedConditions.visibilityOf(statusCodeValue));
 					
 					System.out.println("Completed DE Maker user process");
 					
@@ -3300,6 +4135,9 @@ public class CasePage {
 					System.out.println("Successfuly logged out");
 					
 					//click on Search Setup input field(Global Search)
+					
+					Thread.sleep(10000);
+					wait.until(ExpectedConditions.visibilityOf(searchGlodalFieldOfUserPage));
 					
 					searchGlodalFieldOfUserPage.click();
 					
@@ -3359,20 +4197,27 @@ public class CasePage {
 					caseSearchField.sendKeys(caseno);
 					Thread.sleep(6000);
 					driver.findElement(By.xpath("//table[@data-aura-class='uiVirtualDataTable']/tbody/tr/td[1]/span")).click();
-					Thread.sleep(2000);
+					Thread.sleep(4000);
 					this.performClickWithAction(topCaseNumberLink);
 					
 					System.out.println("Clickd on Case number");
 					Thread.sleep(5000);
+					wait.until(ExpectedConditions.visibilityOf(editButton));
+
 					editButton.click();
-					Thread.sleep(2000);
+					Thread.sleep(10000);
+					statusCodeDropdown.click();
+					wait.until(ExpectedConditions.visibilityOf(statusCodeDropdown));
 					this.selectElement(statusCodeDropdown, handler.getDeCheckerStatus());
 					System.out.println("Status code Changed to Resolved");
 					Thread.sleep(2000);
-					
-					this.performClickWithAction(saveButton);
-					
+					((JavascriptExecutor) driver).executeScript("window.scrollTo(document.body.scrollHeight, 0)");
 					Thread.sleep(5000);
+
+					this.performClickWithAction(topSaveButton);
+					
+					Thread.sleep(10000);
+					wait.until(ExpectedConditions.visibilityOf(statusCodeValue));
 					String statuscode1 = statusCodeValue.getText();
 					
 					System.out.println("Status code is " + statuscode1);
@@ -3748,7 +4593,7 @@ public class CasePage {
 			uploadDocumentButton.isDisplayed();
 			System.out.println("Convert to complaint, View Documentation Omni Scan, Upload document buttons are validated");
 			*/
-			
+			Thread.sleep(2000);
 			caseTypeValue.isDisplayed();
 			categoryValue.isDisplayed();
 			subCategoryValue.isDisplayed();
@@ -3757,6 +4602,7 @@ public class CasePage {
 			
 			historyTab.click();
 			
+			Thread.sleep(2000);
 			caseHistoryLabel.isDisplayed();
 			startTimeStampLabel.isDisplayed();
 			newValueLabel.isDisplayed();
@@ -3780,10 +4626,9 @@ public class CasePage {
 		try
 		{
 			Thread.sleep(10000);
-			this.performClickWithAction(casesWithIcon);
-			Thread.sleep(6000);
 			
 			newButton.click();
+			newCaseButton.click();
 			Thread.sleep(9000);
 			
 			this.performClickWithAction(caseTypeDropdown);
@@ -3797,16 +4642,23 @@ public class CasePage {
 			subCategoryDropdown.click();
 			this.selectElement(subCategoryDropdown, handler.getSubCategory());			
 			System.out.println("Sub category selected");
-			Thread.sleep(2000);
+			Thread.sleep(4000);
 			
-			statusCodeDropdown.click();
+			this.performClickWithAction(statusCodeDropdown);
+			
+			
 			this.selectElement(statusCodeDropdown, handler.getStatusCode());
 			System.out.println("Status Code Sent To Ops");
 			Thread.sleep(3000);
-			this.performClickWithAction(saveButton);
+			((JavascriptExecutor) driver).executeScript("window.scrollTo(document.body.scrollHeight, 0)");
+			
+			Thread.sleep(2000);
+
+			this.performClickWithAction(topSaveButton);
 			
 			
-			Thread.sleep(5000);
+			Thread.sleep(10000);
+			wait.until(ExpectedConditions.visibilityOf(caseNumber));
 			
 			String caseno =  caseNumber.getText();	
 			this.caseCount = caseno;
@@ -3836,15 +4688,87 @@ public class CasePage {
 	}
 	
 	
+	public void createCaseForEmbossedNameChangebyBoc(CaseDataModel handler)
+	{
+		try
+		{
+			Thread.sleep(10000);
+			
+			this.performClickWithAction(newButton);
+			newCaseButton.click();
+			Thread.sleep(9000);
+			
+			this.performClickWithAction(caseTypeDropdown);
+			this.selectElement(caseTypeDropdown, handler.getCaseType());
+			System.out.println("Case type selected");
+			Thread.sleep(2000);
+			categoryDropdown.click();
+			this.selectElement(categoryDropdown, handler.getCategory());
+			System.out.println("Category selected");
+			Thread.sleep(2000);
+			subCategoryDropdown.click();
+			this.selectElement(subCategoryDropdown, handler.getSubCategory());			
+			System.out.println("Sub category selected");
+			Thread.sleep(2000);
+			
+			//validation checks
+						
+			validatePANCheckbox.click();
+			validatePassportNoCheckbox.click();
+			validateDrivingLicenseNoCheckbox.click();
+			validateVoterIdCheckbox.click();
+			validateDobCheckbox.click();
+			mothersMaidenNameCheckbox.click();
+			verifyTransactionCheckbox.click();
+			System.out.println("Sucessfully selected all checkbox");
+			
+			statusCodeDropdown.click();
+			this.selectElement(statusCodeDropdown, handler.getStatusCode());
+			System.out.println("Status Code Sent To Ops");
+			Thread.sleep(3000);
+			((JavascriptExecutor) driver).executeScript("window.scrollTo(document.body.scrollHeight, 0)");
+			
+			Thread.sleep(2000);
+
+			this.performClickWithAction(topSaveButton);
+			
+			Thread.sleep(10000);
+			wait.until(ExpectedConditions.visibilityOf(caseNumber));
+			String caseno =  caseNumber.getText();	
+			this.caseCount = caseno;
+			System.out.println("caseno" +" "+ this.caseCount);
+			
+			String caseownername = caseOwnerValue.getText();
+			System.out.println("Case owner name is " + caseownername);
+			
+			String customername = customerNameValue.getText();
+			System.out.println("Customer name is " + customername);
+			
+			String statuscode = statusCodeValue.getText();
+			System.out.println("Status code is " + statuscode);
+			
+			String createdBydate = createdByDateValue.getText();
+			System.out.println("Created By date " + createdBydate);
+			
+			String createdByName = createdByNameValue.getText();
+			System.out.println("Created by name " + createdByName);
+		}
+		catch(Exception e)
+		{
+			ExtentConfigurer.getTest().log(Status.ERROR, "Selenium Error Occurred : " + e.getMessage());
+			Assert.fail();
+		}
+	}
+	
+	
 	public void createCaseOnlybyBranch(CaseDataModel handler)
 	{
 		try
 		{
 			Thread.sleep(10000);
-			this.performClickWithAction(casesWithIcon);
-			Thread.sleep(6000);
 			
 			newButton.click();
+			newCaseButton.click();
 			Thread.sleep(9000);
 			
 			this.performClickWithAction(caseTypeDropdown);
@@ -3863,16 +4787,20 @@ public class CasePage {
 			barCodeField.sendKeys(handler.getBarCode());
 			
 			Thread.sleep(2000);
+			this.performClickWithAction(statusCodeDropdown);
 			
-			statusCodeDropdown.click();
 			this.selectElement(statusCodeDropdown, handler.getStatusCode());
 			System.out.println("Status Code Sent To Ops");
 			Thread.sleep(3000);
-			this.performClickWithAction(saveButton);
+			((JavascriptExecutor) driver).executeScript("window.scrollTo(document.body.scrollHeight, 0)");
+			
+			Thread.sleep(2000);
+
+			this.performClickWithAction(topSaveButton);
 			System.out.println("Clicked on save button");
 			
-			Thread.sleep(7000);
-			
+			Thread.sleep(10000);
+			wait.until(ExpectedConditions.visibilityOf(caseNumber));
 			String caseno =  caseNumber.getText();	
 			this.caseCount = caseno;
 			System.out.println("caseno" +" "+ this.caseCount);
@@ -3906,10 +4834,9 @@ public class CasePage {
 		try
 		{
 			Thread.sleep(10000);
-			this.performClickWithAction(casesWithIcon);
-			Thread.sleep(6000);
 			
 			newButton.click();
+			newCaseButton.click();
 			Thread.sleep(9000);
 			
 			this.performClickWithAction(caseTypeDropdown);
@@ -3927,8 +4854,12 @@ public class CasePage {
 			
 			sourceBranchField.click();
 			sourceBranchField.sendKeys("Chembur");
-			Thread.sleep(10000);
+			Thread.sleep(3000);
 			
+			showAllResultsForOption.click();
+			Thread.sleep(3000);
+			wait.until(ExpectedConditions.visibilityOf(selectBranchName1stOption));
+			selectBranchName1stOption.click();
 			
 			/*
 			Thread.sleep(2000);
@@ -3941,7 +4872,7 @@ public class CasePage {
 			list.get(0).click();
 			System.out.println("selected source");*/
 			
-			
+			Thread.sleep(2000);
 			barCodeField.sendKeys(handler.getBarCode());
 			
 			Thread.sleep(2000);
@@ -3949,12 +4880,16 @@ public class CasePage {
 			statusCodeDropdown.click();
 			this.selectElement(statusCodeDropdown, handler.getStatusCode());
 			System.out.println("Status Code Sent To Ops");
-			Thread.sleep(3000);
-			this.performClickWithAction(saveButton);
+			Thread.sleep(5000);
+			((JavascriptExecutor) driver).executeScript("window.scrollTo(document.body.scrollHeight, 0)");
+			
+			Thread.sleep(5000);
+
+			this.performClickWithAction(topSaveButton);
 			System.out.println("Clicked on save button");
 			
 			Thread.sleep(10000);
-			
+			wait.until(ExpectedConditions.visibilityOf(caseNumber));
 			String caseno =  caseNumber.getText();	
 			this.caseCount = caseno;
 			System.out.println("caseno" +" "+ this.caseCount);
@@ -3983,15 +4918,103 @@ public class CasePage {
 	}
 	
 	
+	
+	
+	public void createCaseCallBackForRuralAccountByBranch(CaseDataModel handler)
+	{
+		try
+		{
+			Thread.sleep(10000);
+			
+			newButton.click();
+			newCaseButton.click();
+			Thread.sleep(9000);
+			
+			this.performClickWithAction(caseTypeDropdown);
+			this.selectElement(caseTypeDropdown, handler.getCaseType());
+			System.out.println("Case type selected");
+			Thread.sleep(4000);
+			categoryDropdown.click();
+			this.selectElement(categoryDropdown, handler.getCategory());
+			System.out.println("Category selected");
+			Thread.sleep(2000);
+			subCategoryDropdown.click();
+			this.selectElement(subCategoryDropdown, handler.getSubCategory());			
+			System.out.println("Sub category selected");
+			Thread.sleep(2000);
+			
+			sourceBranchField.click();
+			sourceBranchField.sendKeys("Chembur");
+			Thread.sleep(3000);
+			
+			showAllResultsForOption.click();
+			Thread.sleep(3000);
+			wait.until(ExpectedConditions.visibilityOf(selectBranchName1stOption));
+			selectBranchName1stOption.click();			
+						
+			Thread.sleep(2000);
+			barCodeField.sendKeys(handler.getBarCode());
+			
+			Thread.sleep(2000);
+			
+			statusCodeDropdown.click();
+			this.selectElement(statusCodeDropdown, handler.getStatusCode());
+			System.out.println("Status Code Sent To Ops");
+			Thread.sleep(5000);
+			
+			Thread.sleep(2000);
+			callBackDropdown.click();
+			Thread.sleep(1000);			
+			callBackYes.click();			
+			//select date & Time
+			dateField.sendKeys(handler.getCallBackDate());		
+			System.out.println("Selected call back date & time");
+			
+			Thread.sleep(3000);
+			
+			((JavascriptExecutor) driver).executeScript("window.scrollTo(document.body.scrollHeight, 0)");
+			
+			Thread.sleep(5000);
+
+			this.performClickWithAction(topSaveButton);
+			System.out.println("Clicked on save button");
+			
+			Thread.sleep(10000);
+			wait.until(ExpectedConditions.visibilityOf(caseNumber));
+			String caseno =  caseNumber.getText();	
+			this.caseCount = caseno;
+			System.out.println("caseno" +" "+ this.caseCount);
+			
+			String caseownername = caseOwnerValue.getText();
+			System.out.println("Case owner name is " + caseownername);
+			
+			String customername = customerNameValue.getText();
+			System.out.println("Customer name is " + customername);
+			
+			String statuscode = statusCodeValue.getText();
+			System.out.println("Status code is " + statuscode);
+			
+			String createdBydate = createdByDateValue.getText();
+			System.out.println("Created By date " + createdBydate);
+			
+			String createdByName = createdByNameValue.getText();
+			System.out.println("Created by name " + createdByName);
+			
+		}
+		catch(Exception e)
+		{
+			ExtentConfigurer.getTest().log(Status.ERROR, "Selenium Error Occurred : " + e.getMessage());
+			Assert.fail();
+		}
+	}
+	
 	public void createCaseWithCallBackbyBranch(CaseDataModel handler)
 	{
 		try
 		{
 			Thread.sleep(10000);
-			this.performClickWithAction(casesWithIcon);
-			Thread.sleep(6000);
-			
 			newButton.click();
+			newCaseButton.click();
 			Thread.sleep(9000);
 			
 			this.performClickWithAction(caseTypeDropdown);
@@ -4025,11 +5048,15 @@ public class CasePage {
 			dateField.sendKeys(handler.getCallBackDate());
 			Thread.sleep(3000);
 			
-			this.performClickWithAction(saveButton);
+			((JavascriptExecutor) driver).executeScript("window.scrollTo(document.body.scrollHeight, 0)");
+			
+			Thread.sleep(2000);
+
+			this.performClickWithAction(topSaveButton);
 			System.out.println("Clicked on save button");
 			
 			Thread.sleep(10000);
-			
+			wait.until(ExpectedConditions.visibilityOf(caseNumber));
 			String caseno =  caseNumber.getText();	
 			this.caseCount = caseno;
 			System.out.println("caseno" +" "+ this.caseCount);
@@ -4144,6 +5171,7 @@ public class CasePage {
 		
 			System.out.println("Clickd on Case number");
 			Thread.sleep(6000);
+			wait.until(ExpectedConditions.visibilityOf(editButton));
 			editButton.click();
 			System.out.println("Clicked on edit button");
 			Thread.sleep(13000);
@@ -4151,9 +5179,14 @@ public class CasePage {
 			this.selectElement(statusCodeDropdown, handler.getRlOpsStatusCode());
 			System.out.println("Status code is changed");
 			Thread.sleep(2000);
-			this.performClickWithAction(saveButton);
+			
+			((JavascriptExecutor) driver).executeScript("window.scrollTo(document.body.scrollHeight, 0)");
+			Thread.sleep(5000);
+			
+			this.performClickWithAction(topSaveButton);
 			//saveButton.click();
-			Thread.sleep(6000);
+			Thread.sleep(10000);
+			wait.until(ExpectedConditions.visibilityOf(caseOwnerValue));
 			
 			String caseownername = caseOwnerValue.getText();
 			System.out.println("Case owner name is " + caseownername);
@@ -4249,15 +5282,22 @@ public class CasePage {
 			//topCaseNumberLink.click();
 			System.out.println("Clickd on Case number");
 			Thread.sleep(6000);
+			wait.until(ExpectedConditions.visibilityOf(editButton));
 			editButton.click();
-			Thread.sleep(2000);
+			Thread.sleep(10000);
+			wait.until(ExpectedConditions.visibilityOf(statusCodeDropdown));
+			statusCodeDropdown.click();
 			this.selectElement(statusCodeDropdown, handler.getGrdStatusCode());
 			System.out.println("Status code is changed");
 			Thread.sleep(2000);
-			this.performClickWithAction(saveButton);
-			//saveButton.click();
-			Thread.sleep(2000);
+			((JavascriptExecutor) driver).executeScript("window.scrollTo(document.body.scrollHeight, 0)");
 			
+			Thread.sleep(2000);
+
+			this.performClickWithAction(topSaveButton);
+			//saveButton.click();
+			Thread.sleep(10000);
+			wait.until(ExpectedConditions.visibilityOf(caseOwnerValue));
 			String caseownername = caseOwnerValue.getText();
 			System.out.println("Case owner name is " + caseownername);
 			
@@ -4288,10 +5328,9 @@ public class CasePage {
 		try
 		{
 			Thread.sleep(10000);
-			this.performClickWithAction(casesWithIcon);
-			Thread.sleep(3000);
 			
 			newButton.click();
+			newCaseButton.click();
 			Thread.sleep(5000);
 			this.performClickWithAction(caseTypeDropdown);
 			//caseTypeDropdown.click();
@@ -4315,12 +5354,18 @@ public class CasePage {
 			
 			departmentDropdown.click();
 			String departmentvalue = handler.getDepartment();
-			wait.until(ExpectedConditions.presenceOfElementLocated(By.xpath("//label[text()='Department']/following::div[2]/div[2]/lightning-base-combobox-item/span[2]/span[text()='"+departmentvalue+"']"))).click();
+			WebElement d1 = wait.until(ExpectedConditions.presenceOfElementLocated(By.xpath("//label[text()='Department']/following::div[2]/div[2]/lightning-base-combobox-item/span[2]/span[text()='"+departmentvalue+"']")));
+			Thread.sleep(2000);	
+			this.performClickWithAction(d1);
 			System.out.println("Department value selected");
 			Thread.sleep(2000);			
-			saveButton.click();
-			Thread.sleep(2000);
+			((JavascriptExecutor) driver).executeScript("window.scrollTo(document.body.scrollHeight, 0)");
 			
+			Thread.sleep(2000);
+
+			this.performClickWithAction(topSaveButton);
+			Thread.sleep(10000);
+			wait.until(ExpectedConditions.visibilityOf(caseNumber));
 			String caseno =  caseNumber.getText();	
 			this.caseCount = caseno;
 			System.out.println("caseno" +" "+ this.caseCount);
@@ -4353,10 +5398,8 @@ public class CasePage {
 		try
 		{
 			Thread.sleep(10000);
-			this.performClickWithAction(casesWithIcon);
-			Thread.sleep(3000);
-			
 			newButton.click();
+			newCaseButton.click();
 			Thread.sleep(5000);
 			this.performClickWithAction(caseTypeDropdown);
 			//caseTypeDropdown.click();
@@ -4403,9 +5446,13 @@ public class CasePage {
 			
 			Thread.sleep(2000);	
 			
-			saveButton.click();
-			Thread.sleep(8000);
+			((JavascriptExecutor) driver).executeScript("window.scrollTo(document.body.scrollHeight, 0)");
 			
+			Thread.sleep(2000);
+
+			this.performClickWithAction(topSaveButton);
+			Thread.sleep(10000);
+			wait.until(ExpectedConditions.visibilityOf(caseNumber));
 			String caseno =  caseNumber.getText();	
 			this.caseCount = caseno;
 			System.out.println("caseno" +" "+ this.caseCount);
@@ -4499,19 +5546,33 @@ public class CasePage {
 			Thread.sleep(2000);
 			this.performClickWithAction(topCaseNumberLink);
 			
-			System.out.println("Clickd on Case number");
+			System.out.println("Clicked on Case number");
 			Thread.sleep(6000);
+			wait.until(ExpectedConditions.visibilityOf(editButton));
 			editButton.click();
 			Thread.sleep(10000);
+			wait.until(ExpectedConditions.visibilityOf(statusCodeDropdown));
+			Thread.sleep(5000);
+			statusCodeDropdown.click();
 			this.selectElement(statusCodeDropdown, handler.getWealthOpsStatusCode());
 			System.out.println("Status code is changed");
-			this.selectElement(departmentDropdown, handler.getWealthOpsDepartment());
+			Thread.sleep(4000);
+			departmentDropdown.click();
+			String departmentvalue = handler.getWealthOpsDepartment();
+			WebElement d1 = wait.until(ExpectedConditions.presenceOfElementLocated(By.xpath("//label[text()='Department']/following::div[2]/div[2]/lightning-base-combobox-item/span[2]/span[text()='"+departmentvalue+"']")));
+			this.performClickWithAction(d1);
 			System.out.println("Department value is changed");
-			Thread.sleep(2000);
+			Thread.sleep(5000);
 			
-			this.performClickWithAction(saveButton);
-			//saveButton.click();
+			
+			((JavascriptExecutor) driver).executeScript("window.scrollTo(document.body.scrollHeight, 0)");
+			
 			Thread.sleep(2000);
+
+			this.performClickWithAction(topSaveButton);
+			
+			Thread.sleep(10000);
+			wait.until(ExpectedConditions.visibilityOf(caseOwnerValue));
 			
 			String caseownername = caseOwnerValue.getText();
 			System.out.println("Case owner name is " + caseownername);
@@ -4605,18 +5666,25 @@ public class CasePage {
 			
 			System.out.println("Clickd on Case number");
 			Thread.sleep(9000);
+			wait.until(ExpectedConditions.visibilityOf(editButton));
 			this.performClickWithAction(editButton);
 			//editButton.click();
 			Thread.sleep(10000);
+			statusCodeDropdown.click();
 			this.selectElement(statusCodeDropdown, handler.getWealthOpsStatusCode());
 			System.out.println("Status code is changed");
 			
 			Thread.sleep(2000);
 			
-			this.performClickWithAction(saveButton);
+			((JavascriptExecutor) driver).executeScript("window.scrollTo(document.body.scrollHeight, 0)");
 			
-			Thread.sleep(9000);
+			Thread.sleep(2000);
+
+			this.performClickWithAction(topSaveButton);
 			
+			Thread.sleep(10000);
+			
+			wait.until(ExpectedConditions.visibilityOf(caseOwnerValue));
 			String caseownername = caseOwnerValue.getText();
 			System.out.println("Case owner name is " + caseownername);
 			
@@ -4703,26 +5771,35 @@ public class CasePage {
 			System.out.println("My open cases is selected");
 			Thread.sleep(3000);			
 			caseSearchField.sendKeys(this.caseCount);
-			Thread.sleep(5000);
+			caseSearchField.sendKeys(Keys.ENTER);
+			Thread.sleep(9000);
 			driver.findElement(By.xpath("//table[@data-aura-class='uiVirtualDataTable']/tbody/tr/td[1]/span")).click();
-			Thread.sleep(2000);
+			Thread.sleep(4000);
 			this.performClickWithAction(topCaseNumberLink);
 			
-			System.out.println("Clickd on Case number");
+			System.out.println("Clicked on Case number");
 			Thread.sleep(6000);
+			wait.until(ExpectedConditions.visibilityOf(editButton));
 			editButton.click();
-			Thread.sleep(6000);
+			Thread.sleep(10000);
+			wait.until(ExpectedConditions.visibilityOf(statusCodeDropdown));
 			statusCodeDropdown.click();
 			this.selectElement(statusCodeDropdown, handler.getWcOpsStatusCode());
 			System.out.println("Status code is changed");
 			Thread.sleep(4000);
-			this.selectElement(departmentDropdown, handler.getWcOpsDepartment());
+			departmentDropdown.click();
+			String departmentvalue = handler.getWcOpsDepartment();		
+			WebElement d1 = wait.until(ExpectedConditions.presenceOfElementLocated(By.xpath("//label[text()='Department']/following::div[2]/div[2]/lightning-base-combobox-item/span[2]/span[text()='"+departmentvalue+"']")));
+			this.performClickWithAction(d1);
 			System.out.println("Department value is changed");
-			Thread.sleep(2000);
-			
-			this.performClickWithAction(saveButton);
-			
 			Thread.sleep(5000);
+			((JavascriptExecutor) driver).executeScript("window.scrollTo(document.body.scrollHeight, 0)");
+			Thread.sleep(5000);
+			
+			this.performClickWithAction(topSaveButton);
+			
+			Thread.sleep(10000);
+			wait.until(ExpectedConditions.visibilityOf(caseOwnerValue));
 			
 			String caseownername = caseOwnerValue.getText();
 			System.out.println("Case owner name is " + caseownername);
@@ -4816,6 +5893,7 @@ public class CasePage {
 			
 			System.out.println("Clickd on Case number");
 			Thread.sleep(6000);
+			wait.until(ExpectedConditions.visibilityOf(editButton));
 			editButton.click();
 			Thread.sleep(13000);
 			statusCodeDropdown.click();			
@@ -4924,6 +6002,7 @@ public class CasePage {
 			
 			System.out.println("Clickd on Case number");
 			Thread.sleep(6000);
+			wait.until(ExpectedConditions.visibilityOf(editButton));
 			editButton.click();
 			Thread.sleep(13000);
 			statusCodeDropdown.click();
@@ -5008,7 +6087,9 @@ public class CasePage {
 			
 			System.out.println("CMS Ops Request is selected");
 			
-			Thread.sleep(6000);				
+			Thread.sleep(10000);
+			wait.until(ExpectedConditions.visibilityOf(caseSearchField));
+			
 			caseSearchField.sendKeys(this.caseCount);
 			caseSearchField.sendKeys(Keys.ENTER);
 			Thread.sleep(5000);
@@ -5034,19 +6115,28 @@ public class CasePage {
 			actions.doubleClick(topCaseNumberLink).perform();
 			*/
 			//topCaseNumberLink.click();
-			System.out.println("Clickd on Case number");
+			System.out.println("Clicked on Case number");
 			Thread.sleep(6000);
+			wait.until(ExpectedConditions.visibilityOf(editButton));
 			editButton.click();
-			Thread.sleep(2000);
+			Thread.sleep(10000);
+			wait.until(ExpectedConditions.visibilityOf(statusCodeDropdown));
 			this.selectElement(statusCodeDropdown, handler.getCmsOpsStatusCode());
 			System.out.println("Status code is changed");
-			this.selectElement(departmentDropdown, handler.getCmsOpsDepartment());
+			Thread.sleep(4000);
+			departmentDropdown.click();
+			String departmentvalue = handler.getCmsOpsDepartment();		
+			WebElement d1 = wait.until(ExpectedConditions.presenceOfElementLocated(By.xpath("//label[text()='Department']/following::div[2]/div[2]/lightning-base-combobox-item/span[2]/span[text()='"+departmentvalue+"']")));
+			this.performClickWithAction(d1);
 			System.out.println("Department value is changed");
-			Thread.sleep(2000);
+			Thread.sleep(5000);
+			((JavascriptExecutor) driver).executeScript("window.scrollTo(document.body.scrollHeight, 0)");
+			Thread.sleep(5000);
 			
-			this.performClickWithAction(saveButton);
+			this.performClickWithAction(topSaveButton);
 			
-			Thread.sleep(2000);
+			Thread.sleep(10000);
+			wait.until(ExpectedConditions.visibilityOf(caseOwnerValue));
 			
 			String caseownername = caseOwnerValue.getText();
 			System.out.println("Case owner name is " + caseownername);
@@ -5140,6 +6230,7 @@ public class CasePage {
 			//topCaseNumberLink.click();
 			System.out.println("Clickd on Case number");
 			Thread.sleep(6000);
+			wait.until(ExpectedConditions.visibilityOf(editButton));
 			this.performClickWithAction(editButton);
 			//editButton.click();
 			Thread.sleep(15000);
@@ -5269,16 +6360,24 @@ public class CasePage {
 			statusCodeDropdown.click();
 			this.selectElement(statusCodeDropdown, handler.getWealthProductTeamStatusCode());
 			System.out.println("Status code is changed");
-			departmentDropdown.click();
-			this.selectElement(departmentDropdown, handler.getWealthProductTeamDepartment());
-			System.out.println("Department value is changed");
 			Thread.sleep(2000);
+			
+			departmentDropdown.click();
+			String departmentvalue = handler.getWealthProductTeamDepartment();		
+			WebElement d1 = wait.until(ExpectedConditions.presenceOfElementLocated(By.xpath("//label[text()='Department']/following::div[2]/div[2]/lightning-base-combobox-item/span[2]/span[text()='"+departmentvalue+"']")));
+			this.performClickWithAction(d1);
+			System.out.println("Department value is changed");
+			Thread.sleep(5000);
 			//Adding Branch dropdown code
 			
-			this.performClickWithAction(saveButton);
+			((JavascriptExecutor) driver).executeScript("window.scrollTo(document.body.scrollHeight, 0)");
 			
 			Thread.sleep(2000);
+
+			this.performClickWithAction(topSaveButton);
 			
+			Thread.sleep(10000);
+			wait.until(ExpectedConditions.visibilityOf(caseOwnerValue));
 			String caseownername = caseOwnerValue.getText();
 			System.out.println("Case owner name is " + caseownername);
 			
@@ -5494,20 +6593,27 @@ public class CasePage {
 			//topCaseNumberLink.click();
 			System.out.println("Clickd on Case number");
 			Thread.sleep(6000);
+			wait.until(ExpectedConditions.visibilityOf(editButton));
 			editButton.click();
 			Thread.sleep(2000);
 			statusCodeDropdown.click();
 			this.selectElement(statusCodeDropdown, handler.getBranchStatusCode());
 			System.out.println("Status code is changed");
-			departmentDropdown.click();
-			this.selectElement(departmentDropdown, handler.getBranchDepartment());
+			Thread.sleep(2000);
+			departmentDropdown.click();			
+			String departmentvalue = handler.getBranchDepartment();		
+			WebElement d1 = wait.until(ExpectedConditions.presenceOfElementLocated(By.xpath("//label[text()='Department']/following::div[2]/div[2]/lightning-base-combobox-item/span[2]/span[text()='"+departmentvalue+"']")));
+			this.performClickWithAction(d1);
 			System.out.println("Department value is changed");
-			Thread.sleep(2000);
+			Thread.sleep(5000);
 						
-			this.performClickWithAction(saveButton);
-			//saveButton.click();
-			Thread.sleep(2000);
+			((JavascriptExecutor) driver).executeScript("window.scrollTo(document.body.scrollHeight, 0)");
 			
+			Thread.sleep(2000);
+
+			this.performClickWithAction(topSaveButton);
+			Thread.sleep(10000);
+			wait.until(ExpectedConditions.visibilityOf(caseOwnerValue));
 			String caseownername = caseOwnerValue.getText();
 			System.out.println("Case owner name is " + caseownername);
 			
@@ -5579,8 +6685,9 @@ public class CasePage {
 			Thread.sleep(2000);
 			this.performClickWithAction(topCaseNumberLink);
 			
-			System.out.println("Clickd on Case number");
+			System.out.println("Clicked on Case number");
 			Thread.sleep(10000);
+			wait.until(ExpectedConditions.visibilityOf(editButton));
 			this.performClickWithAction(editButton);
 		//	editButton.click();
 			Thread.sleep(9000);
@@ -5595,7 +6702,7 @@ public class CasePage {
 			this.performClickWithAction(topSaveButton);
 			
 			Thread.sleep(10000);
-			
+			wait.until(ExpectedConditions.visibilityOf(caseOwnerValue));
 			String caseownername = caseOwnerValue.getText();
 			System.out.println("Case owner name is " + caseownername);
 			
@@ -5694,6 +6801,7 @@ public class CasePage {
 			//topCaseNumberLink.click();
 			System.out.println("Clickd on Case number");
 			Thread.sleep(6000);
+			wait.until(ExpectedConditions.visibilityOf(editButton));
 			editButton.click();
 			Thread.sleep(6000);
 			statusCodeDropdown.click();
@@ -5711,9 +6819,9 @@ public class CasePage {
 			((JavascriptExecutor) driver).executeScript("window.scrollTo(document.body.scrollHeight, 0)");
 			Thread.sleep(5000);
 			this.performClickWithAction(topSaveButton);
-			//saveButton.click();
-			Thread.sleep(6000);
 			
+			Thread.sleep(10000);
+			wait.until(ExpectedConditions.visibilityOf(caseOwnerValue));
 			String caseownername = caseOwnerValue.getText();
 			System.out.println("Case owner name is " + caseownername);
 			
@@ -5808,6 +6916,7 @@ public class CasePage {
 			
 			System.out.println("Clickd on Case number");
 			Thread.sleep(6000);
+			wait.until(ExpectedConditions.visibilityOf(editButton));
 			editButton.click();
 			Thread.sleep(15000);
 			statusCodeDropdown.click();
@@ -5822,6 +6931,9 @@ public class CasePage {
 			wait.until(ExpectedConditions.presenceOfElementLocated(By.xpath("//label[text()='Department']/following::div[2]/div[2]/lightning-base-combobox-item/span[2]/span[text()='"+iodepartmentvalue+"']"))).click();
 			System.out.println("Department value selected");
 			Thread.sleep(3000);
+			
+			((JavascriptExecutor) driver).executeScript("window.scrollTo(document.body.scrollHeight, 0)");
+			Thread.sleep(5000);
 			
 			
 			this.performClickWithAction(topSaveButton);
@@ -5921,6 +7033,7 @@ public class CasePage {
 			System.out.println("Clickd on Case number");
 			
 			Thread.sleep(6000);
+			wait.until(ExpectedConditions.visibilityOf(editButton));
 			editButton.click();
 			Thread.sleep(15000);
 			statusCodeDropdown.click();
@@ -5961,15 +7074,14 @@ public class CasePage {
 		}
 	}
 	
-	public void createCaseAssignedtoUser(CaseDataModel handler)
+	public void createCaseAssignedtoUserForEmbossedNameChange(CaseDataModel handler)
 	{
 		try
 		{
 			Thread.sleep(10000);
-			this.performClickWithAction(casesWithIcon);
-			Thread.sleep(3000);
 			
 			newButton.click();
+			newCaseButton.click();
 			Thread.sleep(5000);
 			
 			
@@ -5984,6 +7096,11 @@ public class CasePage {
 			subCategoryDropdown.click();
 			this.selectElement(subCategoryDropdown, handler.getSubCategory());			
 			System.out.println("Sub category selected");
+			Thread.sleep(2000);
+			
+			mothersMaidenNameCheckbox.click();
+			verifyTransactionCheckbox.click();
+			System.out.println("Succesfully clicked on verify Transaction Checkbox");
 			Thread.sleep(2000);
 			
 			statusCodeDropdown.click();
@@ -6004,9 +7121,9 @@ public class CasePage {
 			*/
 			
 			Thread.sleep(5000);
-			saveButton.click();
-			Thread.sleep(2000);
-			
+			this.performClickWithAction(topSaveButton);
+			Thread.sleep(10000);
+			wait.until(ExpectedConditions.visibilityOf(caseNumber));
 			String caseno =  caseNumber.getText();	
 			this.caseCount = caseno;
 			System.out.println("caseno" +" "+ this.caseCount);
@@ -6040,10 +7157,9 @@ public class CasePage {
 		try
 		{
 			Thread.sleep(10000);
-			this.performClickWithAction(casesWithIcon);
-			Thread.sleep(3000);
 			
 			newButton.click();
+			newCaseButton.click();
 			Thread.sleep(5000);
 			
 			
@@ -6080,9 +7196,11 @@ public class CasePage {
 			*/
 			
 			Thread.sleep(5000);
-			saveButton.click();
-			Thread.sleep(2000);
-			
+			((JavascriptExecutor) driver).executeScript("window.scrollTo(document.body.scrollHeight, 0)");
+			Thread.sleep(5000);
+			this.performClickWithAction(topSaveButton);
+			Thread.sleep(10000);
+			wait.until(ExpectedConditions.visibilityOf(caseNumber));
 			String caseno =  caseNumber.getText();	
 			this.caseCount = caseno;
 			System.out.println("caseno" +" "+ this.caseCount);
@@ -6133,7 +7251,9 @@ public class CasePage {
 			
 			Thread.sleep(10000);
 			this.clearTab();			
-			Thread.sleep(5000);	
+			Thread.sleep(2000);
+			this.clearTab();			
+			Thread.sleep(5000);
 			navigationMenuDropdown.click();
 			Thread.sleep(3000);
 			caseDropdown.click();
@@ -6152,23 +7272,28 @@ public class CasePage {
 			Thread.sleep(6000);
 			
 			driver.findElement(By.xpath("//table[@data-aura-class='uiVirtualDataTable']/tbody/tr/td[1]/span")).click();
-			Thread.sleep(2000);
+			Thread.sleep(4000);
 			this.performClickWithAction(topCaseNumberLink);
-			/*Actions actions = new Actions(driver);
-			actions.doubleClick(topCaseNumberLink).perform();*/
-			
+					
 			
 			System.out.println("Clickd on Case number");
 			Thread.sleep(6000);
+			wait.until(ExpectedConditions.visibilityOf(editButton));
 			editButton.click();
-			Thread.sleep(2000);
+			Thread.sleep(10000);
+			wait.until(ExpectedConditions.visibilityOf(statusCodeDropdown));
+			statusCodeDropdown.click();
 			this.selectElement(statusCodeDropdown, handler.getGrdStatusCode());
 			System.out.println("Status code is changed");
-			Thread.sleep(2000);
-			this.performClickWithAction(saveButton);
-			//saveButton.click();
+			Thread.sleep(4000);
+			resolutionCommentField.sendKeys(handler.getResolutionComment());
+			Thread.sleep(1000);
+			((JavascriptExecutor) driver).executeScript("window.scrollTo(document.body.scrollHeight, 0)");
 			Thread.sleep(5000);
-			
+			this.performClickWithAction(topSaveButton);
+			//saveButton.click();
+			Thread.sleep(10000);
+			wait.until(ExpectedConditions.visibilityOf(caseOwnerValue));
 			String caseownername = caseOwnerValue.getText();
 			System.out.println("Case owner name is " + caseownername);
 			
@@ -6183,6 +7308,8 @@ public class CasePage {
 			
 			String createdByName = createdByNameValue.getText();
 			System.out.println("Created by name " + createdByName);
+			
+			System.out.println("Completed the process by GRD");
 		}
 		catch(Exception e)
 		{
@@ -6196,10 +7323,9 @@ public class CasePage {
 		try
 		{
 			Thread.sleep(3000);
-			this.performClickWithAction(casesWithIcon);
-			Thread.sleep(5000);
 			
 			newButton.click();
+			newCaseButton.click();
 			Thread.sleep(5000);
 			
 			
@@ -6328,8 +7454,11 @@ public class CasePage {
 			//topCaseNumberLink.click();
 			System.out.println("Clickd on Case number");
 			Thread.sleep(6000);
+			wait.until(ExpectedConditions.visibilityOf(editButton));
 			editButton.click();
-			Thread.sleep(2000);
+			Thread.sleep(10000);
+			wait.until(ExpectedConditions.visibilityOf(statusCodeDropdown));
+			statusCodeDropdown.click();
 			this.selectElement(statusCodeDropdown, handler.getRlOpsStatusCode());
 			System.out.println("Status code is changed");
 			Thread.sleep(2000);
@@ -6430,8 +7559,11 @@ public class CasePage {
 			
 			System.out.println("Clickd on Case number");
 			Thread.sleep(6000);
+			wait.until(ExpectedConditions.visibilityOf(editButton));
 			editButton.click();
-			Thread.sleep(2000);
+			Thread.sleep(10000);
+			wait.until(ExpectedConditions.visibilityOf(statusCodeDropdown));
+			statusCodeDropdown.click();
 			this.selectElement(statusCodeDropdown, handler.getCmsOpsStatusCode());
 			System.out.println("Status code is changed");
 			Thread.sleep(2000);
@@ -6490,7 +7622,10 @@ public class CasePage {
 			//DVU maker user logged in 
 			
 			Thread.sleep(10000);
-			this.clearTab();			
+			this.clearTab();
+			this.clearTab();
+			Thread.sleep(3000);	
+			this.clearTab();
 			Thread.sleep(5000);	
 			navigationMenuDropdown.click();
 			Thread.sleep(3000);
@@ -6535,6 +7670,7 @@ public class CasePage {
 			
 			System.out.println("Clickd on Case number");
 			Thread.sleep(8000);
+			wait.until(ExpectedConditions.visibilityOf(editButton));
 			editButton.click();
 			Thread.sleep(10000);
 						
@@ -6587,6 +7723,8 @@ public class CasePage {
 	{
 		try
 		{
+			Thread.sleep(10000);
+			wait.until(ExpectedConditions.visibilityOf(searchGlodalFieldOfUserPage));
 			searchGlodalFieldOfUserPage.click();			
 			searchGlodalFieldOfUserPage.sendKeys(this.trimQuote(handler.getDeMakerUser()));
 			
@@ -6627,10 +7765,11 @@ public class CasePage {
 			this.performClickWithAction(caseNumberCheckbox);
 		
 			acceptButton.click();
-			Thread.sleep(10000);
 			System.out.println("Successfully clicked on Accept Button");
+			Thread.sleep(10000);
 			
 			
+			wait.until(ExpectedConditions.visibilityOf(listViewDropdown));
 			//CHange status code process
 			listViewDropdown.click();
 			Thread.sleep(3000);
@@ -6648,8 +7787,10 @@ public class CasePage {
 			
 			System.out.println("Clickd on Case number");
 			Thread.sleep(5000);
+			wait.until(ExpectedConditions.visibilityOf(editButton));
 			editButton.click();
 			Thread.sleep(10000);
+			wait.until(ExpectedConditions.visibilityOf(journalNumber));
 			journalNumber.sendKeys(handler.getJournalNumber());
 			Thread.sleep(2000);
 			statusCodeDropdown.click();
@@ -6661,8 +7802,9 @@ public class CasePage {
 			((JavascriptExecutor) driver).executeScript("window.scrollTo(document.body.scrollHeight, 0)");
 			
 			this.performClickWithAction(topSaveButton);
+			wait.until(ExpectedConditions.visibilityOf(caseNumber));
 			
-			Thread.sleep(2000);
+			Thread.sleep(10000);
 			
 			System.out.println("Completed DE Maker user process");
 		}
@@ -6740,6 +7882,7 @@ public class CasePage {
 			
 			System.out.println("Clickd on Case number");
 			Thread.sleep(5000);
+			wait.until(ExpectedConditions.visibilityOf(editButton));
 			editButton.click();
 			Thread.sleep(10000);
 			journalNumber.sendKeys(handler.getJournalNumber());
@@ -6770,7 +7913,8 @@ public class CasePage {
 	{
 		try
 		{
-			
+			Thread.sleep(10000);
+			wait.until(ExpectedConditions.visibilityOf(searchGlodalFieldOfUserPage));
 			searchGlodalFieldOfUserPage.click();
 			
 			searchGlodalFieldOfUserPage.sendKeys(this.trimQuote(handler.getDeCheckerUser()));
@@ -6797,8 +7941,13 @@ public class CasePage {
 			navigationMenuDropdown.click();
 			Thread.sleep(3000);
 			caseDropdown.click();
-			Thread.sleep(3000);			
+			Thread.sleep(10000);
+			driver.navigate().refresh();
+			Thread.sleep(5000);	
+			this.clearTab();
+			Thread.sleep(5000);	
 			//Accept case process
+			wait.until(ExpectedConditions.visibilityOf(listViewDropdown));
 			listViewDropdown.click();
 			Thread.sleep(5000);
 			listViewSearchField.sendKeys("RL Ops DE Checker – Individual Request");
@@ -6834,17 +7983,21 @@ public class CasePage {
 
 			
 			System.out.println("Clickd on Case number");
-			Thread.sleep(5000);
+			Thread.sleep(10000);
+			wait.until(ExpectedConditions.visibilityOf(editButton));
 			editButton.click();
-			Thread.sleep(2000);
+			Thread.sleep(10000);
+			wait.until(ExpectedConditions.visibilityOf(statusCodeDropdown));
 			statusCodeDropdown.click();
 			this.selectElement(statusCodeDropdown, handler.getDeCheckerStatus());
 			System.out.println("Status code is Resolved");
-			Thread.sleep(2000);
+			Thread.sleep(4000);
 			((JavascriptExecutor) driver).executeScript("window.scrollTo(document.body.scrollHeight, 0)");
+			Thread.sleep(4000);
 			this.performClickWithAction(topSaveButton);
 			
-			Thread.sleep(5000);
+			Thread.sleep(10000);
+			wait.until(ExpectedConditions.visibilityOf(caseNumber));
 			System.out.println("Completed DE Checker user process");
 			
 		}
@@ -6926,6 +8079,7 @@ public class CasePage {
 			
 			System.out.println("Clickd on Case number");
 			Thread.sleep(5000);
+			wait.until(ExpectedConditions.visibilityOf(editButton));
 			editButton.click();
 			Thread.sleep(2000);
 			statusCodeDropdown.click();
@@ -7016,6 +8170,7 @@ public class CasePage {
 			//topCaseNumberLink.click();
 			System.out.println("Clickd on Case number");
 			Thread.sleep(6000);
+			wait.until(ExpectedConditions.visibilityOf(editButton));
 			editButton.click();
 			Thread.sleep(2000);
 			statusCodeDropdown.click();
@@ -7057,16 +8212,13 @@ public class CasePage {
 		}
 	}
 	
-	public void createCaseFraudulentMissuse(CaseDataModel handler)
+	public void createCaseFraudulentMissusebyBranch(CaseDataModel handler)
 	{
 		try
 		{
 			Thread.sleep(10000);
-			
-			this.performClickWithAction(casesWithIcon);
-			Thread.sleep(3000);
-			
 			newButton.click();
+			newCaseButton.click();
 			Thread.sleep(8000);
 			
 			this.performClickWithAction(caseTypeDropdown);
@@ -7102,14 +8254,11 @@ public class CasePage {
 			Thread.sleep(5000);
 			
 			this.performClickWithAction(topSaveButton);
-		    
-		   /* Actions actions = new Actions(driver); 
-		    actions.clickAndHold(saveButton).release().perform();*/
-			
+		   			
 			Thread.sleep(5000);
 			System.out.println("Clicked on save button");
-			Thread.sleep(5000);
-			
+			Thread.sleep(10000);
+			wait.until(ExpectedConditions.visibilityOf(caseNumber));
 			String caseno =  caseNumber.getText();	
 			this.caseCount = caseno;
 			System.out.println("caseno" +" "+ this.caseCount);
@@ -7135,6 +8284,81 @@ public class CasePage {
 			Assert.fail();
 		}
 	}
+	
+	public void createCaseFraudulentMissusebyBOC(CaseDataModel handler)
+	{
+		try
+		{
+			Thread.sleep(10000);
+			newButton.click();
+			newCaseButton.click();
+			Thread.sleep(8000);
+			
+			this.performClickWithAction(caseTypeDropdown);
+			this.selectElement(caseTypeDropdown, handler.getCaseType());
+			System.out.println("Case type selected");
+			Thread.sleep(2000);
+			categoryDropdown.click();
+			this.selectElement(categoryDropdown, handler.getCategory());
+			System.out.println("Category selected");
+			Thread.sleep(2000);
+			subCategoryDropdown.click();
+			this.selectElement(subCategoryDropdown, handler.getSubCategory());						
+			System.out.println("Sub category selected");
+			Thread.sleep(2000);	
+			
+			transactionRefernceNoField.sendKeys(handler.getTransactionReferenceNo());
+			disputeAmtField.sendKeys(handler.getDisputeAmt());
+			disputeStageField.click();
+			String disputestagevalue = handler.getDisputeStage();						
+			wait.until(ExpectedConditions.presenceOfElementLocated(By.xpath("//label[text()='Dispute Stage']/following::div[2]/div[2]/lightning-base-combobox-item/span[2]/span[text()='"+disputestagevalue+"']"))).click();
+			
+			
+			Thread.sleep(3000);	
+			
+			statusCodeDropdown.click();
+			this.selectElement(statusCodeDropdown, handler.getStatusCode());
+			System.out.println("Status Code changed");
+			Thread.sleep(3000);	
+			
+			
+			
+			
+			((JavascriptExecutor) driver).executeScript("window.scrollTo(document.body.scrollHeight, 0)");
+			Thread.sleep(5000);
+			
+			this.performClickWithAction(topSaveButton);
+		   			
+			Thread.sleep(5000);
+			System.out.println("Clicked on save button");
+			Thread.sleep(10000);
+			wait.until(ExpectedConditions.visibilityOf(caseNumber));
+			String caseno =  caseNumber.getText();	
+			this.caseCount = caseno;
+			System.out.println("caseno" +" "+ this.caseCount);
+			
+			String caseownername = caseOwnerValue.getText();
+			System.out.println("Case owner name is " + caseownername);
+			
+			String customername = customerNameValue.getText();
+			System.out.println("Customer name is " + customername);
+			
+			String statuscode = statusCodeValue.getText();
+			System.out.println("Status code is " + statuscode);
+			
+			String createdBydate = createdByDateValue.getText();
+			System.out.println("Created By date " + createdBydate);
+			
+			String createdByName = createdByNameValue.getText();
+			System.out.println("Created by name " + createdByName);
+		}
+		catch(Exception e)
+		{
+			ExtentConfigurer.getTest().log(Status.ERROR, "Selenium Error Occurred : " + e.getMessage());
+			Assert.fail();
+		}
+	}
+	
 	
 	public void loginAcceptAndChangeStatusCodeByReconOpsUser(CaseDataModel handler)
 	{
@@ -7195,27 +8419,29 @@ public class CasePage {
 			caseSearchField.sendKeys(this.caseCount);
 			Thread.sleep(6000);
 			driver.findElement(By.xpath("//table[@data-aura-class='uiVirtualDataTable']/tbody/tr/td[1]/span")).click();
-			Thread.sleep(2000);
+			Thread.sleep(4000);
 			this.performClickWithAction(topCaseNumberLink);
-			/*Actions actions = new Actions(driver);
-			actions.doubleClick(topCaseNumberLink).perform();*/
 			
-			//topCaseNumberLink.click();
-			System.out.println("Clickd on Case number");
+			System.out.println("Clicked on Case number");
 			Thread.sleep(6000);
+			wait.until(ExpectedConditions.visibilityOf(editButton));
 			this.performClickWithAction(editButton);
 			//editButton.click();
 			Thread.sleep(15000);
+			wait.until(ExpectedConditions.visibilityOf(statusCodeDropdown));
 			statusCodeDropdown.click();
 			this.selectElement(statusCodeDropdown, handler.getReconOpsStatusCode());
 			System.out.println("Status code is changed");
 			Thread.sleep(8000);										
 			
+			((JavascriptExecutor) driver).executeScript("window.scrollTo(document.body.scrollHeight, 0)");
+			Thread.sleep(5000);
 			
 			this.performClickWithAction(topSaveButton);
 			System.out.println("Clicked on save button");
 			
-			Thread.sleep(5000);
+			Thread.sleep(10000);
+			wait.until(ExpectedConditions.visibilityOf(caseOwnerValue));
 			
 			String caseownername = caseOwnerValue.getText();
 			System.out.println("Case owner name is " + caseownername);
@@ -7316,6 +8542,7 @@ public class CasePage {
 			//topCaseNumberLink.click();
 			System.out.println("Clickd on Case number");
 			Thread.sleep(6000);
+			wait.until(ExpectedConditions.visibilityOf(editButton));
 			this.performClickWithAction(editButton);
 			//editButton.click();
 			Thread.sleep(15000);
@@ -7438,18 +8665,25 @@ public class CasePage {
 			driver.findElement(By.xpath("//table[@data-aura-class='uiVirtualDataTable']/tbody/tr/td[1]/span")).click();
 			Thread.sleep(2000);
 			this.performClickWithAction(topCaseNumberLink);
-			System.out.println("Clickd on Case number");
-			Thread.sleep(6000);
+			System.out.println("Clicked on Case number");
+			Thread.sleep(10000);
+			wait.until(ExpectedConditions.visibilityOf(editButton));
 			editButton.click();
-			Thread.sleep(6000);
+			System.out.println("Clicked on edit button");
+			Thread.sleep(10000);
+			wait.until(ExpectedConditions.visibilityOf(statusCodeDropdown));
+			statusCodeDropdown.click();
 			this.selectElement(statusCodeDropdown, handler.getDvuMakerStatusCode());
-			System.out.println("Status code is changed to Sent to DE maker");
+			System.out.println("Status code is changed");
 			Thread.sleep(2000);
 			
+			((JavascriptExecutor) driver).executeScript("window.scrollTo(document.body.scrollHeight, 0)");
 			
-			this.performClickWithAction(saveButton);
+			Thread.sleep(2000);
+			this.performClickWithAction(topSaveButton);
 			
-			Thread.sleep(6000);
+			Thread.sleep(10000);
+			wait.until(ExpectedConditions.visibilityOf(caseOwnerValue));
 			
 			String caseownername = caseOwnerValue.getText();
 			System.out.println("Case owner name is " + caseownername);
@@ -7524,8 +8758,11 @@ public class CasePage {
 			
 			System.out.println("Clickd on Case number");
 			Thread.sleep(6000);
+			wait.until(ExpectedConditions.visibilityOf(editButton));
 			editButton.click();
 			Thread.sleep(6000);
+			wait.until(ExpectedConditions.visibilityOf(statusCodeDropdown));
+			statusCodeDropdown.click();
 			this.selectElement(statusCodeDropdown, handler.getBranchStatusCode());
 			System.out.println("Status code is changed");
 			Thread.sleep(8000);
@@ -7572,10 +8809,8 @@ public class CasePage {
 		try
 		{
 			Thread.sleep(10000);
-			this.performClickWithAction(casesWithIcon);
-			Thread.sleep(6000);
-			
 			newButton.click();
+			newCaseButton.click();
 			Thread.sleep(9000);
 			
 			this.performClickWithAction(caseTypeDropdown);
@@ -7651,10 +8886,8 @@ public class CasePage {
 		try
 		{
 			Thread.sleep(10000);
-			this.performClickWithAction(casesWithIcon);
-			Thread.sleep(6000);
-			
 			newButton.click();
+			newCaseButton.click();
 			Thread.sleep(9000);
 			
 			this.performClickWithAction(caseTypeDropdown);
@@ -7786,9 +9019,11 @@ public class CasePage {
 			this.performClickWithAction(topCaseNumberLink);
 			System.out.println("Clickd on Case number");
 			Thread.sleep(6000);
-			
+			wait.until(ExpectedConditions.visibilityOf(editButton));
 			editButton.click();
 			Thread.sleep(6000);
+			wait.until(ExpectedConditions.visibilityOf(statusCodeDropdown));
+			statusCodeDropdown.click();
 			this.selectElement(statusCodeDropdown, handler.getBocStatusCode());
 			System.out.println("Status code is changed");
 			Thread.sleep(2000);
@@ -7887,7 +9122,7 @@ public class CasePage {
 			this.performClickWithAction(topCaseNumberLink);
 			System.out.println("Clickd on Case number");
 			Thread.sleep(6000);
-			
+			wait.until(ExpectedConditions.visibilityOf(editButton));
 			editButton.click();
 			Thread.sleep(6000);
 			this.selectElement(statusCodeDropdown, handler.getBbOpsStatusCode());
@@ -7989,7 +9224,7 @@ public class CasePage {
 			this.performClickWithAction(topCaseNumberLink);
 			System.out.println("Clickd on Case number");
 			Thread.sleep(6000);
-			
+			wait.until(ExpectedConditions.visibilityOf(editButton));
 			editButton.click();
 			Thread.sleep(10000);			
 			this.selectElement(statusCodeDropdown, handler.getBbOpsStatusCode1());
@@ -8099,9 +9334,11 @@ public class CasePage {
 			System.out.println("Clickd on Case number");
 			Thread.sleep(9000);
 			
+			wait.until(ExpectedConditions.visibilityOf(editButton));
 			this.performClickWithAction(editButton);
 			System.out.println("Clicked on edit button");
 			Thread.sleep(10000);
+			statusCodeDropdown.click();
 			this.selectElement(statusCodeDropdown, handler.getDvuMakerStatusCode());
 			System.out.println("Status code is changed ");
 			Thread.sleep(2000);
@@ -8204,7 +9441,7 @@ public class CasePage {
 			this.performClickWithAction(topCaseNumberLink);
 			System.out.println("Clickd on Case number");
 			Thread.sleep(9000);
-			
+			wait.until(ExpectedConditions.visibilityOf(editButton));
 			this.performClickWithAction(editButton);
 			System.out.println("Clicked on edit button");
 			Thread.sleep(10000);
@@ -8315,7 +9552,7 @@ public class CasePage {
 			this.performClickWithAction(topCaseNumberLink);
 			System.out.println("Clickd on Case number");
 			Thread.sleep(10000);
-			
+			wait.until(ExpectedConditions.visibilityOf(editButton));
 			this.performClickWithAction(editButton);
 			System.out.println("Clicked on edit button");
 			Thread.sleep(10000);
@@ -8420,7 +9657,7 @@ public class CasePage {
 			this.performClickWithAction(topCaseNumberLink);
 			System.out.println("Clickd on Case number");
 			Thread.sleep(9000);
-			
+			wait.until(ExpectedConditions.visibilityOf(editButton));
 			this.performClickWithAction(editButton);
 			System.out.println("Clicked on edit button");
 			Thread.sleep(10000);
@@ -8462,10 +9699,9 @@ public class CasePage {
 	{
 		try
 		{
-			this.performClickWithAction(casesWithIcon);
-			Thread.sleep(3000);
 			
 			newButton.click();
+			newCaseButton.click();
 			Thread.sleep(5000);
 			this.performClickWithAction(caseTypeDropdown);
 			this.selectElement(caseTypeDropdown, handler.getCaseType());
@@ -8534,6 +9770,7 @@ public class CasePage {
 		try
 		{
 			Thread.sleep(10000);
+			wait.until(ExpectedConditions.visibilityOf(searchGlodalFieldOfUserPage));
 			searchGlodalFieldOfUserPage.click();			
 			searchGlodalFieldOfUserPage.sendKeys(this.trimQuote(handler.getBbOpsDVUMakerUser()));
 			
@@ -8575,8 +9812,10 @@ public class CasePage {
 			Thread.sleep(5000);
 			this.performClickWithAction(caseNumberCheckbox);
 			acceptButton.click();
-			Thread.sleep(10000);
 			System.out.println("Successfully clicked on Accept Button");
+			Thread.sleep(10000);
+			
+			Thread.sleep(3000);
 						
 			//CHange status code process
 			listViewDropdown.click();
@@ -8589,20 +9828,27 @@ public class CasePage {
 			caseSearchField.sendKeys(this.caseCount);
 			Thread.sleep(6000);
 			driver.findElement(By.xpath("//table[@data-aura-class='uiVirtualDataTable']/tbody/tr/td[1]/span")).click();
-			Thread.sleep(2000);
+			Thread.sleep(4000);
 			this.performClickWithAction(topCaseNumberLink);
-			System.out.println("Clickd on Case number");
-			Thread.sleep(6000);
-			
+			System.out.println("Clicked on Case number");
+			Thread.sleep(10000);
+			wait.until(ExpectedConditions.visibilityOf(editButton));
 			editButton.click();
-			Thread.sleep(6000);
+			System.out.println("Clicked on Edit button");
+			Thread.sleep(10000);
+			wait.until(ExpectedConditions.visibilityOf(statusCodeDropdown));
+			statusCodeDropdown.click();			
 			this.selectElement(statusCodeDropdown, handler.getBbOpsDVUMakerStatusCode());
 			System.out.println("Status code is changed");
 			Thread.sleep(2000);
-			this.performClickWithAction(saveButton);
-			//saveButton.click();
-			Thread.sleep(10000);
+			((JavascriptExecutor) driver).executeScript("window.scrollTo(document.body.scrollHeight, 0)");
 			
+			Thread.sleep(2000);
+			
+			this.performClickWithAction(topSaveButton);
+			
+			Thread.sleep(10000);
+			wait.until(ExpectedConditions.visibilityOf(caseOwnerValue));
 			String caseownername = caseOwnerValue.getText();
 			System.out.println("Case owner name is " + caseownername);
 			
@@ -8636,10 +9882,8 @@ public class CasePage {
 		try
 		{
 			Thread.sleep(10000);
-			this.performClickWithAction(casesWithIcon);
-			Thread.sleep(6000);
-			
 			newButton.click();
+			newCaseButton.click();
 			Thread.sleep(9000);
 			
 			this.performClickWithAction(caseTypeDropdown);
@@ -8731,6 +9975,7 @@ public class CasePage {
 		try
 		{
 			Thread.sleep(10000);
+			wait.until(ExpectedConditions.visibilityOf(searchGlodalFieldOfUserPage));
 			
 			searchGlodalFieldOfUserPage.click();			
 			searchGlodalFieldOfUserPage.sendKeys(this.trimQuote(handler.getBbOpsDVUCheckerUser()));
@@ -8747,19 +9992,23 @@ public class CasePage {
 			this.performClickWithAction(loginButton);
 			//loginButton.click();
 			System.out.println("BB Ops DVU Checker user logged in Successfully");
-			Thread.sleep(3000);
+			Thread.sleep(5000);
 			
 			
 			
 			// After login 
 			
 			Thread.sleep(10000);
-			this.clearTab();			
-			Thread.sleep(5000);	
+			this.clearTab();
+			this.clearTab();
+			Thread.sleep(3000);
+			this.clearTab();
+			Thread.sleep(5000);
 			navigationMenuDropdown.click();
 			Thread.sleep(3000);
 			caseDropdown.click();
-			Thread.sleep(3000);			
+			Thread.sleep(5000);	
+			wait.until(ExpectedConditions.visibilityOf(listViewDropdown));
 			//Accept case process
 			listViewDropdown.click();
 			Thread.sleep(5000);
@@ -8789,32 +10038,35 @@ public class CasePage {
 			System.out.println("My open cases is selected");
 			Thread.sleep(3000);			
 			caseSearchField.sendKeys(this.caseCount);
-			Thread.sleep(5000);
+			Thread.sleep(10000);
 			
 			
 			driver.findElement(By.xpath("//table[@data-aura-class='uiVirtualDataTable']/tbody/tr/td[1]/span")).click();
-			Thread.sleep(2000);
+			Thread.sleep(4000);
 			this.performClickWithAction(topCaseNumberLink);
 			
 			System.out.println("Clickd on Case number");
-			Thread.sleep(5000);
+			Thread.sleep(10000);
+			wait.until(ExpectedConditions.visibilityOf(editButton));
 			editButton.click();
+			System.out.println("Clicked on edit button");
 			Thread.sleep(10000);
 			
+			wait.until(ExpectedConditions.visibilityOf(statusCodeDropdown));
 			statusCodeDropdown.click();			
 			this.selectElement(statusCodeDropdown, handler.getBbOpsDVUCheckerStatusCode());
 			System.out.println("Status code is changed");
-			Thread.sleep(6000);
+			Thread.sleep(3000);
 			
-			driver.navigate().refresh();
-			statusCodeDropdown.click();	
-			this.selectElement(statusCodeDropdown, handler.getDvuCheckerStatusCode());
-			System.out.println("Status code is changed");
+			((JavascriptExecutor) driver).executeScript("window.scrollTo(document.body.scrollHeight, 0)");
 			
+			Thread.sleep(3000);
 			
-			this.performClickWithAction(saveButton);
+			this.performClickWithAction(topSaveButton);
+			System.out.println("Clicked on save button");
 			
 			Thread.sleep(10000);
+			wait.until(ExpectedConditions.visibilityOf(caseNumber));
 			
 			
 			
@@ -8830,6 +10082,147 @@ public class CasePage {
 		}
 	}
 	
+	
+	
+	
+	public void LoginAcceptAndChangeStatusCodeByBBOpsDVUCheckerUserTRY(CaseDataModel handler)
+	{
+		try
+		{
+			Thread.sleep(60000);
+			/*Thread.sleep(3000);
+			this.clearTab();
+			System.out.println("Closing All Tabs");
+			Thread.sleep(2000);
+			this.clearTab();
+			System.out.println("Closing All Tabs");
+			Thread.sleep(2000);
+			this.clearTab();
+			System.out.println("Closing All Tabs");
+			Thread.sleep(2000);
+			this.clearTab();
+			System.out.println("Closing All Tabs");
+			Thread.sleep(3000);
+			navigationMenuDropdown.click();
+			Thread.sleep(3000);
+			homeDropdown.click();
+			Thread.sleep(3000);
+			
+			Thread.sleep(5000);
+			this.continueExecution();
+			
+			
+			Actions action = new Actions(driver);
+			action.doubleClick(globalSearchField).perform();
+			
+			
+			globalSearchField.sendKeys(this.trimQuote(handler.getBbOpsDVUCheckerUser()));
+			
+			Thread.sleep(3000);
+			globalSearchValueSelection.click();
+			Thread.sleep(5000);
+			
+			driver.switchTo().frame(0);
+			Thread.sleep(3000);
+			
+			wait.until(ExpectedConditions.visibilityOf(userDetailButton)).click();
+			Thread.sleep(2000);
+			this.performClickWithAction(loginButton);
+			//loginButton.click();
+			System.out.println("BB Ops DVU Checker user logged in Successfully");
+			Thread.sleep(5000);
+			
+			*/
+			
+			// After login 
+			
+			Thread.sleep(10000);
+			this.clearTab();			
+			Thread.sleep(5000);	
+			
+			navigationMenuDropdown.click();
+			Thread.sleep(3000);
+			caseDropdown.click();
+			Thread.sleep(3000);			
+			//Accept case process
+			/*listViewDropdown.click();
+			Thread.sleep(5000);
+			listViewSearchField.sendKeys("BB Ops DVU Checker Request");
+			Thread.sleep(3000);
+			listViewFirstOption.click();
+			System.out.println("BB Ops DVU Checker Request is selected");
+			
+			
+			Thread.sleep(6000);				
+			caseSearchField.sendKeys("1000050370");
+			caseSearchField.sendKeys(Keys.ENTER);
+			Thread.sleep(5000);
+			this.performClickWithAction(caseNumberCheckbox);
+		//	caseNumberCheckbox.click();
+			acceptButton.click();
+			Thread.sleep(10000);
+			System.out.println("Successfully clicked on Accept Button");
+			*/
+			
+			//CHange status code process
+			listViewDropdown.click();
+			Thread.sleep(3000);
+			listViewSearchField.sendKeys("My Open Cases");
+			Thread.sleep(3000);
+			listViewFirstOption.click();
+			System.out.println("My open cases is selected");
+			Thread.sleep(3000);			
+			caseSearchField.sendKeys("1000050370");
+			Thread.sleep(10000);
+			
+			
+			driver.findElement(By.xpath("//table[@data-aura-class='uiVirtualDataTable']/tbody/tr/td[1]/span")).click();
+			Thread.sleep(4000);
+			this.performClickWithAction(topCaseNumberLink);
+			
+			System.out.println("Clickd on Case number");
+			Thread.sleep(30000);
+			wait.until(ExpectedConditions.visibilityOf(editButton));
+			editButton.click();
+			System.out.println("Clicked on edit button");
+			Thread.sleep(15000);
+			
+			wait.until(ExpectedConditions.visibilityOf(statusCodeDropdown));
+			statusCodeDropdown.click();			
+			this.selectElement(statusCodeDropdown, handler.getBbOpsDVUCheckerStatusCode());
+			System.out.println("Status code is changed");
+			Thread.sleep(6000);
+			
+			driver.navigate().refresh();
+			
+			Thread.sleep(10000);
+			wait.until(ExpectedConditions.visibilityOf(statusCodeDropdown));
+			statusCodeDropdown.click();	
+			this.selectElement(statusCodeDropdown, handler.getBbOpsDVUCheckerStatusCode());
+			System.out.println("Status code is changed");
+			Thread.sleep(5000);
+			((JavascriptExecutor) driver).executeScript("window.scrollTo(document.body.scrollHeight, 0)");
+			
+			Thread.sleep(5000);
+			
+			this.performClickWithAction(topSaveButton);
+			
+			Thread.sleep(10000);
+			wait.until(ExpectedConditions.visibilityOf(caseNumber));
+			
+			
+			
+			System.out.println("Completed BB Ops DVU Checker process");
+			
+			
+		}
+		catch(Exception e)
+		{
+			ExtentConfigurer.getTest().log(Status.ERROR, "Selenium Error Occurred : " + e.getMessage());
+			Assert.fail();
+			
+		}
+	}
 	
 	public void loginAcceptAndChangeStatusCodeByBBOpsDEMakerUser(CaseDataModel handler)
 	{
@@ -8902,6 +10295,7 @@ public class CasePage {
 			
 			System.out.println("Clickd on Case number");
 			Thread.sleep(6000);
+			wait.until(ExpectedConditions.visibilityOf(editButton));
 			editButton.click();
 			Thread.sleep(6000);
 			this.selectElement(statusCodeDropdown, handler.getDeMakerStatusCode());
@@ -8928,6 +10322,7 @@ public class CasePage {
 		try
 		{
 			Thread.sleep(10000);
+			wait.until(ExpectedConditions.visibilityOf(searchGlodalFieldOfUserPage));
 			
 			searchGlodalFieldOfUserPage.click();			
 			searchGlodalFieldOfUserPage.sendKeys(this.trimQuote(handler.getBbOpsDEMakerUser()));
@@ -8993,9 +10388,10 @@ public class CasePage {
 			
 			System.out.println("Clickd on Case number");
 			Thread.sleep(6000);
+			wait.until(ExpectedConditions.visibilityOf(editButton));
 			editButton.click();
 			Thread.sleep(6000);
-			
+			wait.until(ExpectedConditions.visibilityOf(journalNumber));
 			journalNumber.sendKeys(handler.getJournalNumber());
 			Thread.sleep(2000);
 			statusCodeDropdown.click();
@@ -9006,9 +10402,11 @@ public class CasePage {
 			
 			((JavascriptExecutor) driver).executeScript("window.scrollTo(document.body.scrollHeight, 0)");
 			
+			Thread.sleep(2000);
 			this.performClickWithAction(topSaveButton);
 			
-			Thread.sleep(2000);
+			Thread.sleep(10000);
+			wait.until(ExpectedConditions.visibilityOf(caseNumber));
 			
 			System.out.println("Completed BB Ops DE Maker user process");
 		}
@@ -9024,6 +10422,8 @@ public class CasePage {
 	{
 		try
 		{
+			Thread.sleep(10000);
+			wait.until(ExpectedConditions.visibilityOf(searchGlodalFieldOfUserPage));
 			
 			searchGlodalFieldOfUserPage.click();
 			
@@ -9089,16 +10489,20 @@ public class CasePage {
 			
 			System.out.println("Clickd on Case number");
 			Thread.sleep(5000);
+			wait.until(ExpectedConditions.visibilityOf(editButton));
 			editButton.click();
-			Thread.sleep(2000);
+			Thread.sleep(10000);
+			wait.until(ExpectedConditions.visibilityOf(statusCodeDropdown));
 			statusCodeDropdown.click();
 			this.selectElement(statusCodeDropdown, handler.getBbOpsDECheckerStatuscode());
 			System.out.println("Status code is Changed");
 			Thread.sleep(2000);
 			((JavascriptExecutor) driver).executeScript("window.scrollTo(document.body.scrollHeight, 0)");
 			this.performClickWithAction(topSaveButton);
+			System.out.println("Clicked on save button");
 			
-			Thread.sleep(5000);
+			Thread.sleep(10000);
+			wait.until(ExpectedConditions.visibilityOf(caseNumber));
 			System.out.println("Completed BB Ops DE Checker user process");
 			
 		}
@@ -9158,6 +10562,7 @@ public class CasePage {
 			
 			System.out.println("Clickd on Case number");
 			Thread.sleep(6000);
+			wait.until(ExpectedConditions.visibilityOf(editButton));
 			editButton.click();
 			Thread.sleep(6000);
 			this.selectElement(statusCodeDropdown, handler.getBranchStatusCode());
@@ -9167,12 +10572,14 @@ public class CasePage {
 			resolutionCommentField.sendKeys(handler.getResolutionComment());
 			Thread.sleep(4000);
 			
+			((JavascriptExecutor) driver).executeScript("window.scrollTo(document.body.scrollHeight, 0)");
 			
-			this.performClickWithAction(saveButton);
+			Thread.sleep(2000);
+			this.performClickWithAction(topSaveButton);
 			System.out.println("Clicked on save button");
 			
-			Thread.sleep(6000);
-			
+			Thread.sleep(10000);
+			wait.until(ExpectedConditions.visibilityOf(caseOwnerValue));
 			
 			String caseownername = caseOwnerValue.getText();
 			System.out.println("Case owner name is " + caseownername);
@@ -9370,7 +10777,7 @@ public class CasePage {
 			this.performClickWithAction(topCaseNumberLink);
 			System.out.println("Clickd on Case number");
 			Thread.sleep(6000);
-			
+			wait.until(ExpectedConditions.visibilityOf(editButton));
 			editButton.click();
 			Thread.sleep(10000);
 			statusCodeDropdown.click();
@@ -9477,6 +10884,7 @@ public class CasePage {
 			
 			System.out.println("Clickd on Case number");
 			Thread.sleep(6000);
+			wait.until(ExpectedConditions.visibilityOf(editButton));
 			editButton.click();
 			Thread.sleep(6000);
 			statusCodeDropdown.click();
@@ -9523,10 +10931,8 @@ public class CasePage {
 		try
 		{
 			Thread.sleep(10000);
-			this.performClickWithAction(casesWithIcon);
-			Thread.sleep(6000);
-			
 			newButton.click();
+			newCaseButton.click();
 			Thread.sleep(9000);
 			
 			this.performClickWithAction(caseTypeDropdown);
@@ -9603,10 +11009,8 @@ public class CasePage {
 		try
 		{
 			Thread.sleep(10000);
-			this.performClickWithAction(casesWithIcon);
-			Thread.sleep(6000);
-			
 			newButton.click();
+			newCaseButton.click();
 			Thread.sleep(9000);
 			
 			this.performClickWithAction(caseTypeDropdown);
@@ -9628,12 +11032,7 @@ public class CasePage {
 			wait.until(ExpectedConditions.presenceOfElementLocated(By.xpath("//label[text()='Dispute Stage']/following::div[2]/div[2]/lightning-base-combobox-item/span[2]/span[text()='"+disputestagevalue+"']"))).click();
 			System.out.println("Dispute Stage value selected");
 			Thread.sleep(2000);			
-			
-			
-			
-			
-			
-			
+						
 			statusCodeDropdown.click();
 			this.selectElement(statusCodeDropdown, handler.getStatusCode());
 			System.out.println("Status Code Sent To Ops");
@@ -9746,11 +11145,12 @@ public class CasePage {
 			
 			System.out.println("Clickd on Case number");
 			Thread.sleep(8000);
+			wait.until(ExpectedConditions.visibilityOf(editButton));
 			editButton.click();
 			Thread.sleep(10000);
 						
 			statusCodeDropdown.click();
-			this.selectElement(statusCodeDropdown, handler.getDvuMakerStatusCode());
+			this.selectElement(statusCodeDropdown, handler.getBbOpsDVUMakerStatusCode());
 			System.out.println("Status code is changed to Sent to DVU Checker - Rejected");
 			Thread.sleep(8000);
 			reasonForRejectionTopVallue.click();
@@ -9793,6 +11193,1043 @@ public class CasePage {
 		}
 	}
 	
+	public void createCasesWithAccount(CaseDataModel handler)
+	{
+		try
+		{
+			Thread.sleep(10000);
+			JavascriptExecutor js = (JavascriptExecutor) driver; 
+			js.executeScript("arguments[0].scrollIntoView();",casesTab);
+			casesTab.click();
+			Thread.sleep(2000);
+			wait.until(ExpectedConditions.visibilityOf(newButton));
+			this.performClickWithAction(newButton);
+			System.out.println("Clicked on new button");
+			Thread.sleep(2000);			
+			wait.until(ExpectedConditions.visibilityOf(newCaseButton));
+			this.performClickWithAction(newCaseButton);
+			System.out.println("Clicked on new case button");			
+			Thread.sleep(9000);	
+			wait.until(ExpectedConditions.visibilityOf(caseTypeDropdown));
+			this.performClickWithAction(caseTypeDropdown);
+			this.selectElement(caseTypeDropdown, handler.getCaseType());
+			System.out.println("Case type selected");
+			Thread.sleep(2000);
+			categoryDropdown.click();
+			this.selectElement(categoryDropdown, handler.getCategory());
+			System.out.println("Category selected");
+			Thread.sleep(2000);
+			subCategoryDropdown.click();
+			this.selectElement(subCategoryDropdown, handler.getSubCategory());			
+			System.out.println("Sub category selected");
+			Thread.sleep(4000);			
+			accountNumberField.click();
+			Thread.sleep(4000);
+			selectButtonOfAccountDetails.click();
+			Thread.sleep(5000);
+			System.out.println("Account number selected from Account Details");		
+			
+			this.performClickWithAction(statusCodeDropdown);
+			this.selectElement(statusCodeDropdown, handler.getStatusCode());
+			System.out.println("Status Code changed");
+			
+			Thread.sleep(3000);
+			((JavascriptExecutor) driver).executeScript("window.scrollTo(document.body.scrollHeight, 0)");
+			
+			Thread.sleep(2000);
+
+			this.performClickWithAction(topSaveButton);
+			Thread.sleep(10000);
+			
+			wait.until(ExpectedConditions.visibilityOf(caseNumber));
+			String caseno =  caseNumber.getText();	
+			this.caseCount = caseno;
+			System.out.println("caseno" +" "+ this.caseCount);
+			
+			String caseownername = caseOwnerValue.getText();
+			System.out.println("Case owner name is " + caseownername);
+			
+			String customername = customerNameValue.getText();
+			System.out.println("Customer name is " + customername);
+			
+			String statuscode = statusCodeValue.getText();
+			System.out.println("Status code is " + statuscode);
+			
+			String createdBydate = createdByDateValue.getText();
+			System.out.println("Created By date " + createdBydate);
+			
+			String createdByName = createdByNameValue.getText();
+			System.out.println("Created by name " + createdByName);
+			
+		}
+		catch(Exception e)
+		{
+			ExtentConfigurer.getTest().log(Status.ERROR, "Selenium Error Occurred : " + e.getMessage());
+			Assert.fail();
+		}
+	}
+	
+	
+	public void loginAcceptAndChangeStatusByCibilQueue(CaseDataModel handler)
+	{
+		try
+		{
+			
+			
+			Thread.sleep(10000);
+			searchGlodalFieldOfUserPage.click();			
+			searchGlodalFieldOfUserPage.sendKeys(this.trimQuote(handler.getCibilQueueUser()));
+			
+			Thread.sleep(3000);
+			globalSearchValueSelection.click();
+			Thread.sleep(5000);
+			Thread.sleep(9000);
+			
+			driver.switchTo().frame(0);
+			Thread.sleep(3000);
+			driver.findElement(By.xpath("//h2[text()='User Detail']")).click();
+			Thread.sleep(2000);
+			this.performClickWithAction(loginButton);
+			//loginButton.click();
+			System.out.println("Cibil queue user logged in Successfully");
+			Thread.sleep(3000);
+			
+			//DVU maker user logged in 
+			
+			Thread.sleep(10000);
+			this.clearTab();
+			this.clearTab();
+			System.out.println("Clear tab");
+			Thread.sleep(5000);	
+			wait.until(ExpectedConditions.visibilityOf(navigationMenuDropdown));
+			navigationMenuDropdown.click();
+			Thread.sleep(3000);
+			caseDropdown.click();
+			Thread.sleep(6000);			
+			//Accept case process
+			listViewDropdown.click();
+			Thread.sleep(5000);
+			listViewSearchField.sendKeys("CIBIL_Queue");
+						
+			Thread.sleep(3000);
+			listViewFirstOption.click();
+						
+			Thread.sleep(3000);			
+			System.out.println("CIBIL_Queue is selected");
+			
+			Thread.sleep(6000);				
+			caseSearchField.sendKeys(this.caseCount);
+			caseSearchField.sendKeys(Keys.ENTER);
+			Thread.sleep(5000);
+			this.performClickWithAction(caseNumberCheckbox);
+			acceptButton.click();
+			Thread.sleep(10000);
+			System.out.println("Successfully clicked on Accept Button");
+			
+			Thread.sleep(3000);
+			this.clearTab();			
+			Thread.sleep(5000);	
+						
+			//CHange status code process
+			listViewDropdown.click();
+			Thread.sleep(3000);
+			listViewSearchField.sendKeys("My Open Cases");
+			Thread.sleep(3000);
+			listViewFirstOption.click();
+			System.out.println("My open cases is selected");
+			Thread.sleep(3000);			
+			caseSearchField.sendKeys(this.caseCount);
+			Thread.sleep(8000);
+			
+			driver.findElement(By.xpath("//table[@data-aura-class='uiVirtualDataTable']/tbody/tr/td[1]/span")).click();
+			Thread.sleep(4000);
+			this.performClickWithAction(topCaseNumberLink);
+			
+			
+			System.out.println("Clickd on Case number");
+			Thread.sleep(8000);
+			wait.until(ExpectedConditions.visibilityOf(editButton));
+			editButton.click();
+			System.out.println("Clicked on edit button");
+			Thread.sleep(10000);
+			wait.until(ExpectedConditions.visibilityOf(statusCodeDropdown));
+			this.performClickWithAction(statusCodeDropdown);
+			//statusCodeDropdown.click();
+			this.selectElement(statusCodeDropdown, handler.getCibilQueueStatusCode());
+			System.out.println("Status code is changed to Communicated & Closed");
+			Thread.sleep(8000);
+			resolutionCommentField.sendKeys(handler.getResolutionComment());
+					
+			//scrolling page on top
+			((JavascriptExecutor) driver).executeScript("window.scrollTo(document.body.scrollHeight, 0)");
+			Thread.sleep(5000);
+					
+			
+			this.performClickWithAction(topSaveButton);
+			System.out.println("Clicked on save button");	
+			
+			Thread.sleep(8000);
+			wait.until(ExpectedConditions.visibilityOf(caseOwnerValue));
+			String caseownername = caseOwnerValue.getText();
+			System.out.println("Case owner name is " + caseownername);
+			
+			String customername = customerNameValue.getText();
+			System.out.println("Customer name is " + customername);
+			
+			String statuscode = statusCodeValue.getText();
+			System.out.println("Status code is " + statuscode);
+			
+			String createdBydate = createdByDateValue.getText();
+			System.out.println("Created By date " + createdBydate);
+			
+			String createdByName = createdByNameValue.getText();
+			System.out.println("Created by name " + createdByName);
+			
+			if(statuscode.equals("Communicated & Closed"))
+			{
+				System.out.println("Status code is Communicated & Closed");
+			}
+			else
+			{
+				System.out.println("Status code is not matched");
+				Assert.fail();
+			}
+			
+			
+			System.out.println("Completed CIBIL Queue ");
+			
+		}
+		catch(Exception e)
+		{
+			ExtentConfigurer.getTest().log(Status.ERROR, "Selenium Error Occurred : " + e.getMessage());
+			Assert.fail();
+		}
+	}
+	
+	
+	
+	public void loginAcceptAndChangeStatusByCollectionQueue(CaseDataModel handler)
+	{
+		try
+		{
+			
+			
+			Thread.sleep(10000);
+			searchGlodalFieldOfUserPage.click();			
+			searchGlodalFieldOfUserPage.sendKeys(this.trimQuote(handler.getCibilQueueUser()));
+			
+			Thread.sleep(3000);
+			globalSearchValueSelection.click();
+			Thread.sleep(5000);
+			Thread.sleep(9000);
+			
+			driver.switchTo().frame(0);
+			Thread.sleep(3000);
+			driver.findElement(By.xpath("//h2[text()='User Detail']")).click();
+			Thread.sleep(2000);
+			this.performClickWithAction(loginButton);
+			//loginButton.click();
+			System.out.println("Collection queue user logged in Successfully");
+			Thread.sleep(3000);
+			
+			//Collection queue user logged in 
+			
+			Thread.sleep(10000);
+			this.clearTab();
+			this.clearTab();
+			System.out.println("Clear tab");
+			Thread.sleep(8000);	
+			wait.until(ExpectedConditions.visibilityOf(navigationMenuDropdown));
+			navigationMenuDropdown.click();
+			Thread.sleep(3000);
+			caseDropdown.click();
+			Thread.sleep(6000);			
+			//Accept case process
+			listViewDropdown.click();
+			Thread.sleep(5000);
+			listViewSearchField.sendKeys("Collections_queue");
+						
+			Thread.sleep(3000);
+			listViewFirstOption.click();
+						
+			Thread.sleep(3000);			
+			System.out.println("Collections_queue is selected");
+			
+			Thread.sleep(6000);				
+			caseSearchField.sendKeys(this.caseCount);
+			caseSearchField.sendKeys(Keys.ENTER);
+			Thread.sleep(5000);
+			this.performClickWithAction(caseNumberCheckbox);
+			acceptButton.click();
+			Thread.sleep(10000);
+			System.out.println("Successfully clicked on Accept Button");
+			
+			Thread.sleep(3000);
+			this.clearTab();			
+			Thread.sleep(5000);	
+						
+			//CHange status code process
+			listViewDropdown.click();
+			Thread.sleep(3000);
+			listViewSearchField.sendKeys("My Open Cases");
+			Thread.sleep(3000);
+			listViewFirstOption.click();
+			System.out.println("My open cases is selected");
+			Thread.sleep(3000);			
+			caseSearchField.sendKeys(this.caseCount);
+			Thread.sleep(8000);
+			
+			driver.findElement(By.xpath("//table[@data-aura-class='uiVirtualDataTable']/tbody/tr/td[1]/span")).click();
+			Thread.sleep(4000);
+			this.performClickWithAction(topCaseNumberLink);
+			
+			
+			System.out.println("Clickd on Case number");
+			Thread.sleep(8000);
+			wait.until(ExpectedConditions.visibilityOf(editButton));
+			editButton.click();
+			System.out.println("Clicked on edit button");
+			Thread.sleep(10000);
+			wait.until(ExpectedConditions.visibilityOf(statusCodeDropdown));
+			this.performClickWithAction(statusCodeDropdown);
+			//statusCodeDropdown.click();
+			this.selectElement(statusCodeDropdown, handler.getCibilQueueStatusCode());
+			System.out.println("Status code is changed to Communicated & Closed");
+			Thread.sleep(8000);
+			resolutionCommentField.sendKeys(handler.getResolutionComment());
+					
+			//scrolling page on top
+			((JavascriptExecutor) driver).executeScript("window.scrollTo(document.body.scrollHeight, 0)");
+			Thread.sleep(5000);
+					
+			
+			this.performClickWithAction(topSaveButton);
+			System.out.println("Clicked on save button");	
+			
+			Thread.sleep(8000);
+			wait.until(ExpectedConditions.visibilityOf(caseOwnerValue));
+			String caseownername = caseOwnerValue.getText();
+			System.out.println("Case owner name is " + caseownername);
+			
+			String customername = customerNameValue.getText();
+			System.out.println("Customer name is " + customername);
+			
+			String statuscode = statusCodeValue.getText();
+			System.out.println("Status code is " + statuscode);
+			
+			String createdBydate = createdByDateValue.getText();
+			System.out.println("Created By date " + createdBydate);
+			
+			String createdByName = createdByNameValue.getText();
+			System.out.println("Created by name " + createdByName);
+			
+			if(statuscode.equals("Communicated & Closed"))
+			{
+				System.out.println("Status code is Communicated & Closed");
+			}
+			else
+			{
+				System.out.println("Status code is not matched");
+				Assert.fail();
+			}
+			
+			
+			System.out.println("Completed Collection Queue ");
+			
+		}
+		catch(Exception e)
+		{
+			ExtentConfigurer.getTest().log(Status.ERROR, "Selenium Error Occurred : " + e.getMessage());
+			Assert.fail();
+		}
+	}
+	
+	
+	public void loginAcceptAndChangeStatusByOpsPDEGroup(CaseDataModel handler)
+	{
+		try
+		{
+			
+			
+			Thread.sleep(10000);
+			searchGlodalFieldOfUserPage.click();			
+			searchGlodalFieldOfUserPage.sendKeys(this.trimQuote(handler.getCibilQueueUser()));
+			
+			Thread.sleep(3000);
+			globalSearchValueSelection.click();
+			Thread.sleep(5000);
+			Thread.sleep(9000);
+			
+			driver.switchTo().frame(0);
+			Thread.sleep(3000);
+			driver.findElement(By.xpath("//h2[text()='User Detail']")).click();
+			Thread.sleep(2000);
+			this.performClickWithAction(loginButton);
+			//loginButton.click();
+			System.out.println("OPS PDE Group logged in Successfully");
+			Thread.sleep(3000);
+			
+			//Collection queue user logged in 
+			
+			Thread.sleep(10000);
+			this.clearTab();
+			this.clearTab();
+			System.out.println("Clear tab");
+			Thread.sleep(8000);	
+			wait.until(ExpectedConditions.visibilityOf(navigationMenuDropdown));
+			navigationMenuDropdown.click();
+			Thread.sleep(3000);
+			caseDropdown.click();
+			Thread.sleep(6000);			
+			//Accept case process
+			listViewDropdown.click();
+			Thread.sleep(5000);
+			listViewSearchField.sendKeys("Ops_PDE Group");
+						
+			Thread.sleep(3000);
+			listViewFirstOption.click();
+						
+			Thread.sleep(3000);			
+			System.out.println("Ops_PDE Group is selected");
+			
+			Thread.sleep(6000);				
+			caseSearchField.sendKeys(this.caseCount);
+			caseSearchField.sendKeys(Keys.ENTER);
+			Thread.sleep(5000);
+			this.performClickWithAction(caseNumberCheckbox);
+			acceptButton.click();
+			Thread.sleep(10000);
+			System.out.println("Successfully clicked on Accept Button");
+			
+			Thread.sleep(3000);
+			this.clearTab();			
+			Thread.sleep(5000);	
+						
+			//CHange status code process
+			listViewDropdown.click();
+			Thread.sleep(3000);
+			listViewSearchField.sendKeys("My Open Cases");
+			Thread.sleep(3000);
+			listViewFirstOption.click();
+			System.out.println("My open cases is selected");
+			Thread.sleep(3000);			
+			caseSearchField.sendKeys(this.caseCount);
+			Thread.sleep(8000);
+			
+			driver.findElement(By.xpath("//table[@data-aura-class='uiVirtualDataTable']/tbody/tr/td[1]/span")).click();
+			Thread.sleep(4000);
+			this.performClickWithAction(topCaseNumberLink);
+			
+			
+			System.out.println("Clickd on Case number");
+			Thread.sleep(8000);
+			wait.until(ExpectedConditions.visibilityOf(editButton));
+			editButton.click();
+			System.out.println("Clicked on edit button");
+			Thread.sleep(10000);
+			wait.until(ExpectedConditions.visibilityOf(statusCodeDropdown));
+			this.performClickWithAction(statusCodeDropdown);
+			//statusCodeDropdown.click();
+			this.selectElement(statusCodeDropdown, handler.getCibilQueueStatusCode());
+			System.out.println("Status code is changed to Communicated & Closed");
+			Thread.sleep(8000);
+			resolutionCommentField.sendKeys(handler.getResolutionComment());
+					
+			//scrolling page on top
+			((JavascriptExecutor) driver).executeScript("window.scrollTo(document.body.scrollHeight, 0)");
+			Thread.sleep(5000);
+					
+			
+			this.performClickWithAction(topSaveButton);
+			System.out.println("Clicked on save button");	
+			
+			Thread.sleep(8000);
+			wait.until(ExpectedConditions.visibilityOf(caseOwnerValue));
+			String caseownername = caseOwnerValue.getText();
+			System.out.println("Case owner name is " + caseownername);
+			
+			String customername = customerNameValue.getText();
+			System.out.println("Customer name is " + customername);
+			
+			String statuscode = statusCodeValue.getText();
+			System.out.println("Status code is " + statuscode);
+			
+			String createdBydate = createdByDateValue.getText();
+			System.out.println("Created By date " + createdBydate);
+			
+			String createdByName = createdByNameValue.getText();
+			System.out.println("Created by name " + createdByName);
+			
+			if(statuscode.equals("Communicated & Closed"))
+			{
+				System.out.println("Status code is Communicated & Closed");
+			}
+			else
+			{
+				System.out.println("Status code is not matched");
+				Assert.fail();
+			}
+			
+			
+			System.out.println("Completed Collection Queue ");
+			
+		}
+		catch(Exception e)
+		{
+			ExtentConfigurer.getTest().log(Status.ERROR, "Selenium Error Occurred : " + e.getMessage());
+			Assert.fail();
+		}
+	}
+	
+	
+	
+	public void loginAcceptAndChangeStatusByOpsDocManagement(CaseDataModel handler)
+	{
+		try
+		{
+			
+			
+			Thread.sleep(10000);
+			searchGlodalFieldOfUserPage.click();			
+			searchGlodalFieldOfUserPage.sendKeys(this.trimQuote(handler.getCibilQueueUser()));
+			
+			Thread.sleep(3000);
+			globalSearchValueSelection.click();
+			Thread.sleep(5000);
+			Thread.sleep(9000);
+			
+			driver.switchTo().frame(0);
+			Thread.sleep(3000);
+			driver.findElement(By.xpath("//h2[text()='User Detail']")).click();
+			Thread.sleep(2000);
+			this.performClickWithAction(loginButton);
+			//loginButton.click();
+			System.out.println("Ops_Doc Management user logged in Successfully");
+			Thread.sleep(3000);
+			
+			//Ops_Doc Management user logged in 
+			
+			Thread.sleep(10000);
+			this.clearTab();
+			this.clearTab();
+			System.out.println("Clear tab");
+			Thread.sleep(8000);	
+			wait.until(ExpectedConditions.visibilityOf(navigationMenuDropdown));
+			navigationMenuDropdown.click();
+			Thread.sleep(3000);
+			caseDropdown.click();
+			Thread.sleep(6000);			
+			//Accept case process
+			listViewDropdown.click();
+			Thread.sleep(5000);
+			listViewSearchField.sendKeys("Ops_Doc Management");
+						
+			Thread.sleep(3000);
+			listViewFirstOption.click();
+						
+			Thread.sleep(3000);			
+			System.out.println("Ops_Doc Management is selected");
+			
+			Thread.sleep(6000);				
+			caseSearchField.sendKeys(this.caseCount);
+			caseSearchField.sendKeys(Keys.ENTER);
+			Thread.sleep(5000);
+			this.performClickWithAction(caseNumberCheckbox);
+			acceptButton.click();
+			Thread.sleep(10000);
+			System.out.println("Successfully clicked on Accept Button");
+			
+			Thread.sleep(3000);
+			this.clearTab();			
+			Thread.sleep(5000);	
+						
+			//CHange status code process
+			listViewDropdown.click();
+			Thread.sleep(3000);
+			listViewSearchField.sendKeys("My Open Cases");
+			Thread.sleep(3000);
+			listViewFirstOption.click();
+			System.out.println("My open cases is selected");
+			Thread.sleep(3000);			
+			caseSearchField.sendKeys(this.caseCount);
+			Thread.sleep(8000);
+			
+			driver.findElement(By.xpath("//table[@data-aura-class='uiVirtualDataTable']/tbody/tr/td[1]/span")).click();
+			Thread.sleep(4000);
+			this.performClickWithAction(topCaseNumberLink);
+			
+			
+			System.out.println("Clickd on Case number");
+			Thread.sleep(8000);
+			wait.until(ExpectedConditions.visibilityOf(editButton));
+			editButton.click();
+			System.out.println("Clicked on edit button");
+			Thread.sleep(10000);
+			wait.until(ExpectedConditions.visibilityOf(statusCodeDropdown));
+			this.performClickWithAction(statusCodeDropdown);
+			//statusCodeDropdown.click();
+			this.selectElement(statusCodeDropdown, handler.getCibilQueueStatusCode());
+			System.out.println("Status code is changed to Communicated & Closed");
+			Thread.sleep(8000);
+			resolutionCommentField.sendKeys(handler.getResolutionComment());
+					
+			//scrolling page on top
+			((JavascriptExecutor) driver).executeScript("window.scrollTo(document.body.scrollHeight, 0)");
+			Thread.sleep(5000);
+					
+			
+			this.performClickWithAction(topSaveButton);
+			System.out.println("Clicked on save button");	
+			
+			Thread.sleep(8000);
+			wait.until(ExpectedConditions.visibilityOf(caseOwnerValue));
+			String caseownername = caseOwnerValue.getText();
+			System.out.println("Case owner name is " + caseownername);
+			
+			String customername = customerNameValue.getText();
+			System.out.println("Customer name is " + customername);
+			
+			String statuscode = statusCodeValue.getText();
+			System.out.println("Status code is " + statuscode);
+			
+			String createdBydate = createdByDateValue.getText();
+			System.out.println("Created By date " + createdBydate);
+			
+			String createdByName = createdByNameValue.getText();
+			System.out.println("Created by name " + createdByName);
+			
+			if(statuscode.equals("Communicated & Closed"))
+			{
+				System.out.println("Status code is Communicated & Closed");
+			}
+			else
+			{
+				System.out.println("Status code is not matched");
+				Assert.fail();
+			}
+			
+			
+			System.out.println("Completed Collection Queue ");
+			
+		}
+		catch(Exception e)
+		{
+			ExtentConfigurer.getTest().log(Status.ERROR, "Selenium Error Occurred : " + e.getMessage());
+			Assert.fail();
+		}
+	}
+	
+	
+	
+	public void loginAcceptAndChangeStatusByOpsPropertyPapersManagemnt(CaseDataModel handler)
+	{
+		try
+		{
+			
+			
+			Thread.sleep(10000);
+			searchGlodalFieldOfUserPage.click();			
+			searchGlodalFieldOfUserPage.sendKeys(this.trimQuote(handler.getCibilQueueUser()));
+			
+			Thread.sleep(3000);
+			globalSearchValueSelection.click();
+			Thread.sleep(5000);
+			Thread.sleep(9000);
+			
+			driver.switchTo().frame(0);
+			Thread.sleep(3000);
+			driver.findElement(By.xpath("//h2[text()='User Detail']")).click();
+			Thread.sleep(2000);
+			this.performClickWithAction(loginButton);
+			//loginButton.click();
+			System.out.println("Ops _Property Papers Management user logged in Successfully");
+			Thread.sleep(3000);
+			
+			//Ops_Doc Management user logged in 
+			
+			Thread.sleep(10000);
+			this.clearTab();
+			this.clearTab();
+			System.out.println("Clear tab");
+			Thread.sleep(8000);	
+			wait.until(ExpectedConditions.visibilityOf(navigationMenuDropdown));
+			navigationMenuDropdown.click();
+			Thread.sleep(3000);
+			caseDropdown.click();
+			Thread.sleep(6000);			
+			//Accept case process
+			listViewDropdown.click();
+			Thread.sleep(5000);
+			listViewSearchField.sendKeys("Ops _Property Papers Management");
+						
+			Thread.sleep(3000);
+			listViewFirstOption.click();
+						
+			Thread.sleep(3000);			
+			System.out.println("Ops _Property Papers Management is selected");
+			
+			Thread.sleep(6000);				
+			caseSearchField.sendKeys(this.caseCount);
+			caseSearchField.sendKeys(Keys.ENTER);
+			Thread.sleep(5000);
+			this.performClickWithAction(caseNumberCheckbox);
+			acceptButton.click();
+			Thread.sleep(10000);
+			System.out.println("Successfully clicked on Accept Button");
+			
+			Thread.sleep(3000);
+			this.clearTab();			
+			Thread.sleep(5000);	
+						
+			//CHange status code process
+			listViewDropdown.click();
+			Thread.sleep(3000);
+			listViewSearchField.sendKeys("My Open Cases");
+			Thread.sleep(3000);
+			listViewFirstOption.click();
+			System.out.println("My open cases is selected");
+			Thread.sleep(3000);			
+			caseSearchField.sendKeys(this.caseCount);
+			Thread.sleep(8000);
+			
+			driver.findElement(By.xpath("//table[@data-aura-class='uiVirtualDataTable']/tbody/tr/td[1]/span")).click();
+			Thread.sleep(4000);
+			this.performClickWithAction(topCaseNumberLink);
+			
+			
+			System.out.println("Clickd on Case number");
+			Thread.sleep(8000);
+			wait.until(ExpectedConditions.visibilityOf(editButton));
+			editButton.click();
+			System.out.println("Clicked on edit button");
+			Thread.sleep(10000);
+			wait.until(ExpectedConditions.visibilityOf(statusCodeDropdown));
+			this.performClickWithAction(statusCodeDropdown);
+			//statusCodeDropdown.click();
+			this.selectElement(statusCodeDropdown, handler.getCibilQueueStatusCode());
+			System.out.println("Status code is changed to Communicated & Closed");
+			Thread.sleep(8000);
+			resolutionCommentField.sendKeys(handler.getResolutionComment());
+					
+			//scrolling page on top
+			((JavascriptExecutor) driver).executeScript("window.scrollTo(document.body.scrollHeight, 0)");
+			Thread.sleep(5000);
+					
+			
+			this.performClickWithAction(topSaveButton);
+			System.out.println("Clicked on save button");	
+			
+			Thread.sleep(8000);
+			wait.until(ExpectedConditions.visibilityOf(caseOwnerValue));
+			String caseownername = caseOwnerValue.getText();
+			System.out.println("Case owner name is " + caseownername);
+			
+			String customername = customerNameValue.getText();
+			System.out.println("Customer name is " + customername);
+			
+			String statuscode = statusCodeValue.getText();
+			System.out.println("Status code is " + statuscode);
+			
+			String createdBydate = createdByDateValue.getText();
+			System.out.println("Created By date " + createdBydate);
+			
+			String createdByName = createdByNameValue.getText();
+			System.out.println("Created by name " + createdByName);
+			
+			if(statuscode.equals("Communicated & Closed"))
+			{
+				System.out.println("Status code is Communicated & Closed");
+			}
+			else
+			{
+				System.out.println("Status code is not matched");
+				Assert.fail();
+			}
+			
+			
+			System.out.println("Completed Collection Queue ");
+			
+		}
+		catch(Exception e)
+		{
+			ExtentConfigurer.getTest().log(Status.ERROR, "Selenium Error Occurred : " + e.getMessage());
+			Assert.fail();
+		}
+	}
+	
+	
+	public void loginAcceptAndChangeStatusByOpsVehiclePDDMgmt(CaseDataModel handler)
+	{
+		try
+		{
+			
+			
+			Thread.sleep(10000);
+			searchGlodalFieldOfUserPage.click();			
+			searchGlodalFieldOfUserPage.sendKeys(this.trimQuote(handler.getCibilQueueUser()));
+			
+			Thread.sleep(3000);
+			globalSearchValueSelection.click();
+			Thread.sleep(5000);
+			Thread.sleep(9000);
+			
+			driver.switchTo().frame(0);
+			Thread.sleep(3000);
+			driver.findElement(By.xpath("//h2[text()='User Detail']")).click();
+			Thread.sleep(2000);
+			this.performClickWithAction(loginButton);
+			//loginButton.click();
+			System.out.println("Ops Vehicle PDD Mgmt user logged in Successfully");
+			Thread.sleep(3000);
+			
+			//Ops_Doc Management user logged in 
+			
+			Thread.sleep(10000);
+			this.clearTab();
+			this.clearTab();
+			System.out.println("Clear tab");
+			Thread.sleep(8000);	
+			wait.until(ExpectedConditions.visibilityOf(navigationMenuDropdown));
+			navigationMenuDropdown.click();
+			Thread.sleep(3000);
+			caseDropdown.click();
+			Thread.sleep(6000);			
+			//Accept case process
+			listViewDropdown.click();
+			Thread.sleep(5000);
+			listViewSearchField.sendKeys("Ops Vehicle PDD Mgmt");
+						
+			Thread.sleep(3000);
+			listViewFirstOption.click();
+						
+			Thread.sleep(3000);			
+			System.out.println("Ops Vehicle PDD Mgmt is selected");
+			
+			Thread.sleep(6000);				
+			caseSearchField.sendKeys(this.caseCount);
+			caseSearchField.sendKeys(Keys.ENTER);
+			Thread.sleep(5000);
+			this.performClickWithAction(caseNumberCheckbox);
+			acceptButton.click();
+			Thread.sleep(10000);
+			System.out.println("Successfully clicked on Accept Button");
+			
+			Thread.sleep(3000);
+			this.clearTab();			
+			Thread.sleep(5000);	
+						
+			//CHange status code process
+			listViewDropdown.click();
+			Thread.sleep(3000);
+			listViewSearchField.sendKeys("My Open Cases");
+			Thread.sleep(3000);
+			listViewFirstOption.click();
+			System.out.println("My open cases is selected");
+			Thread.sleep(3000);			
+			caseSearchField.sendKeys(this.caseCount);
+			Thread.sleep(8000);
+			
+			driver.findElement(By.xpath("//table[@data-aura-class='uiVirtualDataTable']/tbody/tr/td[1]/span")).click();
+			Thread.sleep(4000);
+			this.performClickWithAction(topCaseNumberLink);
+			
+			
+			System.out.println("Clickd on Case number");
+			Thread.sleep(8000);
+			wait.until(ExpectedConditions.visibilityOf(editButton));
+			editButton.click();
+			System.out.println("Clicked on edit button");
+			Thread.sleep(10000);
+			wait.until(ExpectedConditions.visibilityOf(statusCodeDropdown));
+			this.performClickWithAction(statusCodeDropdown);
+			//statusCodeDropdown.click();
+			this.selectElement(statusCodeDropdown, handler.getCibilQueueStatusCode());
+			System.out.println("Status code is changed to Communicated & Closed");
+			Thread.sleep(8000);
+			resolutionCommentField.sendKeys(handler.getResolutionComment());
+					
+			//scrolling page on top
+			((JavascriptExecutor) driver).executeScript("window.scrollTo(document.body.scrollHeight, 0)");
+			Thread.sleep(5000);
+					
+			
+			this.performClickWithAction(topSaveButton);
+			System.out.println("Clicked on save button");	
+			
+			Thread.sleep(8000);
+			wait.until(ExpectedConditions.visibilityOf(caseOwnerValue));
+			String caseownername = caseOwnerValue.getText();
+			System.out.println("Case owner name is " + caseownername);
+			
+			String customername = customerNameValue.getText();
+			System.out.println("Customer name is " + customername);
+			
+			String statuscode = statusCodeValue.getText();
+			System.out.println("Status code is " + statuscode);
+			
+			String createdBydate = createdByDateValue.getText();
+			System.out.println("Created By date " + createdBydate);
+			
+			String createdByName = createdByNameValue.getText();
+			System.out.println("Created by name " + createdByName);
+			
+			if(statuscode.equals("Communicated & Closed"))
+			{
+				System.out.println("Status code is Communicated & Closed");
+			}
+			else
+			{
+				System.out.println("Status code is not matched");
+				Assert.fail();
+			}
+			
+			
+			System.out.println("Completed Collection Queue ");
+			
+		}
+		catch(Exception e)
+		{
+			ExtentConfigurer.getTest().log(Status.ERROR, "Selenium Error Occurred : " + e.getMessage());
+			Assert.fail();
+		}
+	}
+	
+	
+	public void loginAcceptAndChangeStatusByOpsPDCEntrySwap(CaseDataModel handler)
+	{
+		try
+		{
+			
+			
+			Thread.sleep(10000);
+			searchGlodalFieldOfUserPage.click();			
+			searchGlodalFieldOfUserPage.sendKeys(this.trimQuote(handler.getCibilQueueUser()));
+			
+			Thread.sleep(3000);
+			globalSearchValueSelection.click();
+			Thread.sleep(5000);
+			Thread.sleep(9000);
+			
+			driver.switchTo().frame(0);
+			Thread.sleep(3000);
+			driver.findElement(By.xpath("//h2[text()='User Detail']")).click();
+			Thread.sleep(2000);
+			this.performClickWithAction(loginButton);
+			//loginButton.click();
+			System.out.println("OPS PDC Entry swap user logged in Successfully");
+			Thread.sleep(3000);
+			
+			//Ops_Doc Management user logged in 
+			
+			Thread.sleep(10000);
+			this.clearTab();
+			this.clearTab();
+			System.out.println("Clear tab");
+			Thread.sleep(8000);	
+			wait.until(ExpectedConditions.visibilityOf(navigationMenuDropdown));
+			navigationMenuDropdown.click();
+			Thread.sleep(3000);
+			caseDropdown.click();
+			Thread.sleep(6000);			
+			//Accept case process
+			listViewDropdown.click();
+			Thread.sleep(5000);
+			listViewSearchField.sendKeys("OPS PDC Entry swap");
+						
+			Thread.sleep(3000);
+			listViewFirstOption.click();
+						
+			Thread.sleep(3000);			
+			System.out.println("OPS PDC Entry swap is selected");
+			
+			Thread.sleep(6000);				
+			caseSearchField.sendKeys(this.caseCount);
+			caseSearchField.sendKeys(Keys.ENTER);
+			Thread.sleep(5000);
+			this.performClickWithAction(caseNumberCheckbox);
+			acceptButton.click();
+			Thread.sleep(10000);
+			System.out.println("Successfully clicked on Accept Button");
+			
+			Thread.sleep(3000);
+			this.clearTab();			
+			Thread.sleep(5000);	
+						
+			//CHange status code process
+			listViewDropdown.click();
+			Thread.sleep(3000);
+			listViewSearchField.sendKeys("My Open Cases");
+			Thread.sleep(3000);
+			listViewFirstOption.click();
+			System.out.println("My open cases is selected");
+			Thread.sleep(3000);			
+			caseSearchField.sendKeys(this.caseCount);
+			Thread.sleep(8000);
+			
+			driver.findElement(By.xpath("//table[@data-aura-class='uiVirtualDataTable']/tbody/tr/td[1]/span")).click();
+			Thread.sleep(4000);
+			this.performClickWithAction(topCaseNumberLink);
+			
+			
+			System.out.println("Clickd on Case number");
+			Thread.sleep(8000);
+			wait.until(ExpectedConditions.visibilityOf(editButton));
+			editButton.click();
+			System.out.println("Clicked on edit button");
+			Thread.sleep(10000);
+			wait.until(ExpectedConditions.visibilityOf(statusCodeDropdown));
+			this.performClickWithAction(statusCodeDropdown);
+			//statusCodeDropdown.click();
+			this.selectElement(statusCodeDropdown, handler.getCibilQueueStatusCode());
+			System.out.println("Status code is changed to Communicated & Closed");
+			Thread.sleep(8000);
+			resolutionCommentField.sendKeys(handler.getResolutionComment());
+					
+			//scrolling page on top
+			((JavascriptExecutor) driver).executeScript("window.scrollTo(document.body.scrollHeight, 0)");
+			Thread.sleep(5000);
+					
+			
+			this.performClickWithAction(topSaveButton);
+			System.out.println("Clicked on save button");	
+			
+			Thread.sleep(8000);
+			wait.until(ExpectedConditions.visibilityOf(caseOwnerValue));
+			String caseownername = caseOwnerValue.getText();
+			System.out.println("Case owner name is " + caseownername);
+			
+			String customername = customerNameValue.getText();
+			System.out.println("Customer name is " + customername);
+			
+			String statuscode = statusCodeValue.getText();
+			System.out.println("Status code is " + statuscode);
+			
+			String createdBydate = createdByDateValue.getText();
+			System.out.println("Created By date " + createdBydate);
+			
+			String createdByName = createdByNameValue.getText();
+			System.out.println("Created by name " + createdByName);
+			
+			if(statuscode.equals("Communicated & Closed"))
+			{
+				System.out.println("Status code is Communicated & Closed");
+			}
+			else
+			{
+				System.out.println("Status code is not matched");
+				Assert.fail();
+			}
+			
+			
+			System.out.println("Completed Collection Queue ");
+			
+		}
+		catch(Exception e)
+		{
+			ExtentConfigurer.getTest().log(Status.ERROR, "Selenium Error Occurred : " + e.getMessage());
+			Assert.fail();
+		}
+	}
 	
 	private void selectElement(WebElement element, String option)
 	{

@@ -1,11 +1,11 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<testsuite name="TestSuite" time="31.167" tests="1" errors="0" skipped="0" failures="0">
+<testsuite name="TestSuite" time="32.697" tests="1" errors="0" skipped="0" failures="0">
   <properties>
     <property name="java.runtime.name" value="Java(TM) SE Runtime Environment"/>
     <property name="sun.boot.library.path" value="C:\Program Files\Java\jre1.8.0_251\bin"/>
     <property name="java.vm.version" value="25.251-b08"/>
     <property name="java.vm.vendor" value="Oracle Corporation"/>
-    <property name="maven.multiModuleProjectDirectory" value="C:\Users\p.vijaysingh.thakur\Documents\IDFC\SalesForceAutomationTest (3)\Sample"/>
+    <property name="maven.multiModuleProjectDirectory" value="C:\Code\IDFC_Salesforce_Automation_Test"/>
     <property name="java.vendor.url" value="http://java.oracle.com/"/>
     <property name="path.separator" value=";"/>
     <property name="guice.disable.misplaced.annotation.check" value="true"/>
@@ -16,7 +16,7 @@
     <property name="sun.java.launcher" value="SUN_STANDARD"/>
     <property name="sun.os.patch.level" value=""/>
     <property name="java.vm.specification.name" value="Java Virtual Machine Specification"/>
-    <property name="user.dir" value="C:\Users\p.vijaysingh.thakur\Documents\IDFC\SalesForceAutomationTest (3)\Sample"/>
+    <property name="user.dir" value="C:\Code\IDFC_Salesforce_Automation_Test"/>
     <property name="java.runtime.version" value="1.8.0_251-b08"/>
     <property name="java.awt.graphicsenv" value="sun.awt.Win32GraphicsEnvironment"/>
     <property name="java.endorsed.dirs" value="C:\Program Files\Java\jre1.8.0_251\lib\endorsed"/>
@@ -26,7 +26,7 @@
     <property name="java.vm.specification.vendor" value="Oracle Corporation"/>
     <property name="user.variant" value=""/>
     <property name="os.name" value="Windows 10"/>
-    <property name="classworlds.conf" value="C:\Users\p.vijaysingh.thakur\eclipse-workspace1\.metadata\.plugins\org.eclipse.m2e.launching\launches\m2conf8895069715930698597.tmp"/>
+    <property name="classworlds.conf" value="C:\Users\p.vijaysingh.thakur\eclipse-workspace1\.metadata\.plugins\org.eclipse.m2e.launching\launches\m2conf8353628531024307201.tmp"/>
     <property name="sun.jnu.encoding" value="Cp1252"/>
     <property name="java.library.path" value="C:\Program Files\Java\jre1.8.0_251\bin;C:\Windows\Sun\Java\bin;C:\Windows\system32;C:\Windows;C:/Program Files/Java/jre1.8.0_251/bin/server;C:/Program Files/Java/jre1.8.0_251/bin;C:/Program Files/Java/jre1.8.0_251/lib/amd64;C:\Program Files (x86)\TRICENTIS\Tosca Testsuite\ToscaCommander;;C:\Program Files (x86)\TRICENTIS\Tosca Testsuite\Classic;C:\Program Files (x86)\TRICENTIS\Tosca Testsuite\Classic\dll;C:\Program Files (x86)\TRICENTIS\Tosca Testsuite\Classic\dll\GuptaEngine;C:\Program Files (x86)\TRICENTIS\Tosca Testsuite\ToscaCommander;C:\Program Files (x86)\TRICENTIS\Tosca Testsuite\Classic\dll\DelphiEngine;C:\Program Files (x86)\TRICENTIS\Tosca Testsuite\Classic\dll\PBEngine;C:\Program Files (x86)\TRICENTIS\Tosca Testsuite\Classic\dll\VBEngine;C:\Program Files (x86)\TRICENTIS\Tosca Testsuite\Classic\dll\DotNetHooking;;C:\Program Files (x86)\Common Files\Oracle\Java\javapath;C:\Windows\system32;C:\Windows;C:\Windows\System32\Wbem;C:\Windows\System32\WindowsPowerShell\v1.0\;C:\Windows\System32\OpenSSH\;C:\Users\p.vijaysingh.thakur\Downloads\apache-maven-3.6.3-bin\apache-maven-3.6.3\bin;C:\Program Files\Git\cmd;C:\Users\p.vijaysingh.thakur\AppData\Local\Microsoft\WindowsApps;;C:\Users\p.vijaysingh.thakur\Downloads\eclipse\eclipse;;."/>
     <property name="java.specification.name" value="Java Platform API Specification"/>
@@ -52,7 +52,7 @@
     <property name="java.ext.dirs" value="C:\Program Files\Java\jre1.8.0_251\lib\ext;C:\Windows\Sun\Java\lib\ext"/>
     <property name="sun.boot.class.path" value="C:\Program Files\Java\jre1.8.0_251\lib\resources.jar;C:\Program Files\Java\jre1.8.0_251\lib\rt.jar;C:\Program Files\Java\jre1.8.0_251\lib\sunrsasign.jar;C:\Program Files\Java\jre1.8.0_251\lib\jsse.jar;C:\Program Files\Java\jre1.8.0_251\lib\jce.jar;C:\Program Files\Java\jre1.8.0_251\lib\charsets.jar;C:\Program Files\Java\jre1.8.0_251\lib\jfr.jar;C:\Program Files\Java\jre1.8.0_251\classes"/>
     <property name="java.vendor" value="Oracle Corporation"/>
-    <property name="maven.home" value="C:\Users\p.vijaysingh.thakur\Documents\IDFC\SalesForceAutomationTest (3)\Sample\EMBEDDED"/>
+    <property name="maven.home" value="C:\Code\IDFC_Salesforce_Automation_Test\EMBEDDED"/>
     <property name="file.separator" value="\"/>
     <property name="java.vendor.url.bug" value="http://bugreport.sun.com/bugreport/"/>
     <property name="sun.cpu.endian" value="little"/>
@@ -60,5 +60,5 @@
     <property name="sun.desktop" value="windows"/>
     <property name="sun.cpu.isalist" value="amd64"/>
   </properties>
-  <testcase name="Sample Login" classname="com.salesforce.automation.test.LeadPageTest" time="31.167"/>
+  <testcase name="Sample Test" classname="com.salesforce.automation.test.LeadPageTest" time="32.697"/>
 </testsuite>

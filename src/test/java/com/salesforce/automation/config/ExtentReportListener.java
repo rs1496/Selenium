@@ -1,10 +1,12 @@
 package com.salesforce.automation.config;
 
+import org.openqa.selenium.WebDriver;
 import org.testng.ITestContext;
 import org.testng.ITestListener;
 import org.testng.ITestResult;
 
 import com.aventstack.extentreports.Status;
+import com.salesforce.automation.utility.XlsOperationsUtility;
 
 public class ExtentReportListener implements ITestListener {
 
@@ -19,9 +21,19 @@ public class ExtentReportListener implements ITestListener {
 		ExtentConfigurer.getTest().log(Status.PASS, "Test passed");
 	}
 
+	//WebDriver driver;
 	@Override
 	public void onTestFailure(ITestResult result) {
-		ExtentConfigurer.getTest().log(Status.FAIL, "Test Failed");		
+		ExtentConfigurer.getTest().log(Status.FAIL, "Test Failed");	
+		/*try
+		{
+			
+			XlsOperationsUtility.captureScreenshot(driver, result.getName());
+		}
+		catch(Exception e)
+		{
+			e.printStackTrace();
+		}*/
 	}
 
 	@Override

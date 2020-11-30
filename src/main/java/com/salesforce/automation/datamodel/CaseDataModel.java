@@ -96,6 +96,8 @@ public class CaseDataModel
 	private String transactionDisputeStatus;
 	private String wcOpsStatusCode1;
 	
+	private String CibilQueueUser;
+	private String cibilQueueStatusCode;
 	
 	
 	
@@ -113,6 +115,20 @@ public class CaseDataModel
 	
 	
 	
+	
+	
+	public String getCibilQueueStatusCode() {
+		return cibilQueueStatusCode;
+	}
+	public void setCibilQueueStatusCode(String cibilQueueStatusCode) {
+		this.cibilQueueStatusCode = cibilQueueStatusCode;
+	}
+	public String getCibilQueueUser() {
+		return CibilQueueUser;
+	}
+	public void setCibilQueueUser(String cibilQueueUser) {
+		CibilQueueUser = cibilQueueUser;
+	}
 	public String getWcOpsStatusCode1() {
 		return wcOpsStatusCode1;
 	}

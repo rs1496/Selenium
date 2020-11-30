@@ -25,12 +25,14 @@ public class LeadDataHelper
 				handlerObj.setScenarioName(row1.getCell(0).toString());
 				handlerObj.setScenarioRunningStatus(row1.getCell(1).toString());
 				handlerObj.setOperations(row1.getCell(2).toString());
-				handlerObj.setBranchUser(row1.getCell(3).toString());
-				handlerObj.setRecordType(row1.getCell(4).toString());
-				handlerObj.setProduct(row1.getCell(5).toString());
-				handlerObj.setLastname(row1.getCell(6).toString());
-				handlerObj.setLeadSource(row1.getCell(7).toString());
-				handlerObj.setChannelPartner(row1.getCell(8).toString());
+				handlerObj.setGlobalSearch(row1.getCell(3).toString());
+				handlerObj.setAccountName(row1.getCell(4).toString());
+				handlerObj.setRecordType(row1.getCell(5).toString());
+				handlerObj.setProduct(row1.getCell(6).toString());
+				handlerObj.setFirstname(row1.getCell(7).toString());
+				handlerObj.setLastname(row1.getCell(8).toString());
+				handlerObj.setLeadSource(row1.getCell(9).toString());
+				handlerObj.setChannelPartner(row1.getCell(10).toString());
 				
 				datalist.add(handlerObj);
 			}

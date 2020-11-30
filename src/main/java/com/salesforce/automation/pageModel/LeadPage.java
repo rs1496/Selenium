@@ -4,6 +4,7 @@ import java.util.concurrent.TimeUnit;
 
 import org.openqa.selenium.By;
 import org.openqa.selenium.JavascriptExecutor;
+import org.openqa.selenium.Keys;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.WebElement;
 import org.openqa.selenium.interactions.Actions;
@@ -85,8 +86,14 @@ public class LeadPage {
 	@FindBy(xpath = "//a[@title='Home']")
 	private WebElement homeDropdown;
 	
+	@FindBy(xpath = "//a[@data-itemid='Account']/span[2]/span[text()='Accounts']")
+	private WebElement accountDropdown;
+	
 	@FindBy(xpath = "//button[@title='Save']")
 	private WebElement saveButton;
+	
+	@FindBy(xpath = "//div[@class='modal-footer slds-modal__footer']/button[2]/span[text()='Save']")
+	private WebElement saveButtonOfNTBLeadPage;
 	
 	@FindBy(xpath = "//span[text()='Lead Lifecycle']")
 	private WebElement leadlifecycle;
@@ -106,6 +113,24 @@ public class LeadPage {
 	@FindBy(xpath = "//span[text()='Channel Partner']/following::a[1]")
 	private WebElement channelPartnerDropdown;
 	
+	@FindBy(xpath = "//span[text()='First Name']/following::input[1]")
+	private WebElement firstNameField;
+	
+	@FindBy(xpath = "//button[text()='Add'][@type='button']")
+	private WebElement addbuttonOfAction;
+	
+	@FindBy(xpath ="//div[text()='Quick Actions']/following::div[text()='New Lead']")
+	private WebElement newLeadButtonOfQuickActions;
+	
+	@FindBy(xpath = "//span[text()='Segment Type']/following::a[1]")
+	private WebElement segmentTypeDropdown;
+	
+	@FindBy(xpath = "//input[@placeholder='Search this list...']")
+	private WebElement searchThisListField;
+	
+	@FindBy(xpath = "//table[@data-aura-class='uiVirtualDataTable']/tbody[1]/tr[1]/th[1]/span/a[1]")
+	private WebElement topAccountName;
+	
 	@FindBy(xpath = "//img[@class='icon noicon']")
 	private WebElement userIcon;
 	
@@ -114,6 +139,28 @@ public class LeadPage {
 	
 	@FindBy(xpath = "//label[text()='Username']")
 	private WebElement usernamelabel;
+	
+	public void sampleLoginTest(LeadDataModel handler)
+	{
+		try
+		{
+			Thread.sleep(10000);
+			this.performClickWithAction(userIcon);
+			//userIcon.click();
+			Thread.sleep(3000);
+			logout.click();
+			Thread.sleep(10000);
+			wait.until(ExpectedConditions.visibilityOf(usernamelabel));
+			usernamelabel.isDisplayed();
+			System.out.println("Successfully tested sample login");
+		}
+		catch(Exception e)
+		{
+			ExtentConfigurer.getTest().log(Status.ERROR, "Selenium Error Occurred : " + e.getMessage());
+			Assert.fail();
+		}
+	}
+
 	
 	
 	
@@ -174,7 +221,25 @@ public class LeadPage {
 		}
 	}
 	
-	public void searchUserAndLoginByBranchUser(LeadDataModel handler)
+	public void continueExecution()
+	{
+		try
+		{
+						
+			if(logOutLink.isDisplayed())
+			{
+				logOutLink.click();
+				System.out.println("Logged out NOW");
+				Thread.sleep(2000);
+			}
+		}
+		catch(Exception e)
+		{
+			
+		}
+	}
+	
+	public void searchUserAndLoginByBranchOrBOCUser(LeadDataModel handler)
 	{
 		try
 		{
@@ -201,7 +266,7 @@ public class LeadPage {
 			action.doubleClick(globalSearchField).perform();
 			
 			
-			globalSearchField.sendKeys(this.trimQuote(handler.getBranchUser()));			
+			globalSearchField.sendKeys(this.trimQuote(handler.getGlobalSearch()));			
 			Thread.sleep(3000);
 			globalSearchValueSelection.click();
 			Thread.sleep(5000);
@@ -214,6 +279,7 @@ public class LeadPage {
 			Thread.sleep(15000);
 			driver.switchTo().frame(0);
 			Thread.sleep(10000);
+			wait.until(ExpectedConditions.visibilityOf(loginButton));
 			this.performClickWithAction(loginButton);
 			
 			System.out.println("Logged in Successfully");
@@ -228,6 +294,107 @@ public class LeadPage {
 		}
 	}
 	
+	public void searchUserLoginOnSetUpPage(LeadDataModel handler)
+	{
+		try
+		{
+			Thread.sleep(3000);
+			this.clearTab();
+			System.out.println("Closing All Tabs");
+			Thread.sleep(2000);
+			this.clearTab();
+			System.out.println("Closing All Tabs");
+			Thread.sleep(2000);
+			this.clearTab();
+			System.out.println("Closing All Tabs");
+			Thread.sleep(2000);
+			this.clearTab();
+			System.out.println("Closing All Tabs");
+			Thread.sleep(3000);
+			
+			Thread.sleep(8000);
+			
+			this.continueExecution();		
+			
+			Thread.sleep(5000);
+			Actions action = new Actions(driver);
+			action.doubleClick(globalSearchField).perform();
+			
+			
+			globalSearchField.sendKeys(this.trimQuote(handler.getGlobalSearch()));
+			
+			Thread.sleep(3000);
+			globalSearchValueSelection.click();
+			Thread.sleep(5000);			
+						
+			Thread.sleep(15000);
+			driver.switchTo().frame(0);
+			Thread.sleep(10000);
+			this.performClickWithAction(loginButton);
+			
+			System.out.println("Logged in Successfully");
+			Thread.sleep(10000);
+		}
+		catch(Exception e)
+		{
+			ExtentConfigurer.getTest().log(Status.ERROR, "Selenium Error Occurred : " + e.getMessage());
+			Assert.fail();
+		}
+	}
+	
+	
+	public void selectAccount(LeadDataModel handler)
+	{
+		try
+		{
+			Thread.sleep(5000);
+			this.clearTab();			
+			Thread.sleep(5000);	
+			this.clearTab();
+			Thread.sleep(2000);
+			this.clearTab();
+			Thread.sleep(3000);
+			navigationMenuDropdown.click();
+			Thread.sleep(5000);
+			homeDropdown.click();
+			System.out.println("Home dropdown is selected");
+			Thread.sleep(3000);
+			navigationMenuDropdown.click();
+			Thread.sleep(3000);
+			accountDropdown.click();	
+			System.out.println("Account dropdown is selected");
+			
+			//driver.navigate().refresh();
+			
+			Thread.sleep(3000);
+			driver.navigate().refresh();
+			Thread.sleep(5000);
+			this.clearTab();
+			Thread.sleep(5000);
+			wait.until(ExpectedConditions.visibilityOf(searchThisListField));
+			
+			//Thread.sleep(6000);	
+			searchThisListField.clear();
+			searchThisListField.sendKeys(handler.getAccountName());
+			searchThisListField.sendKeys(Keys.ENTER);
+			Thread.sleep(3000);
+			driver.findElement(By.xpath("//span[text()='1 item • ']")).click();
+			Thread.sleep(2000);
+			this.performClickWithAction(topAccountName);
+			System.out.println("Selected Account");
+			Thread.sleep(5000);
+			
+			
+						
+		}
+		catch(Exception e)
+		{
+			ExtentConfigurer.getTest().log(Status.ERROR, "Selenium Error Occurred : " + e.getMessage());
+			Assert.fail();
+		}
+	}
+	
+	
 	public void createNTBLead(LeadDataModel handler)
 	{
 		try
@@ -236,9 +403,12 @@ public class LeadPage {
 			System.out.println("Closing All Tabs");
 			driver.navigate().refresh();
 			this.clearTab();
+			this.clearTab();
+			this.clearTab();
+			this.clearTab();
 			Thread.sleep(7000);
 			navigationMenuDropdown.click();
-			Thread.sleep(1000);
+			Thread.sleep(3000);
 			leadsDropdown.click();
 			Thread.sleep(1000);
 			this.clearTab();
@@ -261,6 +431,7 @@ public class LeadPage {
 			mobilenoField.click();
 			mobilenoField.sendKeys("7738544453");
 			
+			firstNameField.sendKeys(handler.getFirstname());
 			lastNameField.sendKeys(handler.getLastname());
 			
 			JavascriptExecutor js = ((JavascriptExecutor) driver);
@@ -298,6 +469,7 @@ public class LeadPage {
 			
 			
 			
+			
 		}
 		catch(Exception e)
 		{
@@ -316,8 +488,12 @@ public class LeadPage {
 			this.clearTab();
 			System.out.println("Closing All Tabs");
 			Thread.sleep(3000);
+			
 			this.clearTab();
-			Thread.sleep(3000);
+			this.clearTab();
+			this.clearTab();
+			this.clearTab();
+			Thread.sleep(7000);
 			navigationMenuDropdown.click();
 			Thread.sleep(1000);
 			leadsDropdown.click();
@@ -387,20 +563,74 @@ public class LeadPage {
 		}
 	}
 
-	
-	public void sampleLoginTest(LeadDataModel handler)
+	public void createNTBLeadFailed(LeadDataModel handler)
 	{
 		try
 		{
-			Thread.sleep(10000);
-			this.performClickWithAction(userIcon);
-			//userIcon.click();
+			this.clearTab();
+			System.out.println("Closing All Tabs");
+			driver.navigate().refresh();
+			this.clearTab();
+			this.clearTab();
+			this.clearTab();
+			this.clearTab();
+			Thread.sleep(7000);
+			navigationMenuDropdown.click();
 			Thread.sleep(3000);
-			logout.click();
-			Thread.sleep(10000);
-			wait.until(ExpectedConditions.visibilityOf(usernamelabel));
-			usernamelabel.isDisplayed();
-			System.out.println("Successfully tested sample login");
+			leadsDropdown.click();
+			Thread.sleep(1000);
+			this.clearTab();
+			Thread.sleep(5000);
+			
+			nextButton.click();
+			System.out.println("Clicked on next button");
+			
+			wait.until(ExpectedConditions.visibilityOf(productDropdown));
+			
+			productDropdown.click();						
+			String productval = handler.getProduct();			
+			wait.until(ExpectedConditions.presenceOfElementLocated(By.xpath("//div[@class='select-options']/ul/li/a[@title='"+productval+"']"))).click();
+			
+			mobilenoField.click();
+			mobilenoField.sendKeys("7738544453");
+			
+			firstNameField.sendKeys(handler.getFirstname());
+			lastNameField.sendKeys(handler.getLastname());
+			
+			JavascriptExecutor js = ((JavascriptExecutor) driver);
+			js.executeScript("arguments[0].scrollIntoView(true);",leadlifecycle);
+			Thread.sleep(2000);
+			
+			leadSourceDropdown.click();
+			String leadsourceval = handler.getLeadSource();
+			wait.until(ExpectedConditions.presenceOfElementLocated(By.xpath("//div[@class='select-options']/ul/li/a[@title='"+leadsourceval+"']"))).click();
+			
+			
+			
+			
+			saveButton.click();
+			System.out.println("Clicked on save button");
+			
+			
+			
+			
+			wait.until(ExpectedConditions.visibilityOf(leadNumber));
+			XlsOperationsUtility.captureScreenshot(driver, "LeadCreated");
+			
+			String leadno = leadNumber.getText();
+			System.out.println("Lead ID" +" "+ leadno);
+								
+			String leadownerval = leadOwner.getText();
+			System.out.println("Lead Owner" +" "+ leadownerval);	
+			
+			String leadstatusval = leadStatus.getText();
+			System.out.println("Lead Status" +" "+ leadstatusval);
+			
+			String leadsubstatusval = leadSubStatus.getText();
+			System.out.println("Lead Sub Status" +" "+ leadsubstatusval);
+			
+			
+			
 		}
 		catch(Exception e)
 		{
@@ -409,6 +639,44 @@ public class LeadPage {
 		}
 	}
 	
+	public void createETBLead(LeadDataModel handler)
+	{
+		try
+		{
+			JavascriptExecutor js = (JavascriptExecutor) driver;  
+			js.executeScript("arguments[0].scrollIntoView();",addbuttonOfAction );	
+			
+			wait.until(ExpectedConditions.visibilityOf(addbuttonOfAction));
+			this.performClickWithAction(addbuttonOfAction);
+			System.out.println("Clicked on Add button to create lead");
+			wait.until(ExpectedConditions.visibilityOf(newLeadButtonOfQuickActions));
+			newLeadButtonOfQuickActions.click();
+			wait.until(ExpectedConditions.visibilityOf(segmentTypeDropdown));
+			this.performClickWithAction(segmentTypeDropdown);
+			//segmentTypeDropdown.click();
+			String segmentval = handler.getRecordType();
+			wait.until(ExpectedConditions.presenceOfElementLocated(By.xpath("//div[@class='select-options']/ul/li/a[@title='"+segmentval+"']"))).click();
+			
+			productDropdown.click();						
+			String productval = handler.getProduct();			
+			wait.until(ExpectedConditions.presenceOfElementLocated(By.xpath("//div[@class='select-options']/ul/li/a[@title='"+productval+"']"))).click();
+			
+			leadSourceDropdown.click();
+			String leadsourceval = handler.getLeadSource();
+			wait.until(ExpectedConditions.presenceOfElementLocated(By.xpath("//div[@class='select-options']/ul/li/a[@title='"+leadsourceval+"']"))).click();
+			System.out.println("Entered all values");
+			
+			this.performClickWithAction(saveButtonOfNTBLeadPage);
+			
+			System.out.println("Clicked on save button");
+			
+		}
+		catch(Exception e)
+		{
+			ExtentConfigurer.getTest().log(Status.ERROR, "Selenium Error Occurred : " + e.getMessage());
+			Assert.fail();
+		}
+	}
 	
 	
 }

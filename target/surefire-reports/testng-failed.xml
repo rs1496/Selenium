@@ -8,7 +8,7 @@
     <classes>
       <class name="com.salesforce.automation.test.LeadPageTest">
         <methods>
-          <include name="test_LeadPage" invocation-numbers="0"/>
+          <include name="test_LeadPage"/>
           <include name="before"/>
           <include name="afterAll"/>
           <include name="BeforeMethod"/>

@@ -5,9 +5,11 @@ public class LeadDataModel {
 	private String scenarioName;
 	private String scenarioRunningStatus;
 	private String operations;
-	private String branchUser;
+	private String globalSearch;
+	private String accountName;
 	private String recordType;
 	private String product;
+	private String firstname;
 	private String lastname;
 	private String leadSource;
 	private String channelPartner;
@@ -17,6 +19,26 @@ public class LeadDataModel {
 	
 	
 	
+	
+	
+	public String getAccountName() {
+		return accountName;
+	}
+	public void setAccountName(String accountName) {
+		this.accountName = accountName;
+	}
+	public String getGlobalSearch() {
+		return globalSearch;
+	}
+	public void setGlobalSearch(String globalSearch) {
+		this.globalSearch = globalSearch;
+	}
+	public String getFirstname() {
+		return firstname;
+	}
+	public void setFirstname(String firstname) {
+		this.firstname = firstname;
+	}
 	public String getChannelPartner() {
 		return channelPartner;
 	}
@@ -47,12 +69,7 @@ public class LeadDataModel {
 	public void setRecordType(String recordType) {
 		this.recordType = recordType;
 	}
-	public String getBranchUser() {
-		return branchUser;
-	}
-	public void setBranchUser(String branchUser) {
-		this.branchUser = branchUser;
-	}
+	
 	public String getScenarioName() {
 		return scenarioName;
 	}

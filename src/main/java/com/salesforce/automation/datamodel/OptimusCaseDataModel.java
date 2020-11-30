@@ -34,6 +34,7 @@ public class OptimusCaseDataModel
 	
 	
 	
+	
 	public String getFreezeUnfreezeType() {
 		return freezeUnfreezeType;
 	}

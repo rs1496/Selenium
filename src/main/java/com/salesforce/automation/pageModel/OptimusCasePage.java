@@ -33,10 +33,15 @@ public class OptimusCasePage
 	private WebDriver driver;
 	private WebDriverWait wait;
 	Actions builder;
+	private String caseCount = "";
 	
 	
-	@FindBy(xpath = "//div[text()='New']")
+	//@FindBy(xpath = "//div[text()='New']")
+	@FindBy(xpath  = "//a[@id='customTab3__item'][text()='New']")
 	private WebElement newButton;
+	
+	@FindBy(xpath = "//button[text()='New Case']")
+	private WebElement newCaseButton;
 	
 	@FindBy(xpath = "//select[@name='CaseType']")
 	private WebElement caseTypeDropdown;
@@ -148,7 +153,7 @@ public class OptimusCasePage
 	@FindBy(xpath = "//span[text()='Case Responsibilities']/following::button[text()='Save']")
 	private WebElement saveButton;
 	
-	@FindBy(xpath = "//h2[text()='Edit Case']/following::button[1][text()='Save']")
+	@FindBy(xpath = "//h2[contains(text(),'Case')]/following::button[1][text()='Save']")
 	private WebElement topSaveButton;
 	
 	@FindBy(xpath = "//span[text()='App Launcher']/ancestor::button[1]")
@@ -160,8 +165,13 @@ public class OptimusCasePage
 	@FindBy(xpath = "//a[@data-label='Retail Banking Console']")
 	private WebElement retailBankingConsoleOption;
 	
-	//@FindBy(xpath = "//input[@placeholder='Search Salesforce']")
-	@FindBy(xpath = "//input[@placeholder='Search...']")
+	//@FindBy(xpath = "//input[@placeholder='Search Salesforce']")	
+	
+	//@FindBy(xpath = "//input[@placeholder='Search...' OR @placeholder='Search Setup']")
+	
+	//@FindBy(xpath = "//input[@placeholder='Search...']")
+	
+	@FindBy(xpath = "//input[starts-with(@placeholder,'Search')]/ancestor::div[1][@class='uiInput uiAutocomplete uiInput--default']/input")
 	private WebElement globalSearchField;
 	
 /*	@FindBy(xpath = "//ul[@class='slds-global-actions']/li[8]/span/button/div/span/div/span/img[@class='icon noicon'][@title='User']")
@@ -488,6 +498,9 @@ public class OptimusCasePage
 	@FindBy(xpath = "//h2[contains(text(),'Account Details')]/following::button[text()='Select'][1]")
 	private WebElement selectButtonOfAccountDetails;
 	
+	@FindBy(xpath = "//h2[contains(text(),'Account Details')]/following::button[text()='Select'][2]")
+	private WebElement select2ndButtonOfAccountDetails;
+	
 	@FindBy(xpath = "//input[@name='IFB_To_Cheque_No__c']")
 	private WebElement toChequenoField;
 	
@@ -514,6 +527,13 @@ public class OptimusCasePage
 	
 	@FindBy(xpath = "//h2[text()='Card Details']/following::button[text()='Select'][1]")
 	private WebElement selectButtonOfCardDetails;
+	
+	@FindBy(xpath = "//lightning-base-formatted-text[text()='SECONDARY OPEN']/ancestor::tr[1]/th/lightning-primitive-cell-factory/span/div/lightning-primitive-cell-button/lightning-button/button")
+	private WebElement selectButtonOfSecondaryOpenCardDetails;
+	
+	@FindBy(xpath = "//lightning-base-formatted-text[text()='PRIMARY OPEN']/ancestor::tr[1]/th/lightning-primitive-cell-factory/span/div/lightning-primitive-cell-button/lightning-button/button")
+	private WebElement selectButtonOfPrimaryOpenCardDetails;
+	
 	
 	@FindBy(xpath = "//button[@title='Validate PAN']")
 	private WebElement validatePanButton;
@@ -554,6 +574,24 @@ public class OptimusCasePage
 
 		} catch (Exception e) {
 			// do nothing
+		}
+	}
+	
+	public void continueExecution()
+	{
+		try
+		{
+						
+			if(logOutLink.isDisplayed())
+			{
+				logOutLink.click();
+				System.out.println("Logged out NOW");
+				Thread.sleep(2000);
+			}
+		}
+		catch(Exception e)
+		{
+			
 		}
 	}
 	
@@ -669,8 +707,7 @@ public class OptimusCasePage
 			Thread.sleep(3000);
 			homeDropdown.click();
 			Thread.sleep(3000);
-			
-			
+			Thread.sleep(5000);
 			Actions action = new Actions(driver);
 			action.doubleClick(globalSearchField).perform();
 			
@@ -686,6 +723,54 @@ public class OptimusCasePage
 			Thread.sleep(2000);
 			driver.navigate().refresh();
 			
+			Thread.sleep(15000);
+			driver.switchTo().frame(0);
+			Thread.sleep(10000);
+			this.performClickWithAction(loginButton);
+			
+			System.out.println("Logged in Successfully");
+			Thread.sleep(10000);
+		}
+		catch(Exception e)
+		{
+			ExtentConfigurer.getTest().log(Status.ERROR, "Selenium Error Occurred : " + e.getMessage());
+			Assert.fail();
+		}
+	}
+	
+	public void searchUserLoginOnSetUpPage(OptimusCaseDataModel handler)
+	{
+		try
+		{
+			Thread.sleep(3000);
+			this.clearTab();
+			System.out.println("Closing All Tabs");
+			Thread.sleep(2000);
+			this.clearTab();
+			System.out.println("Closing All Tabs");
+			Thread.sleep(2000);
+			this.clearTab();
+			System.out.println("Closing All Tabs");
+			Thread.sleep(2000);
+			this.clearTab();
+			System.out.println("Closing All Tabs");
+			Thread.sleep(3000);
+			
+			Thread.sleep(8000);
+			
+			this.continueExecution();		
+			
+			Thread.sleep(5000);
+			Actions action = new Actions(driver);
+			action.doubleClick(globalSearchField).perform();
+			
+			
+			globalSearchField.sendKeys(this.trimQuote(handler.getGlobalSearch()));
+			
+			Thread.sleep(3000);
+			globalSearchValueSelection.click();
+			Thread.sleep(5000);			
+						
 			Thread.sleep(15000);
 			driver.switchTo().frame(0);
 			Thread.sleep(10000);
@@ -727,8 +812,9 @@ public class OptimusCasePage
 			
 			Thread.sleep(3000);
 			driver.navigate().refresh();
+			Thread.sleep(5000);
 			this.clearTab();
-			Thread.sleep(3000);
+			Thread.sleep(5000);
 			wait.until(ExpectedConditions.visibilityOf(searchThisListField));
 			
 			//Thread.sleep(6000);	
@@ -741,6 +827,15 @@ public class OptimusCasePage
 			this.performClickWithAction(topAccountName);
 			System.out.println("Selected Account");
 			Thread.sleep(5000);
+			
+			/*//later remove this code
+			Thread.sleep(10000);
+			
+			this.performClickWithAction(casesWithIcon);
+			Thread.sleep(3000);
+			
+			newButton.click();
+			Thread.sleep(8000);*/
 						
 		}
 		catch(Exception e)
@@ -756,15 +851,18 @@ public class OptimusCasePage
 		{			
 			Thread.sleep(10000);
 			
-			this.performClickWithAction(casesWithIcon);
-			Thread.sleep(3000);
-			
+					
 			newButton.click();
+			newCaseButton.click();
+			
 			Thread.sleep(8000);
 			this.performClickWithAction(caseTypeDropdown);
 			
 			this.selectElement(caseTypeDropdown, handler.getCaseType());
 			System.out.println("Case type selected");
+			
+					
+			
 			Thread.sleep(2000);
 			categoryDropdown.click();
 			this.selectElement(categoryDropdown, handler.getCategory());
@@ -793,6 +891,7 @@ public class OptimusCasePage
 			System.out.println("Status Code changed");
 			saveButton.click();
 			Thread.sleep(10000);
+			wait.until(ExpectedConditions.visibilityOf(caseNumber));
 			
 			String caseno = caseNumber.getText();
 			System.out.println("caseno" +" "+ caseno);	
@@ -848,10 +947,10 @@ public class OptimusCasePage
 		{
 			Thread.sleep(10000);
 			
-			this.performClickWithAction(casesWithIcon);
-			Thread.sleep(3000);
+			
 			
 			newButton.click();
+			newCaseButton.click();
 			Thread.sleep(8000);
 			
 			this.performClickWithAction(caseTypeDropdown);
@@ -881,7 +980,8 @@ public class OptimusCasePage
 			
 			
 			System.out.println("Clicked on save button");
-			Thread.sleep(3000);
+			Thread.sleep(10000);
+			wait.until(ExpectedConditions.visibilityOf(caseNumber));
 			String caseno = caseNumber.getText();
 			System.out.println("caseno" +" "+ caseno);	
 						
@@ -914,10 +1014,12 @@ public class OptimusCasePage
 		{
 			Thread.sleep(10000);
 			
-			this.performClickWithAction(casesWithIcon);
-			Thread.sleep(3000);
+			/*this.performClickWithAction(casesWithIcon);
+			Thread.sleep(3000);*/
 			
 			newButton.click();
+			newCaseButton.click();
+			
 			Thread.sleep(8000);
 			
 			this.performClickWithAction(caseTypeDropdown);
@@ -963,7 +1065,8 @@ public class OptimusCasePage
 			
 			
 			System.out.println("Clicked on save button");
-			Thread.sleep(3000);
+			Thread.sleep(10000);
+			wait.until(ExpectedConditions.visibilityOf(caseNumber));
 			String caseno = caseNumber.getText();
 			System.out.println("caseno" +" "+ caseno);	
 						
@@ -997,10 +1100,9 @@ public class OptimusCasePage
 		{
 			Thread.sleep(10000);
 			
-			this.performClickWithAction(casesWithIcon);
-			Thread.sleep(3000);
 			
 			newButton.click();
+			newCaseButton.click();
 			Thread.sleep(8000);
 			
 			this.performClickWithAction(caseTypeDropdown);
@@ -1027,7 +1129,7 @@ public class OptimusCasePage
 			
 			this.performClickWithAction(stopReasonDropdown);
 			String stopReasonValue = handler.getStopReason();
-			wait.until(ExpectedConditions.presenceOfElementLocated(By.xpath("//label[text()='Stop Reason']/following::div[2]/div[2]/lightning-base-combobox-item/span[2]/span[@title='"+stopReasonValue+"']"))).click();;
+			wait.until(ExpectedConditions.presenceOfElementLocated(By.xpath("//label[text()='Stop Reason']/following::div[2]/div[2]/lightning-base-combobox-item/span[2]/span[@title='"+stopReasonValue+"']"))).click();
 			fromChequenoField.sendKeys(handler.getFromChequeno());
 			
 			Thread.sleep(3000);
@@ -1052,7 +1154,8 @@ public class OptimusCasePage
 			
 			
 			System.out.println("Clicked on save button");
-			Thread.sleep(5000);
+			Thread.sleep(10000);
+			wait.until(ExpectedConditions.visibilityOf(caseNumber));
 			String caseno = caseNumber.getText();
 			System.out.println("caseno" +" "+ caseno);	
 						
@@ -1086,10 +1189,9 @@ public class OptimusCasePage
 		{
 			Thread.sleep(10000);
 			
-			this.performClickWithAction(casesWithIcon);
-			Thread.sleep(3000);
 			
 			newButton.click();
+			newCaseButton.click();
 			Thread.sleep(8000);
 			
 			this.performClickWithAction(caseTypeDropdown);
@@ -1127,7 +1229,8 @@ public class OptimusCasePage
 			
 			
 			System.out.println("Clicked on save button");
-			Thread.sleep(5000);
+			Thread.sleep(10000);
+			wait.until(ExpectedConditions.visibilityOf(caseNumber));
 			String caseno = caseNumber.getText();
 			System.out.println("caseno" +" "+ caseno);	
 						
@@ -1161,10 +1264,8 @@ public class OptimusCasePage
 		{
 			Thread.sleep(10000);
 			
-			this.performClickWithAction(casesWithIcon);
-			Thread.sleep(3000);
-			
 			newButton.click();
+			newCaseButton.click();
 			Thread.sleep(8000);
 			
 			this.performClickWithAction(caseTypeDropdown);
@@ -1202,7 +1303,8 @@ public class OptimusCasePage
 			
 			
 			System.out.println("Clicked on save button");
-			Thread.sleep(5000);
+			Thread.sleep(10000);
+			wait.until(ExpectedConditions.visibilityOf(caseNumber));
 			String caseno = caseNumber.getText();
 			System.out.println("caseno" +" "+ caseno);	
 						
@@ -1237,10 +1339,9 @@ public class OptimusCasePage
 		{
 			Thread.sleep(10000);
 			
-			this.performClickWithAction(casesWithIcon);
-			Thread.sleep(3000);
 			
 			newButton.click();
+			newCaseButton.click();
 			Thread.sleep(8000);
 			
 			this.performClickWithAction(caseTypeDropdown);
@@ -1284,10 +1385,8 @@ public class OptimusCasePage
 		{
 			Thread.sleep(10000);
 			
-			this.performClickWithAction(casesWithIcon);
-			Thread.sleep(3000);
-			
 			newButton.click();
+			newCaseButton.click();
 			Thread.sleep(8000);
 			
 			this.performClickWithAction(caseTypeDropdown);
@@ -1319,7 +1418,8 @@ public class OptimusCasePage
 			
 			
 			System.out.println("Clicked on save button");
-			Thread.sleep(5000);
+			Thread.sleep(10000);
+			wait.until(ExpectedConditions.visibilityOf(caseNumber));
 			String caseno = caseNumber.getText();
 			System.out.println("caseno" +" "+ caseno);	
 						
@@ -1341,7 +1441,11 @@ public class OptimusCasePage
 			driver.navigate().refresh();
 		
 			Thread.sleep(5000);
+			
+			
 			String statuscode = statusCodeValue.getText();
+			
+			wait.until(ExpectedConditions.visibilityOf(statusCodeValue));
 			
 			System.out.println("Status code is " + statuscode);
 			
@@ -1374,10 +1478,8 @@ public class OptimusCasePage
 		{
 			Thread.sleep(10000);
 			
-			this.performClickWithAction(casesWithIcon);
-			Thread.sleep(3000);
-			
 			newButton.click();
+			newCaseButton.click();
 			Thread.sleep(8000);
 			
 			this.performClickWithAction(caseTypeDropdown);
@@ -1408,7 +1510,8 @@ public class OptimusCasePage
 			
 			
 			System.out.println("Clicked on save button");
-			Thread.sleep(5000);
+			Thread.sleep(10000);
+			wait.until(ExpectedConditions.visibilityOf(caseNumber));
 			String caseno = caseNumber.getText();
 			System.out.println("caseno" +" "+ caseno);	
 						
@@ -1430,6 +1533,7 @@ public class OptimusCasePage
 		
 			Thread.sleep(5000);
 			String statuscode = statusCodeValue.getText();
+			wait.until(ExpectedConditions.visibilityOf(statusCodeValue));
 			
 			System.out.println("Status code is " + statuscode);
 			
@@ -1459,10 +1563,8 @@ public class OptimusCasePage
 		{
 			Thread.sleep(10000);
 			
-			this.performClickWithAction(casesWithIcon);
-			Thread.sleep(3000);
-			
 			newButton.click();
+			newCaseButton.click();
 			Thread.sleep(8000);
 			
 			this.performClickWithAction(caseTypeDropdown);
@@ -1505,7 +1607,8 @@ public class OptimusCasePage
 			
 			
 			System.out.println("Clicked on save button");
-			Thread.sleep(5000);
+			Thread.sleep(10000);
+			wait.until(ExpectedConditions.visibilityOf(caseNumber));
 			String caseno = caseNumber.getText();
 			System.out.println("caseno" +" "+ caseno);	
 						
@@ -1537,10 +1640,8 @@ public class OptimusCasePage
 		{
 			Thread.sleep(10000);
 			
-			this.performClickWithAction(casesWithIcon);
-			Thread.sleep(3000);
-			
 			newButton.click();
+			newCaseButton.click();
 			Thread.sleep(8000);
 			
 			this.performClickWithAction(caseTypeDropdown);
@@ -1558,18 +1659,28 @@ public class OptimusCasePage
 			
 			accountNumberField.click();
 			Thread.sleep(4000);
-			selectButtonOfAccountDetails.click();
+			select2ndButtonOfAccountDetails.click();
+			//selectButtonOfAccountDetails.click();
 			Thread.sleep(5000);
 			System.out.println("Account number selected from Account Details");
 			
 			cardNumberField.click();
 			Thread.sleep(4000);
-			selectButtonOfCardDetails.click();
+			selectButtonOfSecondaryOpenCardDetails.click();
+			//selectButtonOfCardDetails.click();
 			System.out.println("Card number selected");
 			
 			Thread.sleep(2000);			
+			validatePANCheckbox.click();
+			validatePassportNoCheckbox.click();
+			validateDrivingLicenseNoCheckbox.click();
+			validateVoterIdCheckbox.click();
+			validateDobCheckbox.click();
+			mothersMaidenNameCheckbox.click();
+			verifyTransactionCheckbox.click();
+			System.out.println("Sucessfully selected all checkbox");
 			
-			
+			Thread.sleep(2000);	
 			statusCodeDropdown.click();
 			this.selectElement(statusCodeDropdown, handler.getStatusCode());
 			System.out.println("Status Code as Draft");
@@ -1579,7 +1690,8 @@ public class OptimusCasePage
 			
 			
 			System.out.println("Clicked on save button");
-			Thread.sleep(5000);
+			Thread.sleep(10000);
+			wait.until(ExpectedConditions.visibilityOf(caseNumber));
 			String caseno = caseNumber.getText();
 			System.out.println("caseno" +" "+ caseno);	
 						
@@ -1593,7 +1705,26 @@ public class OptimusCasePage
 			System.out.println("Created By date " + createdBydate);
 			
 			String createdByName = createdByNameValue.getText();
-			System.out.println("Created by name " + createdByName);		
+			System.out.println("Created by name " + createdByName);	
+			
+			Thread.sleep(3000);
+			
+			driver.navigate().refresh();
+		
+			Thread.sleep(10000);
+			String statuscode = statusCodeValue.getText();
+			
+			System.out.println("Status code is " + statuscode);
+			
+			if(statuscode.equals("STP Processed"))
+			{
+				System.out.println("Status code is STP Processed");
+			}
+			else
+			{
+				System.out.println("Status code is not matched");
+				Assert.fail();
+			}
 								
 			System.out.println("Card delinking completed");
 		}
@@ -1610,10 +1741,8 @@ public class OptimusCasePage
 		{
 			Thread.sleep(10000);
 			
-			this.performClickWithAction(casesWithIcon);
-			Thread.sleep(3000);
-			
 			newButton.click();
+			newCaseButton.click();
 			Thread.sleep(8000);
 			
 			this.performClickWithAction(caseTypeDropdown);
@@ -1658,7 +1787,8 @@ public class OptimusCasePage
 			
 			
 			System.out.println("Clicked on save button");
-			Thread.sleep(5000);
+			Thread.sleep(10000);
+			wait.until(ExpectedConditions.visibilityOf(caseNumber));
 			String caseno = caseNumber.getText();
 			System.out.println("caseno" +" "+ caseno);	
 						
@@ -1692,10 +1822,8 @@ public class OptimusCasePage
 		{
 			Thread.sleep(10000);
 			
-			this.performClickWithAction(casesWithIcon);
-			Thread.sleep(3000);
-			
 			newButton.click();
+			newCaseButton.click();
 			Thread.sleep(8000);
 			
 			this.performClickWithAction(caseTypeDropdown);
@@ -1717,6 +1845,19 @@ public class OptimusCasePage
 			Thread.sleep(5000);
 			System.out.println("Account number selected from Account Details");
 			
+			
+			
+			validatePANCheckbox.click();
+			validatePassportNoCheckbox.click();
+			validateDrivingLicenseNoCheckbox.click();
+			validateVoterIdCheckbox.click();
+			validateDobCheckbox.click();
+			mothersMaidenNameCheckbox.click();
+			verifyTransactionCheckbox.click();
+			System.out.println("Sucessfully selected all checkbox");
+			
+			Thread.sleep(2000);
+			
 			statusCodeDropdown.click();
 			this.selectElement(statusCodeDropdown, handler.getStatusCode());
 			System.out.println("Status Code as Draft");
@@ -1726,7 +1867,8 @@ public class OptimusCasePage
 			
 			
 			System.out.println("Clicked on save button");
-			Thread.sleep(5000);
+			Thread.sleep(10000);
+			wait.until(ExpectedConditions.visibilityOf(caseNumber));
 			String caseno = caseNumber.getText();
 			System.out.println("caseno" +" "+ caseno);	
 						
@@ -1757,10 +1899,8 @@ public class OptimusCasePage
 		{
 			Thread.sleep(10000);
 			
-			this.performClickWithAction(casesWithIcon);
-			Thread.sleep(3000);
-			
 			newButton.click();
+			newCaseButton.click();
 			Thread.sleep(8000);
 			
 			this.performClickWithAction(caseTypeDropdown);
@@ -1807,7 +1947,8 @@ public class OptimusCasePage
 			
 			
 			System.out.println("Clicked on save button");
-			Thread.sleep(5000);
+			Thread.sleep(10000);
+			wait.until(ExpectedConditions.visibilityOf(caseNumber));
 			String caseno = caseNumber.getText();
 			System.out.println("caseno" +" "+ caseno);	
 						
@@ -1840,10 +1981,8 @@ public class OptimusCasePage
 		{
 			Thread.sleep(10000);
 			
-			this.performClickWithAction(casesWithIcon);
-			Thread.sleep(3000);
-			
 			newButton.click();
+			newCaseButton.click();
 			Thread.sleep(8000);
 			
 			this.performClickWithAction(caseTypeDropdown);
@@ -1866,6 +2005,8 @@ public class OptimusCasePage
 			Thread.sleep(2000);
 			
 			newEmailIdField.sendKeys(handler.getNewEmailId());
+			
+			barCodeField.sendKeys(handler.getBarcode());
 						
 			Thread.sleep(3000);
 			
@@ -1877,7 +2018,8 @@ public class OptimusCasePage
 			this.performClickWithAction(saveButton);		
 			
 			System.out.println("Clicked on save button");
-			Thread.sleep(5000);
+			Thread.sleep(10000);
+			wait.until(ExpectedConditions.visibilityOf(caseNumber));
 			String caseno = caseNumber.getText();
 			System.out.println("caseno" +" "+ caseno);	
 						
@@ -1906,12 +2048,10 @@ public class OptimusCasePage
 	{
 		try
 		{
-			Thread.sleep(10000);
-			
-			this.performClickWithAction(casesWithIcon);
-			Thread.sleep(3000);
+			Thread.sleep(10000);		
 			
 			newButton.click();
+			newCaseButton.click();
 			Thread.sleep(8000);
 			
 			this.performClickWithAction(caseTypeDropdown);
@@ -1932,6 +2072,8 @@ public class OptimusCasePage
 			String authenticationModevalue = handler.getAuthenticationMode();
 			wait.until(ExpectedConditions.presenceOfElementLocated(By.xpath("//span[text()='"+authenticationModevalue+"']"))).click();
 			Thread.sleep(2000);
+			
+			barCodeField.sendKeys(handler.getBarcode());
 			
 			accountNumberField.click();
 			Thread.sleep(4000);
@@ -1955,7 +2097,10 @@ public class OptimusCasePage
 			Thread.sleep(3000);			
 			this.performClickWithAction(saveButton);
 			System.out.println("Clicked on save button");
-			Thread.sleep(3000);
+			
+			Thread.sleep(10000);
+			wait.until(ExpectedConditions.visibilityOf(caseNumber));
+			
 			String caseno = caseNumber.getText();
 			System.out.println("caseno" +" "+ caseno);	
 						
@@ -1990,10 +2135,8 @@ public class OptimusCasePage
 		{
 			Thread.sleep(10000);
 			
-			this.performClickWithAction(casesWithIcon);
-			Thread.sleep(3000);
-			
 			newButton.click();
+			newCaseButton.click();
 			Thread.sleep(8000);
 			
 			this.performClickWithAction(caseTypeDropdown);
@@ -2029,7 +2172,8 @@ public class OptimusCasePage
 			
 			
 			System.out.println("Clicked on save button");
-			Thread.sleep(3000);
+			Thread.sleep(10000);
+			wait.until(ExpectedConditions.visibilityOf(caseNumber));
 			String caseno = caseNumber.getText();
 			System.out.println("caseno" +" "+ caseno);	
 						
@@ -2061,11 +2205,9 @@ public class OptimusCasePage
 		{
 			Thread.sleep(10000);
 			
-			this.performClickWithAction(casesWithIcon);
-			Thread.sleep(3000);
-			
 			newButton.click();
-			Thread.sleep(8000);
+			newCaseButton.click();
+			Thread.sleep(10000);
 			
 			this.performClickWithAction(caseTypeDropdown);
 			this.selectElement(caseTypeDropdown, handler.getCaseType());
@@ -2088,13 +2230,14 @@ public class OptimusCasePage
 			
 			accountNumberField.click();
 			Thread.sleep(4000);
-			selectButtonOfAccountDetails.click();
+			//selectButtonOfAccountDetails.click();
+			select2ndButtonOfAccountDetails.click();
 			Thread.sleep(5000);
 			System.out.println("Account number selected from Account Details");
 			
 			cardNumberField.click();
 			Thread.sleep(4000);
-			selectButtonOfCardDetails.click();
+			selectButtonOfSecondaryOpenCardDetails.click();
 			System.out.println("Card number selected");
 			
 			Thread.sleep(2000);			
@@ -2109,7 +2252,8 @@ public class OptimusCasePage
 			
 			
 			System.out.println("Clicked on save button");
-			Thread.sleep(5000);
+			Thread.sleep(10000);
+			wait.until(ExpectedConditions.visibilityOf(caseNumber));
 			String caseno = caseNumber.getText();
 			System.out.println("caseno" +" "+ caseno);	
 						
@@ -2123,7 +2267,26 @@ public class OptimusCasePage
 			System.out.println("Created By date " + createdBydate);
 			
 			String createdByName = createdByNameValue.getText();
-			System.out.println("Created by name " + createdByName);		
+			System.out.println("Created by name " + createdByName);	
+			
+			Thread.sleep(3000);
+			
+			driver.navigate().refresh();
+		
+			Thread.sleep(10000);
+			String statuscode = statusCodeValue.getText();
+			
+			System.out.println("Status code is " + statuscode);
+			
+			if(statuscode.equals("STP Processed"))
+			{
+				System.out.println("Status code is STP Processed");
+			}
+			else
+			{
+				System.out.println("Status code is not matched");
+				Assert.fail();
+			}
 								
 			System.out.println("Card delinking by Branch completed");
 			
@@ -2141,11 +2304,9 @@ public class OptimusCasePage
 		{
 			Thread.sleep(10000);
 			
-			this.performClickWithAction(casesWithIcon);
-			Thread.sleep(3000);
-			
 			newButton.click();
-			Thread.sleep(8000);
+			newCaseButton.click();
+			Thread.sleep(10000);
 			
 			this.performClickWithAction(caseTypeDropdown);
 			this.selectElement(caseTypeDropdown, handler.getCaseType());
@@ -2168,13 +2329,15 @@ public class OptimusCasePage
 			
 			accountNumberField.click();
 			Thread.sleep(4000);
-			selectButtonOfAccountDetails.click();
+			//selectButtonOfAccountDetails.click();
+			select2ndButtonOfAccountDetails.click();
 			Thread.sleep(5000);
 			System.out.println("Account number selected from Account Details");
 			
 			cardNumberField.click();
 			Thread.sleep(4000);
-			selectButtonOfCardDetails.click();
+			//selectButtonOfCardDetails.click();
+			selectButtonOfPrimaryOpenCardDetails.click();
 			System.out.println("Card number selected");
 			
 			Thread.sleep(2000);			
@@ -2189,7 +2352,8 @@ public class OptimusCasePage
 			
 			
 			System.out.println("Clicked on save button");
-			Thread.sleep(5000);
+			Thread.sleep(10000);
+			wait.until(ExpectedConditions.visibilityOf(caseNumber));
 			String caseno = caseNumber.getText();
 			System.out.println("caseno" +" "+ caseno);	
 						
@@ -2203,9 +2367,28 @@ public class OptimusCasePage
 			System.out.println("Created By date " + createdBydate);
 			
 			String createdByName = createdByNameValue.getText();
-			System.out.println("Created by name " + createdByName);		
+			System.out.println("Created by name " + createdByName);	
+			
+			Thread.sleep(3000);
+			
+			driver.navigate().refresh();
+		
+			Thread.sleep(10000);
+			String statuscode = statusCodeValue.getText();
+			
+			System.out.println("Status code is " + statuscode);
+			
+			if(statuscode.equals("STP Processed"))
+			{
+				System.out.println("Status code is STP Processed");
+			}
+			else
+			{
+				System.out.println("Status code is not matched");
+				Assert.fail();
+			}
 								
-			System.out.println("Card delinking completed");
+			System.out.println("Card linking completed");
 		}
 		catch(Exception e)
 		{
@@ -2220,10 +2403,9 @@ public class OptimusCasePage
 		{
 			Thread.sleep(10000);
 			
-			this.performClickWithAction(casesWithIcon);
-			Thread.sleep(3000);
 			
 			newButton.click();
+			newCaseButton.click();
 			Thread.sleep(8000);
 			
 			this.performClickWithAction(caseTypeDropdown);
@@ -2244,6 +2426,8 @@ public class OptimusCasePage
 			String authenticationModevalue = handler.getAuthenticationMode();
 			wait.until(ExpectedConditions.presenceOfElementLocated(By.xpath("//span[text()='"+authenticationModevalue+"']"))).click();
 			Thread.sleep(2000);
+			barCodeField.sendKeys(handler.getBarcode());
+			
 			
 			accountNumberField.click();
 			Thread.sleep(4000);
@@ -2274,7 +2458,8 @@ public class OptimusCasePage
 			
 			
 			System.out.println("Clicked on save button");
-			Thread.sleep(5000);
+			Thread.sleep(10000);
+			wait.until(ExpectedConditions.visibilityOf(caseNumber));
 			String caseno = caseNumber.getText();
 			System.out.println("caseno" +" "+ caseno);	
 						
@@ -2301,16 +2486,15 @@ public class OptimusCasePage
 		}
 	}
 	
+	
 	public void createCaseCardNewIssuanceByBranch(OptimusCaseDataModel handler)
 	{
 		try
 		{
 			Thread.sleep(10000);
-			
-			this.performClickWithAction(casesWithIcon);
-			Thread.sleep(3000);
-			
+						
 			newButton.click();
+			newCaseButton.click();
 			Thread.sleep(8000);
 			
 			this.performClickWithAction(caseTypeDropdown);
@@ -2332,13 +2516,15 @@ public class OptimusCasePage
 			wait.until(ExpectedConditions.presenceOfElementLocated(By.xpath("//span[text()='"+authenticationModevalue+"']"))).click();
 			Thread.sleep(2000);
 			
+			barCodeField.sendKeys(handler.getBarcode());
+			
 			accountNumberField.click();
 			Thread.sleep(4000);
 			selectButtonOfAccountDetails.click();
 			Thread.sleep(5000);
 			System.out.println("Account number selected from Account Details");
 			
-			cardNumberField.click();
+			/*cardNumberField.click();
 			Thread.sleep(4000);
 			selectButtonOfCardDetails.click();
 			System.out.println("Card number selected");
@@ -2350,7 +2536,7 @@ public class OptimusCasePage
 			wait.until(ExpectedConditions.presenceOfElementLocated(By.xpath("//label[text()='Reason for Reissue']/following::div[2]/div[2]/lightning-base-combobox-item/span[2]/span[text()='"+reasonresissuevalue+"']"))).click();
 		
 			Thread.sleep(2000);
-			System.out.println("Reason for reissue selected");
+			System.out.println("Reason for reissue selected");*/
 			
 			statusCodeDropdown.click();
 			this.selectElement(statusCodeDropdown, handler.getStatusCode());
@@ -2361,7 +2547,8 @@ public class OptimusCasePage
 			
 			
 			System.out.println("Clicked on save button");
-			Thread.sleep(5000);
+			Thread.sleep(10000);
+			wait.until(ExpectedConditions.visibilityOf(caseNumber));
 			String caseno = caseNumber.getText();
 			System.out.println("caseno" +" "+ caseno);	
 						
@@ -2392,10 +2579,8 @@ public class OptimusCasePage
 		{
 			Thread.sleep(10000);
 			
-			this.performClickWithAction(casesWithIcon);
-			Thread.sleep(3000);
-			
 			newButton.click();
+			newCaseButton.click();
 			Thread.sleep(8000);
 			
 			this.performClickWithAction(caseTypeDropdown);
@@ -2442,7 +2627,8 @@ public class OptimusCasePage
 			
 			
 			System.out.println("Clicked on save button");
-			Thread.sleep(5000);
+			Thread.sleep(10000);
+			wait.until(ExpectedConditions.visibilityOf(caseNumber));
 			String caseno = caseNumber.getText();
 			System.out.println("caseno" +" "+ caseno);	
 						
@@ -2474,10 +2660,8 @@ public class OptimusCasePage
 		{
 			Thread.sleep(10000);
 			
-			this.performClickWithAction(casesWithIcon);
-			Thread.sleep(3000);
-			
 			newButton.click();
+			newCaseButton.click();
 			Thread.sleep(8000);
 			
 			this.performClickWithAction(caseTypeDropdown);
@@ -2498,7 +2682,7 @@ public class OptimusCasePage
 			String authenticationModevalue = handler.getAuthenticationMode();
 			wait.until(ExpectedConditions.presenceOfElementLocated(By.xpath("//span[text()='"+authenticationModevalue+"']"))).click();
 			Thread.sleep(4000);
-			
+			barCodeField.sendKeys(handler.getBarcode());
 			
 			accountNumberField.click();
 			Thread.sleep(4000);
@@ -2510,7 +2694,8 @@ public class OptimusCasePage
 			Thread.sleep(1000);	
 			this.performClickWithAction(stopReasonDropdown);
 			String stopReasonValue = handler.getStopReason();
-			wait.until(ExpectedConditions.presenceOfElementLocated(By.xpath("//label[text()='Stop Reason']/following::div[2]/div[2]/lightning-base-combobox-item/span[2]/span[@title='"+stopReasonValue+"']")));
+			wait.until(ExpectedConditions.presenceOfElementLocated(By.xpath("//label[text()='Stop Reason']/following::div[2]/div[2]/lightning-base-combobox-item/span[2]/span[@title='"+stopReasonValue+"']"))).click();;
+			Thread.sleep(2000);
 			fromChequenoField.sendKeys(handler.getFromChequeno());
 			
 			Thread.sleep(3000);
@@ -2522,7 +2707,8 @@ public class OptimusCasePage
 			
 			this.performClickWithAction(saveButton);	
 			System.out.println("Clicked on save button");
-			Thread.sleep(5000);
+			Thread.sleep(10000);
+			wait.until(ExpectedConditions.visibilityOf(caseNumber));
 			String caseno = caseNumber.getText();
 			System.out.println("caseno" +" "+ caseno);	
 						
@@ -2554,10 +2740,8 @@ public class OptimusCasePage
 		{
 			Thread.sleep(10000);
 			
-			this.performClickWithAction(casesWithIcon);
-			Thread.sleep(3000);
-			
 			newButton.click();
+			newCaseButton.click();
 			Thread.sleep(8000);
 			
 			this.performClickWithAction(caseTypeDropdown);
@@ -2586,6 +2770,8 @@ public class OptimusCasePage
 			Thread.sleep(5000);
 			System.out.println("Account number selected from Account Details");
 			
+			barCodeField.sendKeys(handler.getBarcode());
+			
 			cardNumberField.click();
 			Thread.sleep(4000);
 			selectButtonOfCardDetails.click();
@@ -2602,7 +2788,8 @@ public class OptimusCasePage
 			
 			
 			System.out.println("Clicked on save button");
-			Thread.sleep(5000);
+			Thread.sleep(10000);
+			wait.until(ExpectedConditions.visibilityOf(caseNumber));
 			String caseno = caseNumber.getText();
 			System.out.println("caseno" +" "+ caseno);	
 						
@@ -2636,10 +2823,8 @@ public class OptimusCasePage
 		{
 			Thread.sleep(10000);
 			
-			this.performClickWithAction(casesWithIcon);
-			Thread.sleep(3000);
-			
 			newButton.click();
+			newCaseButton.click();
 			Thread.sleep(8000);
 			
 			this.performClickWithAction(caseTypeDropdown);
@@ -2667,6 +2852,8 @@ public class OptimusCasePage
 			Thread.sleep(5000);
 			System.out.println("Account number selected from Account Details");
 			
+			barCodeField.sendKeys(handler.getBarcode());
+			
 			cardNumberField.click();
 			Thread.sleep(4000);
 			selectButtonOfCardDetails.click();
@@ -2683,7 +2870,8 @@ public class OptimusCasePage
 			
 			
 			System.out.println("Clicked on save button");
-			Thread.sleep(5000);
+			Thread.sleep(10000);
+			wait.until(ExpectedConditions.visibilityOf(caseNumber));
 			String caseno = caseNumber.getText();
 			System.out.println("caseno" +" "+ caseno);	
 						
@@ -2718,10 +2906,8 @@ public class OptimusCasePage
 		{
 			Thread.sleep(10000);
 			
-			this.performClickWithAction(casesWithIcon);
-			Thread.sleep(3000);
-			
 			newButton.click();
+			newCaseButton.click();
 			Thread.sleep(8000);
 			
 			this.performClickWithAction(caseTypeDropdown);
@@ -2749,6 +2935,8 @@ public class OptimusCasePage
 			Thread.sleep(5000);
 			System.out.println("Account number selected from Account Details");
 			
+			barCodeField.sendKeys(handler.getBarcode());
+			
 			cardNumberField.click();
 			Thread.sleep(4000);
 			selectButtonOfCardDetails.click();
@@ -2774,7 +2962,8 @@ public class OptimusCasePage
 			
 			
 			System.out.println("Clicked on save button");
-			Thread.sleep(5000);
+			Thread.sleep(10000);
+			wait.until(ExpectedConditions.visibilityOf(caseNumber));
 			String caseno = caseNumber.getText();
 			System.out.println("caseno" +" "+ caseno);	
 						
@@ -2806,11 +2995,8 @@ public class OptimusCasePage
 		try
 		{
 			Thread.sleep(10000);
-			
-			this.performClickWithAction(casesWithIcon);
-			Thread.sleep(3000);
-			
 			newButton.click();
+			newCaseButton.click();
 			Thread.sleep(8000);
 			
 			this.performClickWithAction(caseTypeDropdown);
@@ -2841,7 +3027,8 @@ public class OptimusCasePage
 			
 			
 			System.out.println("Clicked on save button");
-			Thread.sleep(5000);
+			Thread.sleep(10000);
+			wait.until(ExpectedConditions.visibilityOf(caseNumber));
 			String caseno = caseNumber.getText();
 			System.out.println("caseno" +" "+ caseno);	
 						
@@ -2859,13 +3046,10 @@ public class OptimusCasePage
 			System.out.println("Created by name " + createdByName);
 			
 			Thread.sleep(5000);
-			
-			driver.navigate().refresh();
-		
-			Thread.sleep(5000);
 			String statuscode = statusCodeValue.getText();
-			
 			System.out.println("Status code is " + statuscode);
+			
+			/*System.out.println("Status code is " + statuscode);
 			
 			if(statuscode.equals("STP Processed"))
 			{
@@ -2876,7 +3060,7 @@ public class OptimusCasePage
 				System.out.println("Status code is not matched");
 				Assert.fail();
 			}
-			
+			*/
 			
 								
 			System.out.println("DNC Registration completed");
@@ -2895,11 +3079,8 @@ public class OptimusCasePage
 		try
 		{
 			Thread.sleep(10000);
-			
-			this.performClickWithAction(casesWithIcon);
-			Thread.sleep(3000);
-			
 			newButton.click();
+			newCaseButton.click();
 			Thread.sleep(8000);
 			
 			this.performClickWithAction(caseTypeDropdown);
@@ -2930,7 +3111,8 @@ public class OptimusCasePage
 			
 			
 			System.out.println("Clicked on save button");
-			Thread.sleep(5000);
+			Thread.sleep(10000);
+			wait.until(ExpectedConditions.visibilityOf(caseNumber));
 			String caseno = caseNumber.getText();
 			System.out.println("caseno" +" "+ caseno);	
 						
@@ -2955,7 +3137,7 @@ public class OptimusCasePage
 			
 			System.out.println("Status code is " + statuscode);
 			
-			if(statuscode.equals("STP Processed"))
+			/*if(statuscode.equals("STP Processed"))
 			{
 				System.out.println("Status code is STP Processed");
 			}
@@ -2963,7 +3145,7 @@ public class OptimusCasePage
 			{
 				System.out.println("Status code is not matched");
 				Assert.fail();
-			}
+			}*/
 			
 								
 			System.out.println("DNC DE-Registration completed");
@@ -2980,11 +3162,8 @@ public class OptimusCasePage
 		try
 		{
 			Thread.sleep(10000);
-			
-			this.performClickWithAction(casesWithIcon);
-			Thread.sleep(3000);
-			
 			newButton.click();
+			newCaseButton.click();
 			Thread.sleep(8000);
 			
 			this.performClickWithAction(caseTypeDropdown);
@@ -3012,6 +3191,7 @@ public class OptimusCasePage
 			Thread.sleep(5000);
 			System.out.println("Account number selected from Account Details");
 			Thread.sleep(3000);	
+			barCodeField.sendKeys(handler.getBarcode());
 			
 			statusCodeDropdown.click();
 			this.selectElement(statusCodeDropdown, handler.getStatusCode());
@@ -3022,7 +3202,8 @@ public class OptimusCasePage
 			
 			
 			System.out.println("Clicked on save button");
-			Thread.sleep(5000);
+			Thread.sleep(10000);
+			wait.until(ExpectedConditions.visibilityOf(caseNumber));
 			String caseno = caseNumber.getText();
 			System.out.println("caseno" +" "+ caseno);	
 						
@@ -3052,11 +3233,8 @@ public class OptimusCasePage
 		try
 		{
 			Thread.sleep(10000);
-			
-			this.performClickWithAction(casesWithIcon);
-			Thread.sleep(3000);
-			
 			newButton.click();
+			newCaseButton.click();
 			Thread.sleep(8000);
 			
 			this.performClickWithAction(caseTypeDropdown);
@@ -3079,7 +3257,7 @@ public class OptimusCasePage
 			
 			this.performClickWithAction(saveButton);
 			
-			Thread.sleep(5000);
+			Thread.sleep(10000);
 			String erroroccured = driver.findElement(By.xpath("//div[text()='Error Occurred!!!']")).getText();
 			System.out.println(erroroccured);
 			
@@ -3103,8 +3281,9 @@ public class OptimusCasePage
 	{
 		try
 		{
+			
 			Thread.sleep(3000);
-			((JavascriptExecutor) driver).executeScript("window.scrollTo(document.body.scrollHeight, 0)");
+			//((JavascriptExecutor) driver).executeScript("window.scrollTo(document.body.scrollHeight, 0)");
 			Thread.sleep(3000);
 			this.performClickWithAction(caseTypeDropdown);
 			this.selectElement(caseTypeDropdown, handler.getCaseType());
@@ -3150,11 +3329,8 @@ public class OptimusCasePage
 		try
 		{
 			Thread.sleep(10000);
-			
-			this.performClickWithAction(casesWithIcon);
-			Thread.sleep(3000);
-			
 			newButton.click();
+			newCaseButton.click();
 			Thread.sleep(8000);
 			
 			this.performClickWithAction(caseTypeDropdown);
@@ -3263,11 +3439,8 @@ public class OptimusCasePage
 		try
 		{
 			Thread.sleep(10000);
-			
-			this.performClickWithAction(casesWithIcon);
-			Thread.sleep(3000);
-			
 			newButton.click();
+			newCaseButton.click();
 			Thread.sleep(8000);
 			
 			this.performClickWithAction(caseTypeDropdown);
@@ -3286,13 +3459,15 @@ public class OptimusCasePage
 			
 			accountNumberField.click();
 			Thread.sleep(4000);
-			selectButtonOfAccountDetails.click();
+			//selectButtonOfAccountDetails.click();
+			select2ndButtonOfAccountDetails.click();
 			Thread.sleep(5000);
 			System.out.println("Account number selected from Account Details");
 			
 			cardNumberField.click();
 			Thread.sleep(4000);
-			selectButtonOfCardDetails.click();
+			//selectButtonOfCardDetails.click();
+			selectButtonOfPrimaryOpenCardDetails.click();
 			System.out.println("Card number selected");
 			
 			Thread.sleep(2000);	
@@ -3318,7 +3493,8 @@ public class OptimusCasePage
 			
 			
 			System.out.println("Clicked on save button");
-			Thread.sleep(5000);
+			Thread.sleep(10000);
+			wait.until(ExpectedConditions.visibilityOf(caseNumber));
 			String caseno = caseNumber.getText();
 			System.out.println("caseno" +" "+ caseno);	
 						
@@ -3333,6 +3509,25 @@ public class OptimusCasePage
 			
 			String createdByName = createdByNameValue.getText();
 			System.out.println("Created by name " + createdByName);		
+			
+			Thread.sleep(10000);
+			
+			driver.navigate().refresh();
+		
+			Thread.sleep(10000);
+			String statuscode = statusCodeValue.getText();
+			
+			System.out.println("Status code is " + statuscode);
+			
+			if(statuscode.equals("STP Processed"))
+			{
+				System.out.println("Status code is STP Processed");
+			}
+			else
+			{
+				System.out.println("Status code is not matched");
+				Assert.fail();
+			}
 								
 			System.out.println("Card delinking completed");
 		}
@@ -3348,11 +3543,8 @@ public class OptimusCasePage
 		try
 		{
 			Thread.sleep(10000);
-			
-			this.performClickWithAction(casesWithIcon);
-			Thread.sleep(3000);
-			
 			newButton.click();
+			newCaseButton.click();
 			Thread.sleep(8000);
 			
 			this.performClickWithAction(caseTypeDropdown);
@@ -3403,7 +3595,8 @@ public class OptimusCasePage
 			
 			
 			System.out.println("Clicked on save button");
-			Thread.sleep(5000);
+			Thread.sleep(10000);
+			wait.until(ExpectedConditions.visibilityOf(caseNumber));
 			String caseno = caseNumber.getText();
 			System.out.println("caseno" +" "+ caseno);	
 						
@@ -3434,11 +3627,8 @@ public class OptimusCasePage
 		try
 		{
 			Thread.sleep(10000);
-			
-			this.performClickWithAction(casesWithIcon);
-			Thread.sleep(3000);
-			
 			newButton.click();
+			newCaseButton.click();
 			Thread.sleep(8000);
 			
 			this.performClickWithAction(caseTypeDropdown);
@@ -3466,7 +3656,8 @@ public class OptimusCasePage
 			
 			
 			System.out.println("Clicked on save button");
-			Thread.sleep(5000);
+			Thread.sleep(10000);
+			wait.until(ExpectedConditions.visibilityOf(caseNumber));
 			String caseno = caseNumber.getText();
 			System.out.println("caseno" +" "+ caseno);	
 						
@@ -3498,10 +3689,9 @@ public class OptimusCasePage
 		{
 			/*Thread.sleep(10000);
 			
-			this.performClickWithAction(casesWithIcon);
-			Thread.sleep(3000);
 			
 			newButton.click();
+			newCaseButton.click();
 			Thread.sleep(8000);*/
 			
 			Thread.sleep(3000);
@@ -3537,9 +3727,8 @@ public class OptimusCasePage
 			
 			
 			System.out.println("Clicked on save button");
-			Thread.sleep(5000);
+			Thread.sleep(10000);
 			
-			Thread.sleep(5000);
 			String erroroccured = driver.findElement(By.xpath("//div[text()='Error Occurred!!!']")).getText();
 			System.out.println(erroroccured);
 			
@@ -3565,13 +3754,10 @@ public class OptimusCasePage
 		try
 		{
 			Thread.sleep(10000);
-			
-			this.performClickWithAction(casesWithIcon);
-			Thread.sleep(3000);
-			
 			newButton.click();
-			Thread.sleep(8000);
-			
+			newCaseButton.click();
+			Thread.sleep(10000);
+			wait.until(ExpectedConditions.visibilityOf(caseTypeDropdown));
 			this.performClickWithAction(caseTypeDropdown);
 			this.selectElement(caseTypeDropdown, handler.getCaseType());
 			System.out.println("Case type selected");
@@ -3594,16 +3780,16 @@ public class OptimusCasePage
 			
 			statusCodeDropdown.click();
 			this.selectElement(statusCodeDropdown, handler.getStatusCode());
-			System.out.println("Status Code as SENT TO OPS");
+			System.out.println("Status Code Changed");
 			Thread.sleep(3000);
 
 			this.performClickWithAction(saveButton);
 			
 			
 			System.out.println("Clicked on save button");
-			Thread.sleep(5000);
+			Thread.sleep(10000);
 			
-			Thread.sleep(5000);
+			
 			String erroroccured = driver.findElement(By.xpath("//div[text()='Error Occurred!!!']")).getText();
 			System.out.println(erroroccured);
 			
@@ -3630,12 +3816,9 @@ public class OptimusCasePage
 		try
 		{
 			Thread.sleep(10000);
-			
-			this.performClickWithAction(casesWithIcon);
-			Thread.sleep(3000);
-			
 			newButton.click();
-			Thread.sleep(8000);
+			newCaseButton.click();
+			Thread.sleep(10000);
 			
 			this.performClickWithAction(caseTypeDropdown);
 			this.selectElement(caseTypeDropdown, handler.getCaseType());
@@ -3665,7 +3848,8 @@ public class OptimusCasePage
 			this.performClickWithAction(saveButton);
 						
 			System.out.println("Clicked on save button");
-			Thread.sleep(5000);
+			Thread.sleep(10000);
+			wait.until(ExpectedConditions.visibilityOf(caseNumber));
 			
 			String caseno = caseNumber.getText();
 			System.out.println("caseno" +" "+ caseno);	
@@ -3711,11 +3895,8 @@ public class OptimusCasePage
 		try
 		{
 			Thread.sleep(10000);
-			
-			this.performClickWithAction(casesWithIcon);
-			Thread.sleep(3000);
-			
 			newButton.click();
+			newCaseButton.click();
 			Thread.sleep(8000);
 			
 			this.performClickWithAction(caseTypeDropdown);
@@ -3758,7 +3939,9 @@ public class OptimusCasePage
 			
 			
 			System.out.println("Clicked on save button");
-			Thread.sleep(5000);
+			Thread.sleep(10000);
+			wait.until(ExpectedConditions.visibilityOf(caseNumber));
+			
 			String caseno = caseNumber.getText();
 			System.out.println("caseno" +" "+ caseno);	
 						
@@ -3786,10 +3969,12 @@ public class OptimusCasePage
 			
 			String errFailed = errorMessagesofFailed.getText();
 			System.out.println(errFailed);
-			Assert.assertTrue(errFailed.equals(handler.getErrorMessage()));
+			//Assert.assertTrue(errFailed.equals(handler.getErrorMessage()));
 			System.out.println("Error Validated");
 			Thread.sleep(2000);
 			driver.findElement(By.xpath("//button[@title='Close']/lightning-primitive-icon")).click();
+			
+			System.out.println("Completed the STP failure internal mode journey");
 			
 		}
 		catch(Exception e)
@@ -3804,11 +3989,8 @@ public class OptimusCasePage
 		try
 		{
 			Thread.sleep(10000);
-			
-			this.performClickWithAction(casesWithIcon);
-			Thread.sleep(3000);
-			
 			newButton.click();
+			newCaseButton.click();
 			Thread.sleep(8000);
 			
 			this.performClickWithAction(caseTypeDropdown);
@@ -3852,6 +4034,7 @@ public class OptimusCasePage
 			
 			System.out.println("Clicked on save button");
 			Thread.sleep(10000);
+			wait.until(ExpectedConditions.visibilityOf(caseNumber));
 			String caseno = caseNumber.getText();
 			System.out.println("caseno" +" "+ caseno);	
 						
@@ -3869,31 +4052,29 @@ public class OptimusCasePage
 			
 			String statuscode = statusCodeValue.getText();
 			System.out.println("Status code is " + statuscode);
-			Thread.sleep(8000);			
+			Thread.sleep(10000);			
 			
 			//refresh1
 			driver.navigate().refresh();
 			Thread.sleep(15000);		
 						
 			String errFailed = errorMessagesofFailed.getText();
-			System.out.println(errFailed);
-			Assert.assertTrue(errFailed.equals(handler.getErrorMessage()));
+			System.out.println(errFailed);			
 			System.out.println("Error Validated");
 			Thread.sleep(2000);
 			driver.findElement(By.xpath("//button[@title='Close']/lightning-primitive-icon")).click();
-			Thread.sleep(1000);
+			Thread.sleep(2000);
 			
 			//stp try 1
 			this.performClickWithAction(stpRetryButton);			
 			Thread.sleep(2000);
 			String statuscode1 = statusCodeValue.getText();
-			System.out.println("Status code is " + statuscode1);		
-			
+			System.out.println("Status code is " + statuscode1);
 			Assert.assertTrue(statuscode1.equals("STP Failed"));
+			
 			//refresh 2
 			driver.navigate().refresh();
-			Thread.sleep(10000);			
-			Assert.assertTrue(errFailed.equals(handler.getErrorMessage()));
+			Thread.sleep(10000);		
 			System.out.println("Error Validated");
 			Thread.sleep(2000);
 			driver.findElement(By.xpath("//button[@title='Close']/lightning-primitive-icon")).click();			
@@ -3906,7 +4087,6 @@ public class OptimusCasePage
 			//refresh 3
 			driver.navigate().refresh();
 			Thread.sleep(10000);
-			Assert.assertTrue(errFailed.equals(handler.getErrorMessage()));
 			System.out.println("Error Validated");
 			Thread.sleep(2000);
 			driver.findElement(By.xpath("//button[@title='Close']/lightning-primitive-icon")).click();
@@ -3915,9 +4095,9 @@ public class OptimusCasePage
 			//stp try 3
 			this.performClickWithAction(stpRetryButton);
 			Thread.sleep(4000);
+			Assert.assertTrue(statuscode1.equals("STP Failed"));
 			driver.navigate().refresh();
 			Thread.sleep(10000);
-			Assert.assertTrue(errFailed.equals(handler.getErrorMessage()));
 			System.out.println("Error Validated");
 			Thread.sleep(2000);
 			driver.findElement(By.xpath("//button[@title='Close']/lightning-primitive-icon")).click();
@@ -3932,7 +4112,8 @@ public class OptimusCasePage
 			System.out.println(errFailed1);	
 			
 						
-			Assert.assertTrue(errFailed1.equals("You have exhausted the maximum number of STP attempts for your channel. Kindly process case manually, or send to Ops."));
+			//Assert.assertTrue(errFailed1.equals("You have exhausted the maximum number of STP attempts for your channel. Kindly process case manually, or send to Ops."));
+			Assert.assertTrue(errFailed1.equals(handler.getErrorMessage()));
 			System.out.println("Error Validated");
 			Thread.sleep(2000);
 			driver.findElement(By.xpath("//button[@title='Close']/lightning-primitive-icon")).click();
@@ -3940,7 +4121,7 @@ public class OptimusCasePage
 			
 			this.performClickWithAction(editButton);
 			
-			Thread.sleep(6000);
+			Thread.sleep(10000);
 			
 			statusCodeDropdown.click();
 			this.selectElement(statusCodeDropdown, "Sent To Ops");
@@ -3949,17 +4130,15 @@ public class OptimusCasePage
 			
 			this.performClickWithAction(saveButton);			
 			System.out.println("Clicked on save button");
-			Thread.sleep(5000);
-			
-			//later add it
-			
-			/*String errFailed2 = errorMessagesofFailed.getText();
+			Thread.sleep(10000);
+		
+			String errFailed2 = errorMessages.getText();
 			System.out.println(errFailed2);
 			
 			Assert.assertTrue(errFailed2.equals("This is a Critical SR. Kindly process the case by logging in respective system i.e DCMS or CBS"));
 			Thread.sleep(2000);
 			driver.findElement(By.xpath("//button[@title='Close']/lightning-primitive-icon")).click();
-			
+			Thread.sleep(2000);
 			
 			statusCodeDropdown.click();
 			this.selectElement(statusCodeDropdown, "Communicated & Closed");
@@ -3971,13 +4150,15 @@ public class OptimusCasePage
 			
 			this.performClickWithAction(saveButton);			
 			System.out.println("Clicked on save button");
-			Thread.sleep(5000);
+			Thread.sleep(8000);
 			
+			wait.until(ExpectedConditions.visibilityOf(caseNumber));
 			
 			String statuscode2 = statusCodeValue.getText();
 			System.out.println("Status code is " + statuscode2);
 			
-			Assert.assertTrue(statuscode1.equals("Communicated & Closed"));*/
+			Assert.assertTrue(statuscode2.equals("Communicated & Closed"));
+			System.out.println("Completed the journey of retry and close.");
 			
 		}
 		catch(Exception e)
@@ -3992,11 +4173,8 @@ public class OptimusCasePage
 		try
 		{			
 			Thread.sleep(10000);
-			
-			this.performClickWithAction(casesWithIcon);
-			Thread.sleep(3000);
-			
 			newButton.click();
+			newCaseButton.click();
 			Thread.sleep(9000);
 			
 			this.performClickWithAction(caseTypeDropdown);
@@ -4030,8 +4208,9 @@ public class OptimusCasePage
 			System.out.println("Status Code changed");
 			this.performClickWithAction(saveButton);
 			System.out.println("Clicked on save button");
-		//	saveButton.click();
+		
 			Thread.sleep(10000);
+			wait.until(ExpectedConditions.visibilityOf(caseNumber));
 			
 			String caseno = caseNumber.getText();
 			System.out.println("caseno" +" "+ caseno);	
@@ -4048,9 +4227,101 @@ public class OptimusCasePage
 			
 			String createdByName = createdByNameValue.getText();
 			System.out.println("Created by name " + createdByName);
-					
 			
-			//refresh the page
+			
+			String statuscode = statusCodeValue.getText();
+			System.out.println("Status code is " + statuscode);
+			Thread.sleep(10000);			
+			
+			//refresh1
+			driver.navigate().refresh();
+			Thread.sleep(10000);
+			driver.navigate().refresh();
+			Thread.sleep(15000);
+			String errFailed = errorMessagesofFailed.getText();
+			System.out.println(errFailed);			
+			System.out.println("Error Validated");
+			Thread.sleep(2000);
+			driver.findElement(By.xpath("//button[@title='Close']/lightning-primitive-icon")).click();
+			Thread.sleep(2000);
+			
+			//stp try 1
+			this.performClickWithAction(stpRetryButton);			
+			Thread.sleep(2000);
+			String statuscode1 = statusCodeValue.getText();
+			System.out.println("Status code is " + statuscode1);
+			Assert.assertTrue(statuscode1.equals("STP Failed"));
+			
+			//refresh 2
+			driver.navigate().refresh();
+			Thread.sleep(10000);		
+			System.out.println("Error Validated");
+			Thread.sleep(2000);
+			driver.findElement(By.xpath("//button[@title='Close']/lightning-primitive-icon")).click();			
+			Thread.sleep(1000);
+			
+			//stp try 2
+			this.performClickWithAction(stpRetryButton);
+			Thread.sleep(4000);
+			Assert.assertTrue(statuscode1.equals("STP Failed"));
+			//refresh 3
+			driver.navigate().refresh();
+			Thread.sleep(10000);
+			System.out.println("Error Validated");
+			Thread.sleep(2000);
+			driver.findElement(By.xpath("//button[@title='Close']/lightning-primitive-icon")).click();
+			Thread.sleep(1000);
+			
+			//stp try 3
+			this.performClickWithAction(stpRetryButton);
+			Thread.sleep(4000);
+			Assert.assertTrue(statuscode1.equals("STP Failed"));
+			driver.navigate().refresh();
+			Thread.sleep(10000);
+			System.out.println("Error Validated");
+			Thread.sleep(2000);
+			driver.findElement(By.xpath("//button[@title='Close']/lightning-primitive-icon")).click();
+			Thread.sleep(1000);
+			
+			
+			//stp try 4
+			this.performClickWithAction(stpRetryButton);
+			System.out.println("Clicked on STP retry button on 4th time");
+			Thread.sleep(4000);	
+			String errFailed1 = errorMessagesofFailed.getText();
+			System.out.println(errFailed1);	
+			
+						
+			Assert.assertTrue(errFailed1.equals(handler.getErrorMessage()));
+			System.out.println("Error Validated");
+			Thread.sleep(2000);
+			driver.findElement(By.xpath("//button[@title='Close']/lightning-primitive-icon")).click();
+			Thread.sleep(10000);
+			
+			this.performClickWithAction(editButton);
+			
+			Thread.sleep(10000);
+			
+			statusCodeDropdown.click();
+			this.selectElement(statusCodeDropdown, "Sent To Ops");
+			System.out.println("Status Code as Sent To Ops");
+			Thread.sleep(3000);
+			
+			this.performClickWithAction(saveButton);			
+			System.out.println("Clicked on save button");
+			Thread.sleep(10000);
+		
+			String errFailed2 = errorMessages.getText();
+			System.out.println(errFailed2);
+			
+			Assert.assertTrue(errFailed2.equals("This is a Critical SR. Kindly process the case by logging in respective system i.e DCMS or CBS"));
+			Thread.sleep(2000);
+			driver.findElement(By.xpath("//button[@title='Close']/lightning-primitive-icon")).click();
+			Thread.sleep(2000);
+			
+			
+			
+			/*//refresh the page
 			
 			Thread.sleep(15000);
 			
@@ -4077,11 +4348,7 @@ public class OptimusCasePage
 			driver.navigate().refresh();
 			Thread.sleep(15000);		
 						
-			/*String errFailed = errorMessagesofFailed.getText();
-			System.out.println(errFailed);
-			Assert.assertTrue(errFailed.equals(handler.getErrorMessage()));
-			System.out.println("Error Validated");*/
-			//Thread.sleep(2000);
+			
 			driver.findElement(By.xpath("//button[@title='Close']/lightning-primitive-icon")).click();
 			Thread.sleep(1000);
 			
@@ -4095,9 +4362,7 @@ public class OptimusCasePage
 			//refresh 2
 			driver.navigate().refresh();
 			Thread.sleep(10000);			
-			/*Assert.assertTrue(errFailed.equals(handler.getErrorMessage()));
-			System.out.println("Error Validated");
-			Thread.sleep(2000);*/
+			
 			driver.findElement(By.xpath("//button[@title='Close']/lightning-primitive-icon")).click();			
 			Thread.sleep(1000);
 			
@@ -4108,9 +4373,7 @@ public class OptimusCasePage
 			//refresh 3
 			driver.navigate().refresh();
 			Thread.sleep(10000);
-			/*Assert.assertTrue(errFailed.equals(handler.getErrorMessage()));
-			System.out.println("Error Validated");
-			Thread.sleep(2000);*/
+			
 			driver.findElement(By.xpath("//button[@title='Close']/lightning-primitive-icon")).click();
 			Thread.sleep(1000);
 			
@@ -4119,9 +4382,7 @@ public class OptimusCasePage
 			Thread.sleep(4000);
 			driver.navigate().refresh();
 			Thread.sleep(10000);
-			/*Assert.assertTrue(errFailed.equals(handler.getErrorMessage()));
-			System.out.println("Error Validated");
-			Thread.sleep(2000);*/
+			
 			driver.findElement(By.xpath("//button[@title='Close']/lightning-primitive-icon")).click();
 			Thread.sleep(1000);
 			
@@ -4130,13 +4391,7 @@ public class OptimusCasePage
 			this.performClickWithAction(stpRetryButton);
 			System.out.println("Clicked on STP retry button on 4th time");
 			Thread.sleep(6000);	
-		/*	String errFailed1 = errorMessagesofFailed.getText();
-			System.out.println(errFailed1);	
-			
-						
-			Assert.assertTrue(errFailed1.equals("You have exhausted the maximum number of STP attempts for your channel. Kindly process case manually, or send to Ops."));
-			System.out.println("Error Validated");
-			Thread.sleep(2000);*/
+		
 			driver.findElement(By.xpath("//button[@title='Close']/lightning-primitive-icon")).click();
 			Thread.sleep(10000);
 			
@@ -4150,7 +4405,9 @@ public class OptimusCasePage
 			
 			this.performClickWithAction(saveButton);			
 			System.out.println("Clicked on save button");
-			Thread.sleep(8000);
+			Thread.sleep(10000);
+			wait.until(ExpectedConditions.visibilityOf(caseNumber));*/
+			
 									
 			
 										
@@ -4170,11 +4427,8 @@ public class OptimusCasePage
 		try
 		{
 			Thread.sleep(10000);
-			
-			this.performClickWithAction(casesWithIcon);
-			Thread.sleep(3000);
-			
 			newButton.click();
+			newCaseButton.click();
 			Thread.sleep(5000);
 			
 			this.performClickWithAction(caseTypeDropdown);
@@ -4229,7 +4483,8 @@ public class OptimusCasePage
 			this.selectElement(statusCodeDropdown, handler.getStatusCode());
 			System.out.println("Status Code changed");
 			saveButton.click();
-			Thread.sleep(5000);
+			Thread.sleep(10000);
+			wait.until(ExpectedConditions.visibilityOf(caseNumber));
 			
 			String caseno = caseNumber.getText();
 			System.out.println("caseno" +" "+ caseno);	
@@ -4265,11 +4520,9 @@ public class OptimusCasePage
 	{
 		try
 		{
-			Thread.sleep(10000);			
-			this.performClickWithAction(casesWithIcon);
-			Thread.sleep(3000);
-			
+			Thread.sleep(10000);
 			newButton.click();
+			newCaseButton.click();
 			Thread.sleep(5000);
 			
 			this.performClickWithAction(caseTypeDropdown);
@@ -4320,7 +4573,8 @@ public class OptimusCasePage
 			this.selectElement(statusCodeDropdown, handler.getStatusCode());
 			System.out.println("Status Code changed");
 			saveButton.click();
-			Thread.sleep(5000);
+			Thread.sleep(10000);
+			wait.until(ExpectedConditions.visibilityOf(caseNumber));
 			
 			String caseno = caseNumber.getText();
 			System.out.println("caseno" +" "+ caseno);	
@@ -4349,6 +4603,81 @@ public class OptimusCasePage
 		}
 	}
 	
+	
+	public void createCaseNACHMandateCancellation(OptimusCaseDataModel handler)
+	{
+		try
+		{
+			Thread.sleep(10000);
+			newButton.click();
+			newCaseButton.click();
+			Thread.sleep(9000);
+			
+			this.performClickWithAction(caseTypeDropdown);
+			this.selectElement(caseTypeDropdown, handler.getCaseType());
+			System.out.println("Case type selected");
+			Thread.sleep(2000);
+			categoryDropdown.click();
+			this.selectElement(categoryDropdown, handler.getCategory());
+			System.out.println("Category selected");
+			Thread.sleep(2000);
+			subCategoryDropdown.click();
+			this.selectElement(subCategoryDropdown, handler.getSubCategory());			
+			System.out.println("Sub category selected");
+			Thread.sleep(2000);
+			
+			accountNumberField.click();
+			Thread.sleep(4000);
+			selectButtonOfAccountDetails.click();
+			Thread.sleep(5000);
+			System.out.println("Account number selected from Account Details");
+			
+
+			mothersMaidenNameCheckbox.click();
+			verifyTransactionCheckbox.click();			
+			
+			Thread.sleep(2000);
+			
+			
+			statusCodeDropdown.click();
+			this.selectElement(statusCodeDropdown, handler.getStatusCode());
+			System.out.println("Status Code Changed");
+			Thread.sleep(3000);
+
+			((JavascriptExecutor) driver).executeScript("window.scrollTo(document.body.scrollHeight, 0)");
+			Thread.sleep(3000);
+
+			this.performClickWithAction(topSaveButton);
+			System.out.println("Clicked on Save button");
+			
+			Thread.sleep(10000);
+			wait.until(ExpectedConditions.visibilityOf(caseNumber));
+			
+			String caseno =  caseNumber.getText();	
+			this.caseCount = caseno;
+			System.out.println("caseno" +" "+ this.caseCount);
+			
+			String caseownername = caseOwnerValue.getText();
+			System.out.println("Case owner name is " + caseownername);
+			
+			String customername = customerNameValue.getText();
+			System.out.println("Customer name is " + customername);
+			
+			String statuscode = statusCodeValue.getText();
+			System.out.println("Status code is " + statuscode);
+			
+			String createdBydate = createdByDateValue.getText();
+			System.out.println("Created By date " + createdBydate);
+			
+			String createdByName = createdByNameValue.getText();
+			System.out.println("Created by name " + createdByName);
+		}
+		catch(Exception e)
+		{
+			ExtentConfigurer.getTest().log(Status.ERROR, "Selenium Error Occurred : " + e.getMessage());
+			Assert.fail();
+		}
+	}
 	
 	
 	
